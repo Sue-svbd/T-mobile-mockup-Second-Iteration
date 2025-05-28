@@ -5,211 +5,962 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Apple iPhone 16 mit Vertrag | Telekom</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'TeleNeo', Arial, sans-serif; color: #262626; background-color: #f5f5f5; line-height:1.5; }
-    a { text-decoration: none; color: inherit; }
-    ul { list-style: none; }
-    :root { --magenta:#e20074; --white:#ffffff; --black:#262626; --gray-light:#f5f5f5; --gray:#e0e0e0; --gray-dark:#9e9e9e; }
+<style>/* Reset and Base Styles */
+  * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+  }
+  
+  body {
+      font-family: 'TeleNeo', Arial, sans-serif;
+      color: #262626;
+      background-color: #f5f5f5;
+      line-height: 1.5;
+  }
+  
+  a {
+      text-decoration: none;
+      color: inherit;
+  }
+  
+  ul {
+      list-style: none;
+  }
+  
+  button {
+      background: none;
+      border: none;
+      cursor: pointer;
+  }
+  
+  /* Telekom Brand Colors */
+  :root {
+      --magenta: #e20074;
+      --white: #ffffff;
+      --black: #262626;
+      --gray-light: #f5f5f5;
+      --gray: #e0e0e0;
+      --gray-dark: #9e9e9e;
+  }
+  
+  /* Header Styles */
+  .header {
+      background-color: var(--white);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+  }
+  
+  .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 0 20px;
+      min-height: 80px;
+  }
+  
+  /* Logo Section */
+  .logo-section {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+  }
+  
+  .logo-square {
+      width: 80px;
+      height: 80px;
+      background-color: var(--magenta);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+  }
+  
+  .logo-t {
+      color: var(--white);
+      font-size: 2.5rem;
+      font-weight: 700;
+      font-family: 'TeleNeo', Arial, sans-serif;
+  }
+  
+  .top-links {
+      display: flex;
+      gap: 25px;
+      padding-top: 15px;
+  }
+  
+  .top-link {
+      font-size: 0.9rem;
+      color: var(--black);
+      transition: color 0.2s ease;
+  }
+  
+  .top-link.active {
+      color: var(--magenta);
+      font-weight: 700;
+  }
+  
+  .top-link:hover {
+      color: var(--magenta);
+  }
+  
+  /* Header Right Side - removed .header-info styles */
+  
+  .header-icons {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      padding-top: 15px;
+  }
+  
+  .icon-btn {
+      color: var(--black);
+      font-size: 1.2rem;
+      padding: 8px;
+      transition: color 0.2s ease;
+      background: none;
+      border: none;
+  }
+  
+  .icon-btn:hover {
+      color: var(--magenta);
+  }
+  
+  /* Main Navigation */
+  .main-navigation {
+      background-color: var(--white);
+      border-top: 1px solid var(--gray);
+  }
+  
+  .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+  }
+  
+  .nav-menu {
+      display: flex;
+      gap: 40px;
+  }
+  
+  .nav-link {
+      display: block;
+      padding: 15px 0;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--black);
+      position: relative;
+      transition: color 0.2s ease;
+  }
+  
+  .nav-link:hover {
+      color: var(--magenta);
+  }
+  
+  .nav-link.active {
+      color: var(--magenta);
+  }
+  
+  .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: var(--magenta);
+  }
+  
+  /* Breadcrumb Styles */
+  .breadcrumb-container {
+      background-color: var(--white);
+      border-bottom: 1px solid var(--gray);
+  }
+  
+  .breadcrumb {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+      color: var(--gray-dark);
+  }
+  
+  .breadcrumb a {
+      color: var(--gray-dark);
+  }
+  
+  .breadcrumb i {
+      margin: 0 10px;
+      font-size: 0.8rem;
+  }
+  
+  /* Main Content Styles */
+  .main-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      
+  }
+  
+  .product-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+      padding: 10px;
+    background-color: white;
+  }
+  
+  /* Product Images Styles */
+  .product-images {
+      grid-column: 1;
+  }
+  
+  .main-image {
+      background-color: var(--white);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 400px;
+  }
+  
+  .main-image img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+  }
+  
+  .thumbnails {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+  }
+  
+  .thumbnail-container {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+  }
+  
+  .thumbnail-container::-webkit-scrollbar {
+      display: none;
+  }
+  
+  .thumbnail {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      cursor: pointer;
+      object-fit: cover;
+      border: 2px solid transparent;
+      background-color: white;
+      opacity: 60%;
+  }
+  
+  .thumbnail.active {
+      border-color: var(--magenta);
+      opacity: 100%;
 
-    /* Header */
-    .header { background: var(--white); box-shadow:0 2px 4px rgba(0,0,0,0.1); position:sticky; top:0; z-index:100; }
-    .header-container { max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; padding:0 20px; }
-    .logo { height:60px; width:auto; }
-    .customer-links { display:flex; margin-left:20px; }
-    .customer-links a { padding:10px 15px; font-weight:500; color:var(--black); }
-    .customer-links a.active { color:var(--magenta); font-weight:700; }
-    .main-nav { margin-left:auto; }
-    .main-nav ul { display:flex; }
-    .main-nav a { display:block; padding:20px 15px; font-weight:500; color:var(--black); }
-    .main-nav a:hover { color:var(--magenta); }
-    .header-actions { display:flex; align-items:center; margin-left:20px; }
-    .shop-link, .contact-link { padding:10px 15px; font-weight:500; }
-    .header-icons { display:flex; margin-left:15px; }
-    .icon-link { padding:10px; font-size:1.2rem; }
-
-    /* Breadcrumb */
-    .breadcrumb-container { background:var(--white); border-bottom:1px solid var(--gray); }
-    .breadcrumb { max-width:1200px; margin:0 auto; padding:10px 20px; display:flex; align-items:center; font-size:.9rem; color:var(--gray-dark); }
-    .breadcrumb i { margin:0 10px; font-size:.8rem; }
-
-    /* Main Content */
-    .main-content { max-width:1200px; margin:0 auto; padding:20px; }
-    .product-container { display:grid; grid-template-columns:1fr 1fr 1fr; gap:30px; margin-bottom:40px; }
-
-    /* Images */
-    .product-images { grid-column:1; }
-    .main-image { background:var(--white); border-radius:8px; overflow:hidden; margin-bottom:15px; display:flex; justify-content:center; align-items:center; height:400px; }
-    .main-image img { max-width:100%; max-height:100%; object-fit:contain; }
-    .thumbnails { display:flex; align-items:center; gap:10px; }
-    .thumbnail-container { display:flex; gap:10px; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; }
-    .thumbnail-container::-webkit-scrollbar { display:none; }
-    .thumbnail { width:60px; height:60px; border-radius:8px; cursor:pointer; object-fit:cover; border:2px solid transparent; position:relative; background-color: white;opacity: 50%; }
-    .thumbnail.active { border-color:var(--magenta); opacity: 100%;}
-    .thumbnail.video::after {
-      content:'\f04b'; font-family:'Font Awesome 5 Free'; font-weight:900;
-      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-      color:var(--white); background:rgba(0,0,0,0.5); width:24px; height:24px;
-      border-radius:50%; display:flex; align-items:center; justify-content:center;
-    }
-.thumbnail-nav {
-    background: none;
-    border: none;
-    width: auto;
-    height: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--black);
-    padding: 0;
-    font-size: 1.2rem;
-}
-
-    /* Details */
-    .product-details { grid-column:2; }
-    .back-link { margin-bottom:20px; color:var(--magenta); font-size:.9rem; }
-    .product-title { font-size:2.5rem; font-weight:700; margin-bottom:20px; }
-    .product-info-badges { display:flex; gap:15px; margin-bottom:30px; }
-    .delivery-badge, .bonus-badge { display:flex; align-items:center; gap:8px; padding:8px 12px; background:var(--white); border-radius:4px; font-size:.9rem; }
-    .bonus-badge { color:var(--magenta); }
-
-    .product-colors, .product-storage { margin-bottom:30px; }
-    .product-colors h2, .product-storage h2 { font-size:1.2rem; margin-bottom:10px; }
-    .selected-color { font-size:.9rem; margin-bottom:15px; }
-    .color-options { display:flex; gap:15px; }
-    .color-option { position:relative; cursor:pointer; }
-    .color-option input { position:absolute; opacity:0; cursor:pointer; }
-    .color-circle { display:block; width:30px; height:30px; border-radius:50%; border:2px solid var(--white); box-shadow:0 0 0 1px var(--gray); }
-    .color-option.selected .color-circle { box-shadow:0 0 0 2px var(--magenta); }
-    .color-circle.ultramarin { background-color:#5c77ff; }
-    .color-circle.pink { background-color:#ffc0cb; }
-    .color-circle.black { background-color:#000; }
-    .color-circle.teal { background-color:#69c0ba; }
-    .color-circle.white { background-color:#f9f9f9; }
-
-    .storage-options { display:flex; gap:10px; }
-    .storage-option { flex:1; cursor:pointer; position:relative; }
-    .storage-option input { position:absolute; opacity:0; cursor:pointer; }
-    .storage-content { border:2px solid var(--gray); border-radius:8px; padding:15px; text-align:center; transition:all .2s ease; }
-    .storage-option.selected .storage-content { border-color:var(--magenta); background:rgba(226,0,116,0.05); }
-    .storage-option.disabled { opacity:.6; cursor:not-allowed; }
-    .storage-size { display:block; font-weight:700; font-size:1.1rem; }
-    .storage-price { display:block; font-size:.9rem; color:var(--gray-dark); margin-top:5px; }
-    .storage-availability { display:block; font-size:.8rem; color:var(--gray-dark); margin-top:5px; }
-
-    .product-specs { display:flex; gap:30px; margin-bottom:30px; }
-    .spec { display:flex; align-items:center; gap:10px; }
-    .spec-icon { width:40px; height:40px; background:var(--white); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem; }
-    .spec-details { display:flex; flex-direction:column; }
-    .spec-title { font-size:.8rem; color:var(--gray-dark); }
-    .spec-value { font-weight:700; }
-
-    .total-price { background:var(--white); border-radius:8px; padding:20px; }
-    .total-price h3 { font-size:1rem; margin-bottom:10px; }
-    .price-amount { font-size:1.5rem; font-weight:700; }
-    .price-amount span { font-size:.9rem; font-weight:400; color:var(--gray-dark); }
-
-    /* Purchase Summary */
-    .purchase-summary { grid-column:3; background:var(--white); border-radius:8px; padding:20px; box-shadow:0 2px 10px rgba(0,0,0,.05); }
-    .recommendation { display:flex; flex-wrap:wrap; margin-bottom:20px; position:relative; }
-    .recommendation-badge { position:absolute; top:-10px; left:0; background:var(--magenta); color:var(--white); font-size:.7rem; padding:3px 8px; border-radius:4px; }
-    .tariff-details { flex:1; padding-top:15px; }
-    .tariff-details h3 { font-size:1.5rem; font-weight:700; }
-    .tariff-details p { font-size:.9rem; margin-top:5px; }
-    .tariff-details i { color:var(--magenta); margin-top:5px; }
-    .tariff-price { display:flex; align-items:flex-start; padding-top:15px; }
-    .tariff-price .price { font-size:1.5rem; font-weight:700; }
-    .contract-details { font-size:.9rem; color:var(--gray-dark); margin-bottom:20px; }
-    .tariff-actions { display:flex; gap:10px; margin-bottom:30px; }
-    .payment-summary { margin-bottom:30px; padding-top:20px; border-top:1px solid var(--gray); }
-    .payment-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
-    .payment-type { font-size:.8rem; color:var(--gray-dark); }
-    .payment-amount { font-size:1.2rem; font-weight:700; }
-    .payment-details { font-size:.8rem; color:var(--gray-dark); margin-bottom:20px; }
-    .btn-primary { background:var(--magenta); color:var(--white); border:none; border-radius:8px; padding:15px; font-size:1rem; font-weight:700; cursor:pointer; width:100%; transition:background .2s; }
-    .btn-primary:hover { background:#c8006a; }
-    .btn-secondary { background:var(--white); color:var(--black); border:1px solid var(--gray); border-radius:8px; padding:10px; font-size:.9rem; cursor:pointer; flex:1; transition:background .2s; }
-    .btn-secondary:hover { background:var(--gray-light); }
-    .price-overview { text-align:center; margin-top:15px; }
-    .price-overview a { color:var(--magenta); font-size:.9rem; }
-
-    /* Benefits */
-    .benefits-section { margin-top:40px; }
-    .benefits-section h2 { font-size:1.5rem; margin-bottom:20px; }
-    .benefit-card { background:var(--white); border-radius:8px; padding:20px; margin-bottom:20px; display:flex; align-items:flex-start; gap:15px; }
-    .benefit-icon { color:var(--magenta); font-size:1.2rem; }
-    .benefit-content { flex:1; }
-    .benefit-content h3 { font-size:1.1rem; margin-bottom:5px; }
-    .benefit-content p { font-size:.9rem; color:var(--gray-dark); margin-bottom:10px; }
-    .benefit-link { color:var(--magenta); font-size:.9rem; font-weight:500; }
-    .benefit-info { color:var(--magenta); }
-
-    /* Responsive */
-    @media (max-width:1200px){
-      .product-container { grid-template-columns:1fr 1fr; }
-      .purchase-summary { grid-column:1/ span 2; margin-top:30px; }
-    }
-    @media (max-width:900px){
-      .header-container { flex-direction:column; align-items:flex-start; }
-      .main-nav { margin-left:0; width:100%; overflow-x:auto; }
-      .header-actions { margin-left:0; width:100%; justify-content:space-between; padding:10px 0; }
-    }
-    @media (max-width:768px){
-      .product-container { grid-template-columns:1fr; }
-      .main-image { height:300px; }
-      .product-specs { flex-direction:column; gap:15px; }
-    }
-    @media (max-width:480px){
-      .customer-links, .shop-link, .contact-link { display:none; }
-      .header-icons { margin-left:auto; }
-      .product-title { font-size:1.8rem; }
-      .storage-options { flex-direction:column; }
-      .color-options { justify-content:space-between; }
-    }
-    #mainImage {
-  transition: transform 0.3s ease;
-  display: block;            /* prevent inline whitespace issues */
-  will-change: transform;    /* hint to browser for smooth anim */
-}
-  </style>
+  }
+  
+  .thumbnail.video::after {
+      content: '\f04b';
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--white);
+      background-color: rgba(0, 0, 0, 0.5);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+  
+  .thumbnail-nav {
+      background: none;
+      border: none;
+      width: auto;
+      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--black);
+      padding: 0;
+      font-size: 1.2rem;
+  }
+  
+  .thumbnail-nav:hover {
+      color: var(--magenta);
+  }
+  
+  .thumbnail-nav:focus {
+      outline: none;
+  }
+  
+  /* Product Details Styles */
+  .product-details {
+      grid-column: 2;
+  }
+  
+  .back-link {
+      margin-bottom: 20px;
+      color: var(--magenta);
+      font-size: 0.9rem;
+  }
+  
+  .product-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+  }
+  
+  .product-info-badges {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+  }
+  
+  .delivery-badge, .bonus-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background-color: var(--white);
+      border-radius: 4px;
+      font-size: 0.9rem;
+  }
+  
+  .bonus-badge {
+      color: var(--magenta);
+  }
+  
+  .product-colors, .product-storage {
+      margin-bottom: 30px;
+  }
+  
+  .product-colors h2, .product-storage h2 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+  }
+  
+  .selected-color {
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+  }
+  
+  .color-options {
+      display: flex;
+      gap: 15px;
+  }
+  
+  .color-option {
+      position: relative;
+      cursor: pointer;
+  }
+  
+  .color-option input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+  }
+  
+  .color-circle {
+      display: block;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid var(--white);
+      box-shadow: 0 0 0 1px var(--gray);
+  }
+  
+  .color-option.selected .color-circle {
+      box-shadow: 0 0 0 2px var(--magenta);
+  }
+  
+  .color-circle.ultramarin {
+      background-color: #5c77ff;
+  }
+  
+  .color-circle.pink {
+      background-color: #ffc0cb;
+  }
+  
+  .color-circle.black {
+      background-color: #000000;
+  }
+  
+  .color-circle.teal {
+      background-color: #69c0ba;
+  }
+  
+  .color-circle.white {
+      background-color: #f9f9f9;
+  }
+  
+  .storage-options {
+      display: flex;
+      gap: 10px;
+  }
+  
+  .storage-option {
+      flex: 1;
+      cursor: pointer;
+      position: relative;
+  }
+  
+  .storage-option input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+  }
+  
+  .storage-content {
+      border: 2px solid var(--gray);
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      transition: all 0.2s ease;
+  }
+  
+  .storage-option.selected .storage-content {
+      border-color: var(--magenta);
+      background-color: rgba(226, 0, 116, 0.05);
+  }
+  
+  .storage-option.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+  }
+  
+  .storage-size {
+      display: block;
+      font-weight: 700;
+      font-size: 1.1rem;
+  }
+  
+  .storage-price {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--gray-dark);
+      margin-top: 5px;
+  }
+  
+  .storage-availability {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--gray-dark);
+      margin-top: 5px;
+  }
+  
+  .product-specs {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 30px;
+  }
+  
+  .spec {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+  }
+  
+  .spec-icon {
+      width: 40px;
+      height: 40px;
+      background-color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+  }
+  
+  .spec-details {
+      display: flex;
+      flex-direction: column;
+  }
+  
+  .spec-title {
+      font-size: 0.8rem;
+      color: var(--gray-dark);
+  }
+  
+  .spec-value {
+      font-weight: 700;
+  }
+  
+  .total-price {
+      background-color: var(--white);
+      border-radius: 8px;
+      padding: 20px;
+  }
+  
+  .total-price h3 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+  }
+  
+  .price-amount {
+      font-size: 1.5rem;
+      font-weight: 700;
+  }
+  
+  .price-amount span {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--gray-dark);
+  }
+  
+  /* Purchase Summary Styles */
+  .purchase-summary {
+      grid-column: 3;
+      background-color: var(--white);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .recommendation {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      position: relative;
+  }
+  
+  .recommendation-badge {
+      position: absolute;
+      top: -10px;
+      left: 0;
+      background-color: var(--magenta);
+      color: var(--white);
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+  }
+  
+  .tariff-details {
+      flex: 1;
+      padding-top: 15px;
+  }
+  
+  .tariff-details h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+  }
+  
+  .tariff-details p {
+      font-size: 0.9rem;
+      margin-top: 5px;
+  }
+  
+  .tariff-details i {
+      color: var(--magenta);
+      margin-top: 5px;
+  }
+  
+  .tariff-price {
+      display: flex;
+      align-items: flex-start;
+      padding-top: 15px;
+  }
+  
+  .tariff-price .price {
+      font-size: 1.5rem;
+      font-weight: 700;
+  }
+  
+  .contract-details {
+      font-size: 0.9rem;
+      color: var(--gray-dark);
+      margin-bottom: 20px;
+  }
+  
+  .tariff-actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+  }
+  
+  .payment-summary {
+      margin-bottom: 30px;
+      padding-top: 20px;
+      border-top: 1px solid var(--gray);
+  }
+  
+  .payment-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+  }
+  
+  .payment-type {
+      font-size: 0.8rem;
+      color: var(--gray-dark);
+  }
+  
+  .payment-amount {
+      font-size: 1.2rem;
+      font-weight: 700;
+  }
+  
+  .payment-details {
+      font-size: 0.8rem;
+      color: var(--gray-dark);
+      margin-bottom: 20px;
+  }
+  
+  .price-overview {
+      text-align: center;
+      margin-top: 15px;
+  }
+  
+  .price-overview a {
+      color: var(--magenta);
+      font-size: 0.9rem;
+  }
+  
+  /* Benefits Section Styles */
+  .benefits-section {
+      margin-top: 40px;
+  }
+  
+  .benefits-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+  }
+  
+  .benefit-card {
+      background-color: var(--white);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+  }
+  
+  .benefit-icon {
+      color: var(--magenta);
+      font-size: 1.2rem;
+  }
+  
+  .benefit-content {
+      flex: 1;
+  }
+  
+  .benefit-content h3 {
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+  }
+  
+  .benefit-content p {
+      font-size: 0.9rem;
+      color: var(--gray-dark);
+      margin-bottom: 10px;
+  }
+  
+  .benefit-link {
+      color: var(--magenta);
+      font-size: 0.9rem;
+      font-weight: 500;
+  }
+  
+  .benefit-info {
+      color: var(--magenta);
+  }
+  
+  /* Button Styles */
+  .btn-primary {
+      background-color: var(--magenta);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      padding: 15px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.2s ease;
+  }
+  
+  .btn-primary:hover {
+      background-color: #c20062;
+  }
+  
+  .btn-secondary {
+      background-color: transparent;
+      color: var(--magenta);
+      border: 2px solid var(--magenta);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+  }
+  
+  .btn-secondary:hover {
+      background-color: var(--magenta);
+      color: var(--white);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+      .product-container {
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+     
+      }
+      
+      .purchase-summary {
+          grid-column: 1 / -1;
+          margin-top: 20px;
+      }
+  }
+  
+  @media (max-width: 768px) {
+      .header-container {
+          flex-direction: column;
+          align-items: stretch;
+          min-height: auto;
+          padding: 10px 20px;
+      }
+      
+      .logo-section {
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 15px;
+      }
+      
+      .logo-square {
+          width: 60px;
+          height: 60px;
+      }
+      
+      .logo-t {
+          font-size: 2rem;
+      }
+      
+      .top-links {
+          padding-top: 0;
+          gap: 15px;
+      }
+      
+      .top-link {
+          font-size: 0.8rem;
+      }
+      
+      .header-icons {
+          padding-top: 0;
+          gap: 10px;
+      }
+      
+      .nav-menu {
+          flex-wrap: wrap;
+          gap: 20px;
+      }
+      
+      .nav-link {
+          font-size: 0.9rem;
+          padding: 10px 0;
+      }
+      
+      .product-container {
+          grid-template-columns: 1fr;
+          gap: 20px;
+          background-color: var(--white);
+      }
+      
+      .product-title {
+          font-size: 2rem;
+      }
+      
+      .product-info-badges {
+          flex-direction: column;
+          gap: 10px;
+      }
+      
+      .product-specs {
+          flex-direction: column;
+          gap: 15px;
+      }
+      
+      .storage-options {
+          flex-direction: column;
+      }
+      
+      .tariff-actions {
+          flex-direction: column;
+      }
+  }
+  
+  @media (max-width: 480px) {
+      .main-content {
+          padding: 15px;
+      }
+      
+      .logo-section {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+      }
+      
+      .top-links {
+          align-self: stretch;
+          justify-content: space-between;
+      }
+      
+      .nav-menu {
+          gap: 15px;
+      }
+      
+      .nav-link {
+          font-size: 0.8rem;
+      }
+      
+      .product-title {
+          font-size: 1.8rem;
+      }
+      
+      .color-options {
+          justify-content: center;
+      }
+      
+      .thumbnails {
+          justify-content: center;
+      }
+  }
+  
+  /* Focus States for Accessibility */
+  .icon-btn:focus,
+  .nav-link:focus,
+  .top-link:focus,
+  .benefit-link:focus {
+      outline: 2px solid var(--magenta);
+      outline-offset: 2px;
+  }
+  
+  .btn-primary:focus,
+  .btn-secondary:focus {
+      outline: 2px solid var(--magenta);
+      outline-offset: 2px;
+  }
+  
+  .color-option:focus-within .color-circle {
+      box-shadow: 0 0 0 2px var(--magenta), 0 0 0 4px rgba(226, 0, 116, 0.2);
+  }
+  
+  .storage-option:focus-within .storage-content {
+      box-shadow: 0 0 0 2px var(--magenta);
+  }
+  
+  /* Loading States */
+  .main-image.loading {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+  }
+  
+  @keyframes loading {
+      0% {
+          background-position: 200% 0;
+      }
+      100% {
+          background-position: -200% 0;
+      }
+  }
+  
+  /* Smooth Transitions */
+  * {
+      transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  /* Print Styles */
+  @media print {
+      .header,
+      .breadcrumb-container,
+      .purchase-summary,
+      .benefits-section {
+          display: none;
+      }
+      
+      .product-container {
+          grid-template-columns: 1fr;
+      }
+      
+      .main-content {
+          max-width: none;
+          padding: 0;
+          background-color: var(--white);
+      }
+  }</style>
 </head>
 <body>
   <!-- Header -->
-  <header class="header">
-    <div class="header-container">
-      <div class="logo-container">
-        <a href="/">
-          <img src="https://placehold.co/80x80/e20074/ffffff?text=T" alt="Telekom Logo" class="logo"/>
-        </a>
+<!-- Header -->
+<header class="header">
+  <div class="header-container">
+      <!-- Logo Section -->
+      <div class="logo-section">
+          <div class="logo-square">
+              <span class="logo-t">T</span>
+          </div>
+          
+          <!-- Top Links -->
+          <div class="top-links">
+              <a href="#" class="top-link active">Osobní</a>
+              <a href="#" class="top-link">Podnikatelé a firmy</a>
+              <a href="#" class="top-link">Můj T-Mobile</a>
+          </div>
       </div>
-      <div class="customer-links">
-        <a href="#" class="active">Privatkunden</a>
-        <a href="#">Geschäftskunden</a>
+      
+      <!-- Header Icons -->
+      <div class="header-icons">
+          <button class="icon-btn" aria-label="Vyhledávání">
+              <i class="fas fa-search"></i>
+          </button>
+          <button class="icon-btn" aria-label="Nákupní košík">
+              <i class="fas fa-shopping-cart"></i>
+          </button>
+          <button class="icon-btn" aria-label="Uživatelský účet">
+              <i class="fas fa-user"></i>
+          </button>
       </div>
-      <nav class="main-nav">
-        <ul>
-          <li><a href="#">Mobilfunk</a></li>
-          <li><a href="#">Internet</a></li>
-          <li><a href="#">TV</a></li>
-          <li><a href="#">MeinMagenta App</a></li>
-          <li><a href="#">Glasfaser</a></li>
-          <li><a href="#">Junge Leute</a></li>
-          <li><a href="#">Service</a></li>
-        </ul>
-      </nav>
-      <div class="header-actions">
-        <a href="#" class="shop-link">Telekom Shops</a>
-        <a href="#" class="contact-link">Kontakt</a>
-        <div class="header-icons">
-          <a href="#" class="icon-link"><i class="fas fa-search"></i></a>  
-          <a href="#" class="icon-link"><i class="fas fa-phone"></i></a>  
-          <a href="#" class="icon-link"><i class="fas fa-shopping-cart"></i></a>  
-          <a href="#" class="icon-link"><i class="fas fa-user"></i></a>
-        </div>
+  </div>
+  
+  <!-- Main Navigation -->
+  <nav class="main-navigation">
+      <div class="nav-container">
+          <ul class="nav-menu">
+              <li><a href="#" class="nav-link">Magenta 1</a></li>
+              <li><a href="#" class="nav-link">Mobilní služby</a></li>
+              <li><a href="#" class="nav-link">Internet</a></li>
+              <li><a href="#" class="nav-link">Televize</a></li>
+              <li><a href="#" class="nav-link active">Telefony a jiné</a></li>
+              <li><a href="#" class="nav-link">Akce</a></li>
+              <li><a href="#" class="nav-link">Podpora</a></li>
+          </ul>
       </div>
-    </div>
-  </header>
+  </nav>
+</header>
 
   <!-- Breadcrumb -->
   <div class="breadcrumb-container">

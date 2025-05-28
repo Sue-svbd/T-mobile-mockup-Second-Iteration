@@ -981,7 +981,7 @@
           <img src="https://placehold.co/500x500/ffc0cb/000000?text=iPhone+16+Pink" alt="Apple iPhone 16 in Pink" id="mainImage"/>
         </div>
         <div class="thumbnails">
-          <button class="thumbnail-nav prev"><i class="fas fa-chevron-left"></i></button>
+          <button class="thumbnail-nav prev" tabindex="0"><i class="fas fa-chevron-left"></i></button>
           <div class="thumbnail-container">
             <img src="https://dtdl-static-natco.eshop.yo-digital.com/resize-image?f=czuat2/AJK15lIU0YbiMfNuHQcND0MTJD2xbK.png&q=80&w=55" alt="iPhone 16 #1" class="thumbnail" data-src="https://dtdl-static-natco.eshop.yo-digital.com/resize-image?f=czuat2/AJK15lIU0YbiMfNuHQcND0MTJD2xbK.png&q=80&w=444"/>
             <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/PmsgUVmNsoi7oglNCewHguCIARm57P.png&q=80&w=444" alt="iPhone 16 #2" class="thumbnail" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/PmsgUVmNsoi7oglNCewHguCIARm57P.png&q=80&w=444"/>
@@ -1165,12 +1165,17 @@ document.addEventListener('DOMContentLoaded', function() {
   let firstIndex      = 0;
   let selectedIndex   = 0;
 
+  // Set up proper tab order: prev -> container -> next
+  prevBtn.tabIndex = 0;
+  strip.tabIndex = 0;
+  nextBtn.tabIndex = 0;
+
   // Build an array of slides
   const allThumbs = Array.from(strip.querySelectorAll('.thumbnail')).map(el => ({
     src:      el.src,
     dataSrc:  el.getAttribute('data-src'),
     alt:      el.alt || '',
-    isVideo:  el.getAttribute('data-src').toLowerCase().endsWith('.mp4')
+    isVideo:  el.getAttribute('data-src') && el.getAttribute('data-src').toLowerCase().endsWith('.mp4')
   }));
   const total = allThumbs.length;
 
@@ -1198,13 +1203,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
       thumbEl.className   = 'thumbnail' + (idx === selectedIndex ? ' active' : '') + (slide.isVideo ? ' video' : '');
       thumbEl.dataset.idx = idx;
-      thumbEl.tabIndex    = -1;
+      thumbEl.tabIndex    = -1; // Remove individual thumbnails from tab order
       strip.appendChild(thumbEl);
 
       thumbEl.addEventListener('click', () => select(idx));
     }
-    // ensure strip is focusable once
-    strip.tabIndex = 0;
   }
 
   // Show an image in the main container
@@ -1262,12 +1265,70 @@ document.addEventListener('DOMContentLoaded', function() {
     select(selectedIndex + (forward ? 1 : -1));
   }
 
-  // wire buttons & arrow keys
+  // Previous button event handlers
   prevBtn.addEventListener('click', () => move(false));
+  prevBtn.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      move(false);
+    }
+  });
+
+  // Next button event handlers
   nextBtn.addEventListener('click', () => move(true));
-  strip.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight') { e.preventDefault(); move(true); }
-    if (e.key === 'ArrowLeft')  { e.preventDefault(); move(false); }
+  nextBtn.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      move(true);
+    }
+  });
+
+  // Thumbnail container keyboard navigation
+  strip.addEventListener('keydown', (e) => {
+    // Only handle arrow keys within the thumbnail container
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      e.stopPropagation();
+      move(true);
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      e.stopPropagation();
+      move(false);
+    }
+    // Tab key is allowed to bubble up for normal tab navigation
+  });
+
+  // Add focus indicators for accessibility
+  prevBtn.addEventListener('focus', () => {
+    prevBtn.style.outline = '2px solid blue';
+    prevBtn.style.outlineOffset = '2px';
+  });
+  
+  prevBtn.addEventListener('blur', () => {
+    prevBtn.style.outline = '';
+    prevBtn.style.outlineOffset = '';
+  });
+
+  nextBtn.addEventListener('focus', () => {
+    nextBtn.style.outline = '2px solid blue';
+    nextBtn.style.outlineOffset = '2px';
+  });
+  
+  nextBtn.addEventListener('blur', () => {
+    nextBtn.style.outline = '';
+    nextBtn.style.outlineOffset = '';
+  });
+
+  strip.addEventListener('focus', () => {
+    strip.style.outline = '2px solid blue';
+    strip.style.outlineOffset = '2px';
+    strip.style.borderRadius = '4px';
+  });
+  
+  strip.addEventListener('blur', () => {
+    strip.style.outline = '';
+    strip.style.outlineOffset = '';
+    strip.style.borderRadius = '';
   });
 
   // Initialize

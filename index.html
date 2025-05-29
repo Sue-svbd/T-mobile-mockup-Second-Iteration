@@ -55,13 +55,15 @@
     }
     
     .header-container {
-        max-width: 1200px;
+        max-width: 1400px;
         margin: 0 auto;
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
         padding: 0 20px;
         min-height: 80px;
+        justify-content: flex-start;
+        gap: 24px;;
     }
     
     /* Logo Section */
@@ -133,17 +135,26 @@
     .main-navigation {
         background-color: var(--white);
         border-top: 1px solid var(--gray);
+        width: 100%;
     }
     
     .nav-container {
-        max-width: 1200px;
-        margin: 0 auto;
+        width:100%;
         padding: 0 20px;
+        display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     }
     
     .nav-menu {
         display: flex;
         gap: 40px;
+    }
+    .nav-menu-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
     }
     
     .nav-link {
@@ -606,7 +617,7 @@
     
     .tariff-header {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 10px;
         margin-bottom: 10px;
         margin-top: 10px;
@@ -642,6 +653,7 @@
         text-align: right;
         font-size: 1.3rem;
         font-weight: 700;
+        white-space: nowrap;
     }
     
     .tariff-duration {
@@ -900,22 +912,22 @@
     .nav-link:focus,
     .top-link:focus,
     .benefit-link:focus {
-        outline: 2px solid var(--magenta);
+        outline: 2px solid blue;
         outline-offset: 2px;
     }
     
     .btn-primary:focus,
     .btn-secondary:focus {
-        outline: 2px solid var(--magenta);
+        outline: 2px solid blue;
         outline-offset: 2px;
     }
     
     .color-option:focus-within .color-circle {
-        box-shadow: 0 0 0 2px var(--magenta), 0 0 0 4px rgba(226, 0, 116, 0.2);
+        box-shadow: 0 0 0 2px blue, 0 0 0 4px rgba(226, 0, 116, 0.2);
     }
     
     .storage-option:focus-within .storage-content {
-        box-shadow: 0 0 0 2px var(--magenta);
+        box-shadow: 0 0 0 2px blue;
     }
     
     /* Loading States */
@@ -971,40 +983,45 @@
               <span class="logo-t">T</span>
           </div>
           
-          <!-- Top Links -->
-          <div class="top-links">
-              <a href="#" class="top-link active">Osobní</a>
-              <a href="#" class="top-link">Podnikatelé a firmy</a>
-              <a href="#" class="top-link">Můj T-Mobile</a>
-          </div>
-      </div>
-      
-      <!-- Header Icons -->
-      <div class="header-icons">
-          <button class="icon-btn" aria-label="Vyhledávání">
-              <i class="fas fa-search"></i>
-          </button>
-          <button class="icon-btn" aria-label="Nákupní košík">
-              <i class="fas fa-shopping-cart"></i>
-          </button>
-          <button class="icon-btn" aria-label="Uživatelský účet">
-              <i class="fas fa-user"></i>
-          </button>
-      </div>
-  </div>
+
   
+
+</div>
+<div class="nav-container">
   <!-- Main Navigation -->
-  <nav class="main-navigation">
-      <div class="nav-container">
-          <ul class="nav-menu">
-              <li><a href="#" class="nav-link">Magenta 1</a></li>
-              <li><a href="#" class="nav-link">Mobilní služby</a></li>
-              <li><a href="#" class="nav-link">Internet</a></li>
-              <li><a href="#" class="nav-link">Televize</a></li>
-              <li><a href="#" class="nav-link active">Telefony a jiné</a></li>
-              <li><a href="#" class="nav-link">Akce</a></li>
-              <li><a href="#" class="nav-link">Podpora</a></li>
-          </ul>
+<nav class="main-navigation">
+<!-- Top Links -->
+<div class="top-links">
+<a href="#" class="top-link active">Osobní</a>
+<a href="#" class="top-link">Podnikatelé a firmy</a>
+<a href="#" class="top-link">Můj T-Mobile</a>
+</div>
+<div class="nav-menu-container">
+  <!-- Nav menu -->
+  <ul class="nav-menu">
+      <li><a href="#" class="nav-link">Magenta 1</a></li>
+      <li><a href="#" class="nav-link">Mobilní služby</a></li>
+      <li><a href="#" class="nav-link">Internet</a></li>
+      <li><a href="#" class="nav-link">Televize</a></li>
+      <li><a href="#" class="nav-link active">Telefony a jiné</a></li>
+      <li><a href="#" class="nav-link">Akce</a></li>
+      <li><a href="#" class="nav-link">Podpora</a></li>
+  </ul>
+        <!-- Header Icons -->
+<div class="header-icons">
+<button class="icon-btn" aria-label="Vyhledávání">
+    <i class="fas fa-search"></i>
+</button>
+<button class="icon-btn" aria-label="Nákupní košík">
+    <i class="fas fa-shopping-cart"></i>
+</button>
+<button class="icon-btn" aria-label="Uživatelský účet">
+    <i class="fas fa-user"></i>
+</button>
+</div>
+
+</div>
+</div>
       </div>
   </nav>
 </header>

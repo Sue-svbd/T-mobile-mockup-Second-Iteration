@@ -342,7 +342,7 @@
         align-items: center;
         justify-content: center;
     }
-    
+
     .thumbnail-nav {
         background: none;
         border: none;
@@ -598,6 +598,9 @@
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         height: fit-content;
     }
+ .purchase-summary-mobile {
+  visibility: hidden;
+ }
     
     .tariff-recommendation {
         background-color: #f8f9fa;
@@ -798,12 +801,25 @@
         }
         
         .purchase-summary {
-            grid-column: 1 / -1;
-            margin-top: 20px;
+          display: none;
         }
+         .purchase-summary-mobile {
+  visibility:visible;
+ }
+   
     }
+
+        /* tablet */
+
     
     @media (max-width: 768px) {
+.purchase-summary{
+  display: none;
+}
+.purchase-summary-mobile{
+  display: block !important;
+}
+
         .header-container {
             flex-direction: column;
             align-items: stretch;
@@ -849,6 +865,11 @@
             font-size: 0.9rem;
             padding: 10px 0;
         }
+
+        .product-images-container{
+          max-width: 208px;
+          max-height: 280px;
+        }
         
         .product-container {
             grid-template-columns: 1fr;
@@ -859,13 +880,19 @@
             font-size: 2rem;
         }
         
-        
-        .storage-options {
-            flex-direction: column;
-        }
-        
+   
         .tariff-actions {
             flex-direction: column;
+        }
+        .thumbnails{
+          max-width: 208px;
+        }
+        .product-specs{
+          max-width: 208px;
+        }
+        .spec-value{
+          font-weight: 100;
+          font-size: 14px;
         }
     }
     
@@ -972,13 +999,90 @@
     font-size: 2rem;
   }
 
-  .storage-options {
-    flex-direction: column;
-  }
-
   .tariff-actions {
     flex-direction: column;
   }
+
+  /* base gallery layout */
+.product-images-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 500px; /* your desktop size */
+  margin: auto;
+}
+
+.main-image img,
+.main-image video {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* thumbnail row */
+.thumbnails {
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.thumbnail-nav {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.thumbnail-container {
+  display: flex;
+  overflow: hidden;
+  gap: 0.25rem;
+}
+
+/* each thumb */
+.thumbnail {
+  flex-shrink: 0;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity .2s;
+}
+.thumbnail.active { opacity: 1; }
+
+/* tablet breakpoint tweaks */
+@media (max-width: 768px) {
+  .product-images-container {
+    max-width: 260px;      /* enforce overall cap */
+  }
+
+  .main-image img,
+  .main-image video {
+    max-width: 260px;      /* shrink the main */
+  }
+
+  .thumbnails {
+    max-width: 260px;      /* ensure thumbs+arrows fit */
+  }
+
+  .thumbnail-nav {
+    flex: 0 0 20px;        /* reserve ~20px for arrow each side */
+  }
+
+  .thumbnail-container {
+    flex: 1;
+  }
+
+  /* width of each of the 3 thumbs = (260px - 2×20px - gaps) ÷ 3 */
+  .thumbnail {
+    flex: 1 1 0;        /* split container evenly */
+    aspect-ratio: 1/1;  /* force a square */
+    position: relative; /* for absolutely-positioned content */
+    overflow: hidden;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+}
+
 }
    /* Header changes */
 
@@ -1359,6 +1463,48 @@ justify-content: flex-end;
           <div class="price-amount">15 019 Kč</div>
         </div>
       </div>
+<!-- Mobile purchase summary  -->
+  <!-- Purchase Summary -->
+    <div class="purchase-summary-mobile">
+      <div class="tariff-recommendation">
+        <div class="tariff-header">
+          <div class="tariff-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <div class="tariff-info">
+            <h3>Neomezená data</h3>
+            <p>Next neomezená XL s výhodou</p>
+          </div>
+          <div class="tariff-price">945 Kč</div>
+        </div>
+        <div class="tariff-duration">na 24 měsíců</div>
+        <div class="tariff-actions">
+          <button class="btn-link">Vyberte jiný tarif</button>
+          <button class="btn-link">Žádné tarify</button>
+        </div>
+      </div>
+
+      <div class="payment-summary">
+        <div class="payment-row">
+          <div class="payment-type">Jednorázově</div>
+          <div class="payment-amount">0 Kč</div>
+        </div>
+        <div class="payment-row">
+          <div class="payment-type">Celkově měsíčně
+          </div>
+          <div class="payment-amount">1815 Kč</div>
+        </div>
+      </div>
+
+      <button class="btn-primary">Přidat do košíku</button>
+      
+      <div class="price-details">
+        <a href="#"><i class="fas fa-info-circle"></i> Detaily k platbě</a>
+      </div>
+    </div>
+
+
+
     </div>
 
     <!-- Purchase Summary -->
@@ -1431,362 +1577,165 @@ justify-content: flex-end;
     const prevBtn       = document.querySelector('.thumbnail-nav.prev');
     const nextBtn       = document.querySelector('.thumbnail-nav.next');
     const strip         = document.querySelector('.thumbnail-container');
-    const visibleCount  = 5;
-    let firstIndex      = 0;
-    let selectedIndex   = 0;
-    let isAnimating     = false; // Flag to prevent multiple rapid transitions
-  
-    // Track mouse usage to differentiate between keyboard and mouse focus
-    let mouseDownTarget = null;
-  
-    // Set up proper tab order: prev -> container -> next
-    prevBtn.tabIndex = 0;
-    strip.tabIndex = 0;
-    nextBtn.tabIndex = 0;
-  
-    // Build an array of slides
+    const TABLET_BP     = 768;
+
+    // dynamic visibleCount based on viewport
+    function getVisibleCount() {
+      return window.innerWidth <= TABLET_BP ? 3 : 5;
+    }
+    let visibleCount = getVisibleCount();
+
+    let firstIndex    = 0;
+    let selectedIndex = 0;
+    let isAnimating   = false;
+
+    // build slides array (images & videos)
     const allThumbs = Array.from(strip.querySelectorAll('.thumbnail')).map(el => ({
-      src:      el.src,
-      dataSrc:  el.getAttribute('data-src'),
-      alt:      el.alt || '',
-      isVideo:  el.getAttribute('data-src') && el.getAttribute('data-src').toLowerCase().endsWith('.mp4')
+      src:     el.src,
+      dataSrc: el.getAttribute('data-src'),
+      alt:     el.alt || '',
+      isVideo: el.getAttribute('data-src')?.toLowerCase().endsWith('.mp4')
     }));
     const total = allThumbs.length;
-  
-    // Render five thumbnails at a time
+
+    // Renders the strip of thumbnails
     function renderStrip() {
       strip.innerHTML = '';
       for (let i = 0; i < visibleCount; i++) {
         const idx   = (firstIndex + i + total) % total;
         const slide = allThumbs[idx];
         let thumbEl;
-  
+
         if (slide.isVideo) {
-          // video thumb
           thumbEl = document.createElement('video');
-          thumbEl.muted      = true;
-          thumbEl.preload    = 'metadata';
-          thumbEl.src        = slide.dataSrc;
-          thumbEl.playsInline= true;
+          thumbEl.muted       = true;
+          thumbEl.preload     = 'metadata';
+          thumbEl.src         = slide.dataSrc;
+          thumbEl.playsInline = true;
         } else {
-          // image thumb
           thumbEl = document.createElement('img');
           thumbEl.src = slide.src;
-          thumbEl.alt= slide.alt;
+          thumbEl.alt = slide.alt;
         }
-  
+
         thumbEl.className   = 'thumbnail' + (idx === selectedIndex ? ' active' : '') + (slide.isVideo ? ' video' : '');
         thumbEl.dataset.idx = idx;
-        thumbEl.tabIndex    = -1; // Remove individual thumbnails from tab order
+        thumbEl.tabIndex    = -1;
         strip.appendChild(thumbEl);
-  
+
         thumbEl.addEventListener('click', () => select(idx));
       }
     }
-  
-    // Enhanced focus management for main container content
-    function setupMainContainerFocus() {
-      const mainContent = mainContainer.querySelector('img, video');
-      if (mainContent && mainContent.tagName === 'VIDEO') {
-        // For videos, ensure proper tab order integration
-        mainContent.addEventListener('keydown', (e) => {
-          // Handle tab navigation within video controls
-          if (e.key === 'Tab') {
-            const videoControls = mainContent.shadowRoot?.querySelectorAll('[tabindex]:not([tabindex="-1"])') || [];
-            const focusableControls = Array.from(videoControls).filter(el => 
-              !el.hasAttribute('disabled') && 
-              el.offsetParent !== null
-            );
-            
-            if (focusableControls.length > 0) {
-              const currentIndex = focusableControls.indexOf(document.activeElement);
-              
-              if (!e.shiftKey && currentIndex === focusableControls.length - 1) {
-                // Tab from last video control should go to next arrow
-                e.preventDefault();
-                nextBtn.focus();
-              } else if (e.shiftKey && currentIndex === 0) {
-                // Shift+Tab from first video control should go to thumbnail container
-                e.preventDefault();
-                strip.focus();
-              }
-            }
-          }
-        });
-        
-        // Ensure video is focusable but doesn't interfere with main tab order
-        mainContent.tabIndex = -1;
-      } else if (mainContent) {
-        // For images, remove from tab order
-        mainContent.tabIndex = -1;
+
+    // Show image/video in main container with fade
+    function transitionContent(newEl) {
+      if (isAnimating) return;
+      isAnimating = true;
+      const current = mainContainer.querySelector('img, video');
+      if (current) {
+        current.classList.add('fade-out');
+        setTimeout(() => {
+          mainContainer.innerHTML = '';
+          newEl.style.opacity = '0';
+          newEl.style.maxWidth = '100%';
+          newEl.style.maxHeight = '100%';
+          newEl.style.objectFit = 'contain';
+          mainContainer.appendChild(newEl);
+          void newEl.offsetWidth;
+          newEl.style.opacity = '1';
+          setTimeout(() => { isAnimating = false; }, 300);
+        }, 300);
+      } else {
+        mainContainer.innerHTML = '';
+        newEl.style.opacity = '1';
+        mainContainer.appendChild(newEl);
+        isAnimating = false;
       }
     }
-  
-    // Show an image in the main container with transition
+
     function showImage(src, alt='') {
-      if (isAnimating) return;
-      isAnimating = true;
-      
-      // Fade out current content
-      const currentContent = mainContainer.querySelector('img, video');
-      if (currentContent) {
-        currentContent.classList.add('fade-out');
-        
-        // Wait for fade out to complete
-        setTimeout(() => {
-          // Create new image
-          mainContainer.innerHTML = '';
-          const img = document.createElement('img');
-          img.src = src;
-          img.alt = alt;
-          img.style.opacity = '0'; // Start invisible
-          img.style.maxWidth = '100%';
-          img.style.maxHeight = '100%';
-          img.style.objectFit = 'contain';
-          mainContainer.appendChild(img);
-          
-          // Setup focus management
-          setupMainContainerFocus();
-          
-          // Trigger reflow for transition to work
-          void img.offsetWidth;
-          
-          // Fade in new image
-          img.style.opacity = '1';
-          
-          // Reset animation flag after transition completes
-          setTimeout(() => {
-            isAnimating = false;
-          }, 300);
-        }, 300);
-      } else {
-        // No current content, just show the image
-        mainContainer.innerHTML = '';
-        const img = document.createElement('img');
-        img.src = src;
-        img.alt = alt;
-        img.style.maxWidth = '100%';
-        img.style.maxHeight = '100%';
-        img.style.objectFit = 'contain';
-        mainContainer.appendChild(img);
-        setupMainContainerFocus();
-        isAnimating = false;
-      }
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = alt;
+      transitionContent(img);
     }
-  
-    // Show a muted video in the main container with transition
+
     function showVideo(src) {
-      if (isAnimating) return;
-      isAnimating = true;
-      
-      // Fade out current content
-      const currentContent = mainContainer.querySelector('img, video');
-      if (currentContent) {
-        currentContent.classList.add('fade-out');
-        
-        // Wait for fade out to complete
-        setTimeout(() => {
-          // Create new video
-          mainContainer.innerHTML = '';
-          const v = document.createElement('video');
-          v.src = src;
-          v.muted = true;
-          v.controls = true;
-          v.autoplay = true;
-          v.playsInline = true;
-          v.style.opacity = '0'; // Start invisible
-          v.style.width = '100%';
-          v.style.height = '100%';
-          v.style.objectFit = 'contain';
-          mainContainer.appendChild(v);
-          
-          // Setup focus management for video
-          setupMainContainerFocus();
-          
-          // Trigger reflow for transition to work
-          void v.offsetWidth;
-          
-          // Fade in new video
-          v.style.opacity = '1';
-          
-          // Reset animation flag after transition completes
-          setTimeout(() => {
-            isAnimating = false;
-          }, 300);
-        }, 300);
-      } else {
-        // No current content, just show the video
-        mainContainer.innerHTML = '';
-        const v = document.createElement('video');
-        v.src = src;
-        v.muted = true;
-        v.controls = true;
-        v.autoplay = true;
-        v.playsInline = true;
-        v.style.width = '100%';
-        v.style.height = '100%';
-        v.style.objectFit = 'contain';
-        mainContainer.appendChild(v);
-        setupMainContainerFocus();
-        isAnimating = false;
-      }
+      const vid = document.createElement('video');
+      vid.src = src;
+      vid.muted = true;
+      vid.controls = true;
+      vid.autoplay = true;
+      vid.playsInline = true;
+      transitionContent(vid);
     }
-  
-    // Select a slide by index
+
+    // select slide by index
     function select(idx) {
       selectedIndex = ((idx % total) + total) % total;
-  
-      // shift window one step if hitting an edge
+
+      // adjust window if at edges
       const start = firstIndex;
       const end   = firstIndex + visibleCount - 1;
       if      (selectedIndex === end   && end < total - 1) firstIndex++;
       else if (selectedIndex === start && start > 0)       firstIndex--;
-  
-      // clamp if outside
-      if (selectedIndex < firstIndex)               firstIndex = selectedIndex;
+
+      // clamp
+      if (selectedIndex < firstIndex) firstIndex = selectedIndex;
       if (selectedIndex > firstIndex + visibleCount - 1) firstIndex = selectedIndex - visibleCount + 1;
       if (firstIndex < 0) firstIndex = 0;
-      if (firstIndex + visibleCount > total)        firstIndex = total - visibleCount;
-  
+      if (firstIndex + visibleCount > total) firstIndex = total - visibleCount;
+
       renderStrip();
-  
       const slide = allThumbs[selectedIndex];
-      if (slide.isVideo) showVideo(slide.dataSrc);
-      else              showImage(slide.dataSrc, slide.alt);
+      slide.isVideo ? showVideo(slide.dataSrc) : showImage(slide.dataSrc, slide.alt);
     }
-  
-    // move forward/backwards
+
+    // move forward/back
     function move(forward) {
       select(selectedIndex + (forward ? 1 : -1));
     }
-  
-    // Track mouse down events to differentiate keyboard vs mouse focus
-    prevBtn.addEventListener('mousedown', () => {
-      mouseDownTarget = prevBtn;
-    });
-  
-    nextBtn.addEventListener('mousedown', () => {
-      mouseDownTarget = nextBtn;
-    });
-  
-    strip.addEventListener('mousedown', () => {
-      mouseDownTarget = strip;
-    });
-  
-    // Clear mouse target after a short delay
-    document.addEventListener('mousedown', () => {
-      setTimeout(() => {
-        mouseDownTarget = null;
-      }, 100);
-    });
-  
-    // Enhanced keyboard navigation for thumbnail container
-    strip.addEventListener('keydown', (e) => {
-      // Only handle arrow keys within the thumbnail container
-      if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        e.stopPropagation();
-        move(true);
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        e.stopPropagation();
-        move(false);
-      } else if (e.key === 'Tab' && !e.shiftKey) {
-        // Tab from thumbnail container
-        const mainContent = mainContainer.querySelector('video[controls]');
-        if (mainContent) {
-          // If there's a video with controls, focus it first
-          e.preventDefault();
-          mainContent.focus();
-        }
-        // Otherwise, let tab naturally go to next arrow
-      }
-      // Tab key is allowed to bubble up for normal tab navigation
-    });
-  
-    // Enhanced focus management for navigation buttons
-    prevBtn.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        move(false);
-      }
-    });
-  
-    nextBtn.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        move(true);
-      } else if (e.key === 'Tab' && e.shiftKey) {
-        // Shift+Tab from next arrow
-        const mainContent = mainContainer.querySelector('video[controls]');
-        if (mainContent) {
-          // If there's a video with controls, focus its last control
-          e.preventDefault();
-          const videoControls = mainContent.shadowRoot?.querySelectorAll('[tabindex]:not([tabindex="-1"])') || [];
-          const focusableControls = Array.from(videoControls).filter(el => 
-            !el.hasAttribute('disabled') && 
-            el.offsetParent !== null
-          );
-          if (focusableControls.length > 0) {
-            focusableControls[focusableControls.length - 1].focus();
-          } else {
-            mainContent.focus();
-          }
-        }
-        // Otherwise, let shift+tab naturally go to thumbnail container
-      }
-    });
-  
-    // Previous button event handlers
+
+    // arrow button handlers
     prevBtn.addEventListener('click', () => move(false));
-  
-    // Next button event handlers
     nextBtn.addEventListener('click', () => move(true));
-  
-    // Focus indicators only for keyboard navigation
-    prevBtn.addEventListener('focus', () => {
-      if (mouseDownTarget !== prevBtn) {
-        prevBtn.style.outline = '2px solid blue';
-        prevBtn.style.outlineOffset = '2px';
+
+    // keyboard navigation, focus outlines, etc. (keep your existing code here…)
+
+    // handle window resize for dynamic visibleCount
+    window.addEventListener('resize', () => {
+      const newCount = getVisibleCount();
+      if (newCount !== visibleCount) {
+        visibleCount = newCount;
+        firstIndex = Math.min(firstIndex, total - visibleCount);
+        renderStrip();
       }
     });
-    
-    prevBtn.addEventListener('blur', () => {
-      prevBtn.style.outline = '';
-      prevBtn.style.outlineOffset = '';
-    });
-  
-    nextBtn.addEventListener('focus', () => {
-      if (mouseDownTarget !== nextBtn) {
-        nextBtn.style.outline = '2px solid blue';
-        nextBtn.style.outlineOffset = '2px';
+
+    // ——— SWIPE HANDLING for tablet/mobile ———
+    let touchStartX = 0;
+    mainContainer.addEventListener('touchstart', e => {
+      if (window.innerWidth <= TABLET_BP) {
+        touchStartX = e.changedTouches[0].clientX;
       }
     });
-    
-    nextBtn.addEventListener('blur', () => {
-      nextBtn.style.outline = '';
-      nextBtn.style.outlineOffset = '';
-    });
-  
-    strip.addEventListener('focus', () => {
-      if (mouseDownTarget !== strip) {
-        strip.style.outline = '2px solid blue';
-        strip.style.outlineOffset = '2px';
-        strip.style.borderRadius = '4px';
+    mainContainer.addEventListener('touchend', e => {
+      if (window.innerWidth <= TABLET_BP) {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const THRESHOLD = 50;
+        if (Math.abs(dx) > THRESHOLD) {
+          move(dx < 0);
+        }
       }
     });
-    
-    strip.addEventListener('blur', () => {
-      strip.style.outline = '';
-      strip.style.outlineOffset = '';
-      strip.style.borderRadius = '';
-    });
-  
-    // Initialize
+    // ——— end swipe ———
+
+    // Initialize gallery
     renderStrip();
     select(0);
   });
-  </script>
+</script>
+
 
 
 </body>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Apple iPhone 16 mit Vertrag | Telekom</title>
+  <title>Apple iPhone 16| Telekom</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
     /* Reset and Base Styles */
@@ -19,6 +19,44 @@
         background-color: #f5f5f5;
         line-height: 1.5;
     }
+
+    /* --- Thumbnail wrapper --- */
+.thumbnail {
+  flex: 1 1 0;           /* share space equally */
+  aspect-ratio: 1/1;     /* force square */
+  position: relative;    /* for overlay & absolute content */
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.thumbnail.active { opacity: 1; }
+
+/* center img/video inside wrapper */
+.thumbnail img,
+.thumbnail video {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* play-icon overlay */
+.thumbnail.video .play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;                  /* adjust if you like */
+  color: white;
+  pointer-events: none;
+  text-shadow: 0 0 5px rgba(0,0,0,0.7);
+  z-index: 1;
+}
+
     
     a {
         text-decoration: none;
@@ -334,7 +372,6 @@
         left: 50%;
         transform: translate(-50%, -50%);
         color: var(--white);
-        background-color: rgba(0, 0, 0, 0.5);
         width: 24px;
         height: 24px;
         border-radius: 50%;
@@ -896,56 +933,7 @@
         }
     }
     
-    @media (max-width: 480px) {
-        .header-container {
-         display:none;
-        }
-         body > header > div.header-container.mobile {
-       max-width: 1400px;
-        margin: 0 auto;
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        padding: 0 20px;
-        min-height: 80px;
-        justify-content: flex-start;
-        gap: 24px;;
-    }
-        .main-content {
-            padding: 15px;
-        }
-        
-        .logo-section {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
-        
-        .top-links {
-            align-self: stretch;
-            justify-content: space-between;
-        }
-        
-        .nav-menu {
-            gap: 15px;
-        }
-        
-        .nav-link {
-            font-size: 0.8rem;
-        }
-        
-        .product-title {
-            font-size: 1.8rem;
-        }
-        
-        .color-options {
-            justify-content: center;
-        }
-        
-        .thumbnails {
-            justify-content: center;
-        }
-    }
+ 
 
  
     @media (max-width: 768px) {
@@ -1110,68 +1098,110 @@
 justify-content: flex-end;
 }
     }
-
-
-/* Phone breakpoint (e.g., 480px) */
-@media (max-width: 480px) {
-  .main-content {
-    padding: 15px;
+   @media (max-width: 480px) {
+        .thumbnail {
+    display: none !important;
   }
-
-  .logo-section {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 15px;
-  }
-
-  .logo-square {
-    width: 40px;
-    height: 40px;
-  }
-
-  .logo-t {
-    font-size: 1.5rem;
-  }
-
-  .top-links {
-    padding-top: 0;
-    gap: 10px;
-  }
-
-  .top-link {
-    font-size: 0.7rem;
-  }
-
-  .header-icons {
-    padding-top: 0;
-    gap: 10px;
-  }
-
-  .nav-menu {
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-
-  .nav-link {
-    font-size: 0.7rem;
-    padding: 8px 0;
-  }
-
-  .color-options {
-    justify-content: center;
-  }
-
-  .thumbnails {
-    justify-content: center;
-  }
+.product-details{
+  display: none;
 }
+  /* style the strip container to center the dots */
+  .thumbnail-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    overflow: hidden;
+    flex: 1;  /* arrows still flex:0 0 20px */
+  }
+
+  /* base dot */
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ccc;
+    cursor: pointer;
+    position: relative;
+    flex: none;
+  }
+  .dot.active {
+    background: #000;
+  }
+
+  /* video dots: bigger, show play icon */
+  .dot.video {
+    width: 16px;
+    height: 16px;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .dot.video .play-icon {
+    font-size: 0.75rem;
+    color: #000;
+    pointer-events: none;
+  }
+        .header-container {
+         display:none;
+        }
+         body > header > div.header-container.mobile {
+       max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 0 20px;
+        min-height: 80px;
+        justify-content: flex-start;
+        gap: 24px;;
+    }
+        .main-content {
+            padding: 15px;
+        }
+        
+        .logo-section {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .top-links {
+            align-self: stretch;
+            justify-content: space-between;
+        }
+        
+        .nav-menu {
+            gap: 15px;
+        }
+        
+        .nav-link {
+            font-size: 0.8rem;
+        }
+        
+        .product-title {
+            font-size: 1.8rem;
+        }
+        
+        .color-options {
+            justify-content: center;
+        }
+        
+        .thumbnails {
+            justify-content: center;
+        }
+    }
+
     
     /* Focus States for Accessibility */
     .icon-btn:focus,
     .nav-link:focus,
     .top-link:focus,
-    .benefit-link:focus {
+    .benefit-link:focus,
+    .thumbnail-nav.prev:focus,
+    .thumbnail-nav.next:focus,
+    .thumbnail-container:focus {
         outline: 2px solid blue;
         outline-offset: 2px;
     }
@@ -1598,34 +1628,68 @@ justify-content: flex-end;
     }));
     const total = allThumbs.length;
 
-    // Renders the strip of thumbnails
-    function renderStrip() {
-      strip.innerHTML = '';
-      for (let i = 0; i < visibleCount; i++) {
-        const idx   = (firstIndex + i + total) % total;
-        const slide = allThumbs[idx];
-        let thumbEl;
+const MOBILE_BP = 480;
 
-        if (slide.isVideo) {
-          thumbEl = document.createElement('video');
-          thumbEl.muted       = true;
-          thumbEl.preload     = 'metadata';
-          thumbEl.src         = slide.dataSrc;
-          thumbEl.playsInline = true;
-        } else {
-          thumbEl = document.createElement('img');
-          thumbEl.src = slide.src;
-          thumbEl.alt = slide.alt;
-        }
+function renderStrip() {
+  strip.innerHTML = '';
 
-        thumbEl.className   = 'thumbnail' + (idx === selectedIndex ? ' active' : '') + (slide.isVideo ? ' video' : '');
-        thumbEl.dataset.idx = idx;
-        thumbEl.tabIndex    = -1;
-        strip.appendChild(thumbEl);
+  // MOBILE: render dots for every slide
+  if (window.innerWidth <= MOBILE_BP) {
+    for (let idx = 0; idx < total; idx++) {
+      const slide = allThumbs[idx];
+      const dot   = document.createElement('div');
+      dot.className = 'dot'
+        + (slide.isVideo ? ' video' : '')
+        + (idx === selectedIndex ? ' active' : '');
+      dot.dataset.idx = idx;
 
-        thumbEl.addEventListener('click', () => select(idx));
+      // for video, inject a tiny play icon
+      if (slide.isVideo) {
+        const icon = document.createElement('i');
+        icon.className = 'fas fa-play play-icon';
+        dot.appendChild(icon);
       }
+
+      dot.addEventListener('click', () => select(idx));
+      strip.appendChild(dot);
     }
+    return;
+  }
+
+  // TABLET+DESKTOP: your existing thumbnail logic
+  for (let i = 0; i < visibleCount; i++) {
+    const idx   = (firstIndex + i + total) % total;
+    const slide = allThumbs[idx];
+
+    const thumbWrapper = document.createElement('div');
+    thumbWrapper.className = 'thumbnail'
+      + (slide.isVideo ? ' video' : '')
+      + (idx === selectedIndex ? ' active' : '');
+    thumbWrapper.dataset.idx = idx;
+    thumbWrapper.tabIndex    = 0;
+
+    if (slide.isVideo) {
+      const vid = document.createElement('video');
+      vid.muted       = true;
+      vid.preload     = 'metadata';
+      vid.src         = slide.dataSrc;
+      vid.playsInline = true;
+      thumbWrapper.appendChild(vid);
+
+      const icon = document.createElement('i');
+      icon.className = 'fas fa-play play-icon';
+      thumbWrapper.appendChild(icon);
+    } else {
+      const img = document.createElement('img');
+      img.src = slide.src;
+      img.alt = slide.alt;
+      thumbWrapper.appendChild(img);
+    }
+
+    thumbWrapper.addEventListener('click', () => select(idx));
+    strip.appendChild(thumbWrapper);
+  }
+}
 
     // Show image/video in main container with fade
     function transitionContent(newEl) {
@@ -1701,6 +1765,7 @@ justify-content: flex-end;
     nextBtn.addEventListener('click', () => move(true));
 
     // keyboard navigation, focus outlines, etc. (keep your existing code here…)
+    
 
     // handle window resize for dynamic visibleCount
     window.addEventListener('resize', () => {

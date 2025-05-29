@@ -205,6 +205,34 @@
         margin: 0 auto;
         padding: 20px;
     }
+    .main-image {
+    background-color: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+    position: relative; /* Added for transition positioning */
+}
+
+.main-image img,
+.main-image video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
+}
+
+/* Fade animation classes */
+.fade-out {
+    opacity: 0;
+}
+
+.fade-in {
+    opacity: 1;
+}
     
     .product-container {
         display: grid;
@@ -224,6 +252,12 @@
     /* Product Images Styles */
     .product-images {
         grid-column: 1;
+    }
+
+    .product-images-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
     
     .main-image {
@@ -991,25 +1025,28 @@
 
     <!-- Images -->
     <div class="product-images">
-      <div class="main-image">
-        <img src="https://placehold.co/500x500/ffc0cb/000000?text=iPhone+16+Pink" alt="Apple iPhone 16 in Pink" id="mainImage"/>
+      <div class="product-images-container">
+        <div class="main-image">
+          <img src="https://placehold.co/500x500/ffc0cb/000000?text=iPhone+16+Pink" alt="Apple iPhone 16 in Pink" id="mainImage"/>
+        </div>
+        <div class="thumbnails">
+          <button class="thumbnail-nav prev" tabindex="0"><i class="fas fa-chevron-left"></i></button>
+          <div class="thumbnail-container">
+            <img src="https://dtdl-static-natco.eshop.yo-digital.com/resize-image?f=czuat2/AJK15lIU0YbiMfNuHQcND0MTJD2xbK.png&q=80&w=55" alt="iPhone 16 #1" class="thumbnail" data-src="https://dtdl-static-natco.eshop.yo-digital.com/resize-image?f=czuat2/AJK15lIU0YbiMfNuHQcND0MTJD2xbK.png&q=80&w=444"/>
+              <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/PmsgUVmNsoi7oglNCewHguCIARm57P.png&q=80&w=444" alt="iPhone 16 #2" class="thumbnail" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/PmsgUVmNsoi7oglNCewHguCIARm57P.png&q=80&w=444"/>
+              <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/nB2lsY5RKDljInWWrSXZllXgQD6XZj.png&q=80&w=444" alt="iPhone 16 #3" class="thumbnail" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/nB2lsY5RKDljInWWrSXZllXgQD6XZj.png&q=80&w=444"/>
+              <video src="https://melodic-dragon-2bebdf.netlify.app/iphone_16_pdp_video_16x9__cz-cs.mp4" alt="iPhone 16 #3" class="thumbnail" data-src="https://melodic-dragon-2bebdf.netlify.app/iphone_16_pdp_video_16x9__cz-cs.mp4">
+              <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/AKn9b18l5cr32n711APV8zYKH9R4S1.png&q=80&w=444" alt="iPhone 16 #4" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/AKn9b18l5cr32n711APV8zYKH9R4S1.png&q=80&w=444"/>
+                    <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/lhSy40dKawrv76vPM4Ov1ycIoCH8yN.png&q=80&w=444" alt="iPhone 16 #5" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/lhSy40dKawrv76vPM4Ov1ycIoCH8yN.png&q=80&w=444"/>
+                    <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/tmQU9WcdHNp34neFpmFCREDuOHvbdG.png&q=80&w=444" alt="iPhone 16 #6" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/tmQU9WcdHNp34neFpmFCREDuOHvbdG.png&q=80&w=444"/>
+                    <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/aRycOzYLPUMR4sWlE4WYMVJnaiSbAJ.png&q=80&w=444" alt="iPhone 16 #7" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/aRycOzYLPUMR4sWlE4WYMVJnaiSbAJ.png&q=80&w=444"/>
+                    <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/gZb2gQZRfoYmnpw20T7DRt1czBFt9m.png&q=80&w=444" alt="iPhone 16 #8" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/gZb2gQZRfoYmnpw20T7DRt1czBFt9m.png&q=80&w=444"/>
+                    <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/11qJbpnu48qFgtKA6E9uawaBGninzi.png&q=80&w=444" alt="iPhone 16 #9" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/11qJbpnu48qFgtKA6E9uawaBGninzi.png&q=80&w=444"/>
+                  </div>
+          <button class="thumbnail-nav next"><i class="fas fa-chevron-right"></i></button>
+        </div>
       </div>
-      <div class="thumbnails">
-        <button class="thumbnail-nav prev" tabindex="0"><i class="fas fa-chevron-left"></i></button>
-        <div class="thumbnail-container">
-          <img src="https://dtdl-static-natco.eshop.yo-digital.com/resize-image?f=czuat2/AJK15lIU0YbiMfNuHQcND0MTJD2xbK.png&q=80&w=55" alt="iPhone 16 #1" class="thumbnail" data-src="https://dtdl-static-natco.eshop.yo-digital.com/resize-image?f=czuat2/AJK15lIU0YbiMfNuHQcND0MTJD2xbK.png&q=80&w=444"/>
-            <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/PmsgUVmNsoi7oglNCewHguCIARm57P.png&q=80&w=444" alt="iPhone 16 #2" class="thumbnail" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/PmsgUVmNsoi7oglNCewHguCIARm57P.png&q=80&w=444"/>
-            <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/nB2lsY5RKDljInWWrSXZllXgQD6XZj.png&q=80&w=444" alt="iPhone 16 #3" class="thumbnail" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/nB2lsY5RKDljInWWrSXZllXgQD6XZj.png&q=80&w=444"/>
-            <video src="https://melodic-dragon-2bebdf.netlify.app/iphone_16_pdp_video_16x9__cz-cs.mp4" alt="iPhone 16 #3" class="thumbnail" data-src="https://melodic-dragon-2bebdf.netlify.app/iphone_16_pdp_video_16x9__cz-cs.mp4">
-            <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/AKn9b18l5cr32n711APV8zYKH9R4S1.png&q=80&w=444" alt="iPhone 16 #4" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/AKn9b18l5cr32n711APV8zYKH9R4S1.png&q=80&w=444"/>
-                  <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/lhSy40dKawrv76vPM4Ov1ycIoCH8yN.png&q=80&w=444" alt="iPhone 16 #5" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/lhSy40dKawrv76vPM4Ov1ycIoCH8yN.png&q=80&w=444"/>
-                  <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/tmQU9WcdHNp34neFpmFCREDuOHvbdG.png&q=80&w=444" alt="iPhone 16 #6" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/tmQU9WcdHNp34neFpmFCREDuOHvbdG.png&q=80&w=444"/>
-                  <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/aRycOzYLPUMR4sWlE4WYMVJnaiSbAJ.png&q=80&w=444" alt="iPhone 16 #7" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/aRycOzYLPUMR4sWlE4WYMVJnaiSbAJ.png&q=80&w=444"/>
-                  <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/gZb2gQZRfoYmnpw20T7DRt1czBFt9m.png&q=80&w=444" alt="iPhone 16 #8" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/gZb2gQZRfoYmnpw20T7DRt1czBFt9m.png&q=80&w=444"/>
-                  <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/11qJbpnu48qFgtKA6E9uawaBGninzi.png&q=80&w=444" alt="iPhone 16 #9" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/11qJbpnu48qFgtKA6E9uawaBGninzi.png&q=80&w=444"/>
-                </div>
-        <button class="thumbnail-nav next"><i class="fas fa-chevron-right"></i></button>
-      </div>
+    
       <div class="product-specs">
         <div class="spec">
           <div class="spec-icon"><i class="fas fa-mobile-alt"></i></div>
@@ -1185,89 +1222,165 @@
 </main>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const mainContainer = document.querySelector('.main-image');
-      const prevBtn       = document.querySelector('.thumbnail-nav.prev');
-      const nextBtn       = document.querySelector('.thumbnail-nav.next');
-      const strip         = document.querySelector('.thumbnail-container');
-      const visibleCount  = 5;
-      let firstIndex      = 0;
-      let selectedIndex   = 0;
-    
-      // Track mouse usage to differentiate between keyboard and mouse focus
-      let mouseDownTarget = null;
-    
-      // Set up proper tab order: prev -> container -> next
-      prevBtn.tabIndex = 0;
-      strip.tabIndex = 0;
-      nextBtn.tabIndex = 0;
-    
-      // Build an array of slides
-      const allThumbs = Array.from(strip.querySelectorAll('.thumbnail')).map(el => ({
-        src:      el.src,
-        dataSrc:  el.getAttribute('data-src'),
-        alt:      el.alt || '',
-        isVideo:  el.getAttribute('data-src') && el.getAttribute('data-src').toLowerCase().endsWith('.mp4')
-      }));
-      const total = allThumbs.length;
-    
-      // Render five thumbnails at a time
-      function renderStrip() {
-        strip.innerHTML = '';
-        for (let i = 0; i < visibleCount; i++) {
-          const idx   = (firstIndex + i + total) % total;
-          const slide = allThumbs[idx];
-          let thumbEl;
-    
-          if (slide.isVideo) {
-            // video thumb
-            thumbEl = document.createElement('video');
-            thumbEl.muted      = true;
-            thumbEl.preload    = 'metadata';
-            thumbEl.src        = slide.dataSrc;
-            thumbEl.playsInline= true;
-          } else {
-            // image thumb
-            thumbEl = document.createElement('img');
-            thumbEl.src = slide.src;
-            thumbEl.alt= slide.alt;
-          }
-    
-          thumbEl.className   = 'thumbnail' + (idx === selectedIndex ? ' active' : '') + (slide.isVideo ? ' video' : '');
-          thumbEl.dataset.idx = idx;
-          thumbEl.tabIndex    = -1; // Remove individual thumbnails from tab order
-          strip.appendChild(thumbEl);
-    
-          thumbEl.addEventListener('click', () => select(idx));
-        }
+document.addEventListener('DOMContentLoaded', function() {
+  const mainContainer = document.querySelector('.main-image');
+  const prevBtn       = document.querySelector('.thumbnail-nav.prev');
+  const nextBtn       = document.querySelector('.thumbnail-nav.next');
+  const strip         = document.querySelector('.thumbnail-container');
+  const visibleCount  = 5;
+  let firstIndex      = 0;
+  let selectedIndex   = 0;
+  let isAnimating     = false; // Flag to prevent multiple rapid transitions
+
+  // Track mouse usage to differentiate between keyboard and mouse focus
+  let mouseDownTarget = null;
+
+  // Set up proper tab order: prev -> container -> next
+  prevBtn.tabIndex = 0;
+  strip.tabIndex = 0;
+  nextBtn.tabIndex = 0;
+
+  // Build an array of slides
+  const allThumbs = Array.from(strip.querySelectorAll('.thumbnail')).map(el => ({
+    src:      el.src,
+    dataSrc:  el.getAttribute('data-src'),
+    alt:      el.alt || '',
+    isVideo:  el.getAttribute('data-src') && el.getAttribute('data-src').toLowerCase().endsWith('.mp4')
+  }));
+  const total = allThumbs.length;
+
+  // Render five thumbnails at a time
+  function renderStrip() {
+    strip.innerHTML = '';
+    for (let i = 0; i < visibleCount; i++) {
+      const idx   = (firstIndex + i + total) % total;
+      const slide = allThumbs[idx];
+      let thumbEl;
+
+      if (slide.isVideo) {
+        // video thumb
+        thumbEl = document.createElement('video');
+        thumbEl.muted      = true;
+        thumbEl.preload    = 'metadata';
+        thumbEl.src        = slide.dataSrc;
+        thumbEl.playsInline= true;
+      } else {
+        // image thumb
+        thumbEl = document.createElement('img');
+        thumbEl.src = slide.src;
+        thumbEl.alt= slide.alt;
       }
+
+      thumbEl.className   = 'thumbnail' + (idx === selectedIndex ? ' active' : '') + (slide.isVideo ? ' video' : '');
+      thumbEl.dataset.idx = idx;
+      thumbEl.tabIndex    = -1; // Remove individual thumbnails from tab order
+      strip.appendChild(thumbEl);
+
+      thumbEl.addEventListener('click', () => select(idx));
+    }
+  }
+
+  // Show an image in the main container with transition
+  function showImage(src, alt='') {
+    if (isAnimating) return;
+    isAnimating = true;
     
-      // Show an image in the main container
-      function showImage(src, alt='') {
+    // Fade out current content
+    const currentContent = mainContainer.querySelector('img, video');
+    if (currentContent) {
+      currentContent.classList.add('fade-out');
+      
+      // Wait for fade out to complete
+      setTimeout(() => {
+        // Create new image
         mainContainer.innerHTML = '';
         const img = document.createElement('img');
         img.src = src;
-        img.alt= alt;
-        img.style.maxWidth  = '100%';
+        img.alt = alt;
+        img.style.opacity = '0'; // Start invisible
+        img.style.maxWidth = '100%';
         img.style.maxHeight = '100%';
         img.style.objectFit = 'contain';
         mainContainer.appendChild(img);
-      }
+        
+        // Trigger reflow for transition to work
+        void img.offsetWidth;
+        
+        // Fade in new image
+        img.style.opacity = '1';
+        
+        // Reset animation flag after transition completes
+        setTimeout(() => {
+          isAnimating = false;
+        }, 100);
+      }, 100);
+    } else {
+      // No current content, just show the image
+      mainContainer.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = alt;
+      img.style.maxWidth = '100%';
+      img.style.maxHeight = '100%';
+      img.style.objectFit = 'contain';
+      mainContainer.appendChild(img);
+      isAnimating = false;
+    }
+  }
+
+  // Show a muted video in the main container with transition
+  function showVideo(src) {
+    if (isAnimating) return;
+    isAnimating = true;
     
-      // Show a muted video in the main container
-      function showVideo(src) {
+    // Fade out current content
+    const currentContent = mainContainer.querySelector('img, video');
+    if (currentContent) {
+      currentContent.classList.add('fade-out');
+      
+      // Wait for fade out to complete
+      setTimeout(() => {
+        // Create new video
         mainContainer.innerHTML = '';
         const v = document.createElement('video');
-        v.src        = src;
-        v.muted      = true;
-        v.controls   = true;
-        v.autoplay   = true;
-        v.playsInline= true;
-        v.style.width     = '100%';
-        v.style.height    = '100%';
-        v.style.objectFit= 'contain';
+        v.src = src;
+        v.muted = true;
+        v.controls = true;
+        v.autoplay = true;
+        v.playsInline = true;
+        v.style.opacity = '0'; // Start invisible
+        v.style.width = '100%';
+        v.style.height = '100%';
+        v.style.objectFit = 'contain';
         mainContainer.appendChild(v);
-      }
+        
+        // Trigger reflow for transition to work
+        void v.offsetWidth;
+        
+        // Fade in new video
+        v.style.opacity = '1';
+        
+        // Reset animation flag after transition completes
+        setTimeout(() => {
+          isAnimating = false;
+        }, 100);
+      }, 100);
+    } else {
+      // No current content, just show the video
+      mainContainer.innerHTML = '';
+      const v = document.createElement('video');
+      v.src = src;
+      v.muted = true;
+      v.controls = true;
+      v.autoplay = true;
+      v.playsInline = true;
+      v.style.width = '100%';
+      v.style.height = '100%';
+      v.style.objectFit = 'contain';
+      mainContainer.appendChild(v);
+      isAnimating = false;
+    }
+  }
     
       // Select a slide by index
       function select(idx) {

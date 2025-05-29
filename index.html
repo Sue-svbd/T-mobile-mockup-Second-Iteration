@@ -65,6 +65,9 @@
         justify-content: flex-start;
         gap: 24px;;
     }
+    body > header > div.header-container.mobile {
+        display: none;
+    }
     
     /* Logo Section */
     .logo-section {
@@ -856,10 +859,6 @@
             font-size: 2rem;
         }
         
-        .product-specs {
-            flex-direction: column;
-            gap: 15px;
-        }
         
         .storage-options {
             flex-direction: column;
@@ -871,6 +870,20 @@
     }
     
     @media (max-width: 480px) {
+        .header-container {
+         display:none;
+        }
+         body > header > div.header-container.mobile {
+       max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 0 20px;
+        min-height: 80px;
+        justify-content: flex-start;
+        gap: 24px;;
+    }
         .main-content {
             padding: 15px;
         }
@@ -906,6 +919,149 @@
             justify-content: center;
         }
     }
+
+ 
+    @media (max-width: 768px) {
+ 
+
+  .logo-section {
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  .logo-square {
+    width: 60px;
+    height: 60px;
+  }
+
+  .logo-t {
+    font-size: 2rem;
+  }
+
+  .top-links {
+    padding-top: 0;
+    gap: 15px;
+  }
+
+  .top-link {
+    font-size: 0.8rem;
+  }
+
+  .header-icons {
+    padding-top: 0;
+    gap: 10px;
+  }
+
+  .nav-menu {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .nav-link {
+    font-size: 0.9rem;
+    padding: 10px 0;
+  }
+
+  .product-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .product-title {
+    font-size: 2rem;
+  }
+
+  .storage-options {
+    flex-direction: column;
+  }
+
+  .tariff-actions {
+    flex-direction: column;
+  }
+}
+   /* Header changes */
+
+    @media (max-width: 1365px){
+             .header-container {
+         display:none;
+        }
+         body > header > div.header-container.mobile {
+      max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        min-height: 80px;
+        justify-content: flex-start;
+        gap: 24px;
+        flex-direction: row;
+    }
+.main-navigation{
+  border: none;
+}
+
+.nav-menu-container{
+justify-content: flex-end;
+}
+    }
+
+
+/* Phone breakpoint (e.g., 480px) */
+@media (max-width: 480px) {
+  .main-content {
+    padding: 15px;
+  }
+
+  .logo-section {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+
+  .logo-square {
+    width: 40px;
+    height: 40px;
+  }
+
+  .logo-t {
+    font-size: 1.5rem;
+  }
+
+  .top-links {
+    padding-top: 0;
+    gap: 10px;
+  }
+
+  .top-link {
+    font-size: 0.7rem;
+  }
+
+  .header-icons {
+    padding-top: 0;
+    gap: 10px;
+  }
+
+  .nav-menu {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .nav-link {
+    font-size: 0.7rem;
+    padding: 8px 0;
+  }
+
+  .color-options {
+    justify-content: center;
+  }
+
+  .thumbnails {
+    justify-content: center;
+  }
+}
     
     /* Focus States for Accessibility */
     .icon-btn:focus,
@@ -1007,6 +1163,37 @@
       <li><a href="#" class="nav-link">Akce</a></li>
       <li><a href="#" class="nav-link">Podpora</a></li>
   </ul>
+        <!-- Header Icons -->
+<div class="header-icons">
+<button class="icon-btn" aria-label="Vyhledávání">
+    <i class="fas fa-search"></i>
+</button>
+<button class="icon-btn" aria-label="Nákupní košík">
+    <i class="fas fa-shopping-cart"></i>
+</button>
+<button class="icon-btn" aria-label="Uživatelský účet">
+    <i class="fas fa-user"></i>
+</button>
+</div>
+
+</div>
+</div>
+      </div>
+        <div class="header-container mobile">
+      <!-- Logo Section -->
+      <div class="logo-section">
+          <div class="logo-square">
+              <span class="logo-t">T</span>
+          </div>
+          
+
+  
+
+</div>
+<div class="nav-container">
+  <!-- Main Navigation -->
+<nav class="main-navigation">
+<div class="nav-menu-container">
         <!-- Header Icons -->
 <div class="header-icons">
 <button class="icon-btn" aria-label="Vyhledávání">

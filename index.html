@@ -1195,19 +1195,20 @@ justify-content: flex-end;
 
     
     /* Focus States for Accessibility */
-    .icon-btn:focus,
-    .nav-link:focus,
-    .top-link:focus,
-    .benefit-link:focus,
-    .thumbnail-nav.prev:focus,
-    .thumbnail-nav.next:focus,
-    .thumbnail-container:focus {
+    .icon-btn:focus-visible,
+    .nav-link:focus-visible,
+    .top-link:focus-visible,
+    .benefit-link:focus-visible,
+    .thumbnail-nav.prev:focus-visible,
+    .thumbnail-nav.next:focus-visible,
+    .thumbnail-container:focus-visible,
+    video:focus-visible {
         outline: 2px solid blue;
         outline-offset: 2px;
     }
     
-    .btn-primary:focus,
-    .btn-secondary:focus {
+    .btn-primary:focus-visible,
+    .btn-secondary:focus-visible {
         outline: 2px solid blue;
         outline-offset: 2px;
     }
@@ -1368,7 +1369,7 @@ justify-content: flex-end;
           <img src="https://placehold.co/500x500/ffc0cb/000000?text=iPhone+16+Pink" alt="Apple iPhone 16 in Pink" id="mainImage"/>
         </div>
         <div class="thumbnails">
-          <button class="thumbnail-nav prev" tabindex="0"><i class="fas fa-chevron-left"></i></button>
+          <button class="thumbnail-nav prev" ><i class="fas fa-chevron-left"></i></button>
           <div class="thumbnail-container">
             <img src="https://dtdl-static-natco.eshop.yo-digital.com/resize-image?f=czuat2/AJK15lIU0YbiMfNuHQcND0MTJD2xbK.png&q=80&w=55" alt="iPhone 16 #1" class="thumbnail" data-src="https://dtdl-static-natco.eshop.yo-digital.com/resize-image?f=czuat2/AJK15lIU0YbiMfNuHQcND0MTJD2xbK.png&q=80&w=444"/>
               <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/PmsgUVmNsoi7oglNCewHguCIARm57P.png&q=80&w=444" alt="iPhone 16 #2" class="thumbnail" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/PmsgUVmNsoi7oglNCewHguCIARm57P.png&q=80&w=444"/>
@@ -1619,6 +1620,14 @@ justify-content: flex-end;
     let selectedIndex = 0;
     let isAnimating   = false;
 
+    // Track mouse usage to differentiate between keyboard and mouse focus
+    let mouseDownTarget = null;
+  
+    // Set up proper tab order: prev -> container -> next
+    prevBtn.tabIndex = 0;
+    strip.tabIndex = 0;
+    nextBtn.tabIndex = 0;
+
     // build slides array (images & videos)
     const allThumbs = Array.from(strip.querySelectorAll('.thumbnail')).map(el => ({
       src:     el.src,
@@ -1717,6 +1726,67 @@ function renderStrip() {
       }
     }
 
+    function setupMainContainerFocus() {
+      const mainContent = mainContainer.querySelector('img, video');
+      if (mainContent && mainContent.tagName === 'VIDEO') {
+        // For videos, ensure proper tab order integration
+        mainContent.addEventListener('keydown', (e) => {
+          // Handle tab navigation within video controls
+          if (e.key === 'Tab') {
+            const videoControls = mainContent.shadowRoot?.querySelectorAll('[tabindex]:not([tabindex="-1"])') || [];
+            const focusableControls = Array.from(videoControls).filter(el => 
+              !el.hasAttribute('disabled') && 
+              el.offsetParent !== null
+            );
+            
+            if (focusableControls.length > 0) {
+              const currentIndex = focusableControls.indexOf(document.activeElement);
+              
+              if (!e.shiftKey && currentIndex === focusableControls.length - 1) {
+                // Tab from last video control should go to strip
+                e.preventDefault();
+                strip.focus();
+              } else if (e.shiftKey && currentIndex === 0) {
+                // Shift+Tab from first video control should go to prev arrow
+                e.preventDefault();
+                prevBtn.focus();
+              }
+            }
+          }
+        });
+        
+        // Add focus and blur event listeners for video outline
+        mainContent.addEventListener('focus', () => {
+          if (mouseDownTarget !== mainContent) {
+            mainContent.style.outline = '2px solid blue';
+            mainContent.style.outlineOffset = '2px';
+          }
+        });
+        
+        mainContent.addEventListener('blur', () => {
+          mainContent.style.outline = '';
+          mainContent.style.outlineOffset = '';
+        });
+        
+        // Track mouse interactions with video
+        mainContent.addEventListener('mousedown', () => {
+          mouseDownTarget = mainContent;
+        });
+        
+        // Ensure video is focusable but doesn't interfere with main tab order
+        mainContent.tabIndex = 0;
+      } else if (mainContent) {
+        // For images, remove from tab order
+        mainContent.tabIndex = -1;
+      }
+      
+      // Make individual thumbnails non-focusable since we're using arrow keys
+      const thumbnails = strip.querySelectorAll('.thumbnail');
+      thumbnails.forEach(thumbnail => {
+        thumbnail.tabIndex = -1;
+      });
+    }
+
     function showImage(src, alt='') {
       const img = document.createElement('img');
       img.src = src;
@@ -1760,12 +1830,133 @@ function renderStrip() {
       select(selectedIndex + (forward ? 1 : -1));
     }
 
-    // arrow button handlers
-    prevBtn.addEventListener('click', () => move(false));
-    nextBtn.addEventListener('click', () => move(true));
-
-    // keyboard navigation, focus outlines, etc. (keep your existing code here…)
     
+    // Track mouse down events to differentiate keyboard vs mouse focus
+    prevBtn.addEventListener('mousedown', () => {
+      mouseDownTarget = prevBtn;
+    });
+  
+    nextBtn.addEventListener('mousedown', () => {
+      mouseDownTarget = nextBtn;
+    });
+  
+    strip.addEventListener('mousedown', () => {
+      mouseDownTarget = strip;
+    });
+  
+    // Clear mouse target after a short delay
+    document.addEventListener('mousedown', () => {
+      setTimeout(() => {
+        mouseDownTarget = null;
+      }, 100);
+    });
+  
+    // Enhanced keyboard navigation for thumbnail container
+    strip.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        e.stopPropagation();
+        move(true);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        e.stopPropagation();
+        move(false);
+      } else if (e.key === 'Tab') {
+        if (!e.shiftKey) {
+          // Forward tab from strip
+          const mainContent = mainContainer.querySelector('video[controls]');
+          if (mainContent) {
+            // If there's a video with controls, focus it
+            e.preventDefault();
+            mainContent.focus();
+          } else {
+            // If no video, go to next arrow
+            e.preventDefault();
+            nextBtn.focus();
+          }
+        } else {
+          // Shift+Tab from strip goes to prev arrow
+          e.preventDefault();
+          prevBtn.focus();
+        }
+      }
+    });
+  
+    // Enhanced focus management for navigation buttons
+    prevBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        move(false);
+      } else if (e.key === 'Tab' && !e.shiftKey) {
+        // Tab from prev arrow goes to strip
+        e.preventDefault();
+        strip.focus();
+      }
+    });
+
+    nextBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        move(true);
+      } else if (e.key === 'Tab' && e.shiftKey) {
+        // Shift+Tab from next arrow
+        const mainContent = mainContainer.querySelector('video[controls]');
+        if (mainContent) {
+          // If there's a video with controls, focus it
+          e.preventDefault();
+          mainContent.focus();
+        } else {
+          // If no video, go to strip
+          e.preventDefault();
+          strip.focus();
+        }
+      }
+    });
+  
+    // Previous button event handlers
+    prevBtn.addEventListener('click', () => move(false));
+  
+    // Next button event handlers
+    nextBtn.addEventListener('click', () => move(true));
+  
+    // Focus indicators only for keyboard navigation
+    prevBtn.addEventListener('focus', () => {
+      if (mouseDownTarget !== prevBtn) {
+        prevBtn.style.outline = '2px solid blue';
+        prevBtn.style.outlineOffset = '2px';
+      }
+    });
+    
+    prevBtn.addEventListener('blur', () => {
+      prevBtn.style.outline = '';
+      prevBtn.style.outlineOffset = '';
+    });
+  
+    nextBtn.addEventListener('focus', () => {
+      if (mouseDownTarget !== nextBtn) {
+        nextBtn.style.outline = '2px solid blue';
+        nextBtn.style.outlineOffset = '2px';
+      }
+    });
+    
+    nextBtn.addEventListener('blur', () => {
+      nextBtn.style.outline = '';
+      nextBtn.style.outlineOffset = '';
+    });
+  
+    strip.addEventListener('focus', () => {
+      if (mouseDownTarget !== strip) {
+        strip.style.outline = '2px solid blue';
+        strip.style.outlineOffset = '2px';
+        strip.style.borderRadius = '4px';
+      }
+    });
+    
+    strip.addEventListener('blur', () => {
+      strip.style.outline = '';
+      strip.style.outlineOffset = '';
+      strip.style.borderRadius = '';
+    });
 
     // handle window resize for dynamic visibleCount
     window.addEventListener('resize', () => {
@@ -1798,6 +1989,7 @@ function renderStrip() {
     // Initialize gallery
     renderStrip();
     select(0);
+    setupMainContainerFocus();
   });
 </script>
 

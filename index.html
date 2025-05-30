@@ -1261,6 +1261,62 @@ justify-content: flex-end;
             background-color: var(--white);
         }
     }
+
+    /* Mobile View Styles */
+    @media (max-width: 480px) {
+        .thumbnail-container.mobile-view {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 0;
+        }
+
+        .thumbnail-container.mobile-view .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ccc;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .thumbnail-container.mobile-view .dot.active {
+            background: #000;
+        }
+
+        .thumbnail-container.mobile-view .dot.video {
+            width: 16px;
+            height: 16px;
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .thumbnail-container.mobile-view .dot.video .play-icon {
+            font-size: 0.75rem;
+            color: #000;
+            pointer-events: none;
+        }
+
+        .thumbnail-nav {
+            display: none;
+        }
+    }
+
+    /* Desktop/Tablet View Styles */
+    .thumbnail-container.desktop-view {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .thumbnail-container.desktop-view::-webkit-scrollbar {
+        display: none;
+    }
     </style>
 </head>
 <body>
@@ -1644,9 +1700,12 @@ function renderStrip() {
 
   // MOBILE: render dots for every slide
   if (window.innerWidth <= MOBILE_BP) {
+    strip.classList.add('mobile-view');
+    strip.classList.remove('desktop-view');
+    
     for (let idx = 0; idx < total; idx++) {
       const slide = allThumbs[idx];
-      const dot   = document.createElement('div');
+      const dot = document.createElement('div');
       dot.className = 'dot'
         + (slide.isVideo ? ' video' : '')
         + (idx === selectedIndex ? ' active' : '');
@@ -1665,9 +1724,12 @@ function renderStrip() {
     return;
   }
 
-  // TABLET+DESKTOP: your existing thumbnail logic
+  // TABLET+DESKTOP: thumbnail view
+  strip.classList.remove('mobile-view');
+  strip.classList.add('desktop-view');
+  
   for (let i = 0; i < visibleCount; i++) {
-    const idx   = (firstIndex + i + total) % total;
+    const idx = (firstIndex + i + total) % total;
     const slide = allThumbs[idx];
 
     const thumbWrapper = document.createElement('div');
@@ -1675,13 +1737,13 @@ function renderStrip() {
       + (slide.isVideo ? ' video' : '')
       + (idx === selectedIndex ? ' active' : '');
     thumbWrapper.dataset.idx = idx;
-    thumbWrapper.tabIndex    = 0;
+    thumbWrapper.tabIndex = 0;
 
     if (slide.isVideo) {
       const vid = document.createElement('video');
-      vid.muted       = true;
-      vid.preload     = 'metadata';
-      vid.src         = slide.dataSrc;
+      vid.muted = true;
+      vid.preload = 'metadata';
+      vid.src = slide.dataSrc;
       vid.playsInline = true;
       thumbWrapper.appendChild(vid);
 
@@ -1964,8 +2026,8 @@ function renderStrip() {
       if (newCount !== visibleCount) {
         visibleCount = newCount;
         firstIndex = Math.min(firstIndex, total - visibleCount);
-        renderStrip();
       }
+      renderStrip();
     });
 
     // ——— SWIPE HANDLING for tablet/mobile ———

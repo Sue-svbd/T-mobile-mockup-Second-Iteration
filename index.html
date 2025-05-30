@@ -985,7 +985,6 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            padding: 0 10px;
         }
 
         .thumbnail-container {
@@ -1010,7 +1009,7 @@
             border: none;
             font-size: 1rem;
             cursor: pointer;
-            color: var(--black);
+            color: #302f2f;
             padding: 0;
             z-index: 2;
         }
@@ -1024,7 +1023,7 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: #ccc;
+            background: #302f2f;
             cursor: pointer;
             position: relative;
             flex: none;
@@ -1034,13 +1033,13 @@
 
         .dot.active {
             opacity: 1;
-            background: #000;
+            background: #302f2f;
         }
 
         /* video dots: bigger, show play icon */
         .dot.video {
-            width: 16px;
-            height: 16px;
+            width: 10px;
+            height: 10px;
             background: transparent;
             display: flex;
             justify-content: center;
@@ -1049,7 +1048,7 @@
 
         .dot.video .play-icon {
             font-size: 0.75rem;
-            color: #000;
+            color: #302f2f;
             pointer-events: none;
         }
     }
@@ -1103,13 +1102,13 @@ justify-content: flex-end;
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #ccc;
+    background: #302f2f;
     cursor: pointer;
     position: relative;
     flex: none;
   }
   .dot.active {
-    border: 1px solid var(--magenta);
+    background: var(--magenta);
   }
   body > main > div > div.product-images > div.product-images-container > div.thumbnails > div > div.dot.video.active{
     border: none;
@@ -1128,7 +1127,7 @@ justify-content: flex-end;
   }
   .dot.video .play-icon {
     font-size: 0.75rem;
-    color: #ccc;
+    color: #302f2f;
     pointer-events: none;
   }
         .header-container {
@@ -1257,20 +1256,19 @@ justify-content: flex-end;
             justify-content: center;
             align-items: center;
             gap: 8px;
-            padding: 10px 0;
         }
 
         .thumbnail-container.mobile-view .dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            background: #ccc;
+            background: #302f2f;
             cursor: pointer;
             transition: background-color 0.2s ease;
         }
 
         .thumbnail-container.mobile-view .dot.active {
-             border: 2px solid var(--magenta);
+             background: var(--magenta);
              
         }
 
@@ -1285,7 +1283,7 @@ justify-content: flex-end;
 
         .thumbnail-container.mobile-view .dot.video .play-icon {
             font-size: 0.75rem;
-            color: #ccc;;
+            color: #302f2f;;
             pointer-events: none;
         }
 

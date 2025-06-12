@@ -1821,8 +1821,19 @@ justify-content: flex-end;
       src:     el.src,
       dataSrc: el.getAttribute('data-src'),
       alt:     el.alt || '',
-      isVideo: el.getAttribute('data-src')?.toLowerCase().endsWith('.mp4')
+      isVideo: el.getAttribute('data-src')?.toLowerCase().endsWith('.mp4'),
+      is3D: false
     }));
+
+    // Add the 3D model thumbnail to the allThumbs array at index 2
+    allThumbs.splice(2, 0, {
+      src: 'models/iPhone13.glb',
+      dataSrc: 'models/iPhone13.glb',
+      alt: '3D Model of iPhone 16',
+      isVideo: false,
+      is3D: true
+    });
+
     const total = allThumbs.length;
 
 const MOBILE_BP = 480;
@@ -1834,16 +1845,22 @@ function renderStrip() {
         strip.classList.add('mobile-view');
         strip.classList.remove('desktop-view');
         
-        // First two dots
-        for (let idx = 0; idx < 2; idx++) {
-            const slide = allThumbs[idx];
+        // Render all dots including 3D model
+        allThumbs.forEach((slide, idx) => {
             const dot = document.createElement('div');
             dot.className = 'dot'
                 + (slide.isVideo ? ' video' : '')
+                + (slide.is3D ? ' model' : '')
                 + (idx === selectedIndex ? ' active' : '');
             dot.dataset.idx = idx;
 
-            if (slide.isVideo) {
+            if (slide.is3D) {
+                const modelText = document.createElement('span');
+                modelText.textContent = '3D';
+                modelText.style.fontSize = '12px';
+                modelText.style.fontWeight = 'bold';
+                dot.appendChild(modelText);
+            } else if (slide.isVideo) {
                 const icon = document.createElement('i');
                 icon.className = 'fas fa-play play-icon';
                 dot.appendChild(icon);
@@ -1851,41 +1868,7 @@ function renderStrip() {
 
             dot.addEventListener('click', () => select(idx));
             strip.appendChild(dot);
-        }
-
-        // 3D model dot (third position)
-        const modelDot = document.createElement('div');
-        modelDot.className = 'dot video';
-        const modelText = document.createElement('span');
-        modelText.textContent = '3D';
-        modelText.style.fontSize = '12px';
-        modelText.style.fontWeight = 'bold';
-        modelDot.appendChild(modelText);
-        modelDot.addEventListener('click', () => {
-            strip.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
-            modelDot.classList.add('active');
-            showModel();
         });
-        strip.appendChild(modelDot);
-
-        // Remaining dots
-        for (let idx = 2; idx < total; idx++) {
-            const slide = allThumbs[idx];
-            const dot = document.createElement('div');
-            dot.className = 'dot'
-                + (slide.isVideo ? ' video' : '')
-                + (idx === selectedIndex ? ' active' : '');
-            dot.dataset.idx = idx;
-
-            if (slide.isVideo) {
-                const icon = document.createElement('i');
-                icon.className = 'fas fa-play play-icon';
-                dot.appendChild(icon);
-            }
-
-            dot.addEventListener('click', () => select(idx));
-            strip.appendChild(dot);
-        }
         return;
     }
 
@@ -1893,66 +1876,25 @@ function renderStrip() {
     strip.classList.remove('mobile-view');
     strip.classList.add('desktop-view');
     
-    // First two thumbnails
-    for (let i = 0; i < 2; i++) {
-        const idx = (firstIndex + i + total) % total;
+    // Render visible thumbnails
+    for (let i = 0; i < visibleCount; i++) {
+        const idx = (firstIndex + i) % total;
         const slide = allThumbs[idx];
 
         const thumbWrapper = document.createElement('div');
         thumbWrapper.className = 'thumbnail'
             + (slide.isVideo ? ' video' : '')
+            + (slide.is3D ? ' model' : '')
             + (idx === selectedIndex ? ' active' : '');
         thumbWrapper.dataset.idx = idx;
 
-        if (slide.isVideo) {
-            const vid = document.createElement('video');
-            vid.muted = true;
-            vid.preload = 'metadata';
-            vid.src = slide.dataSrc;
-            vid.playsInline = true;
-            thumbWrapper.appendChild(vid);
-
-            const icon = document.createElement('i');
-            icon.className = 'fas fa-play play-icon';
-            thumbWrapper.appendChild(icon);
-        } else {
-            const img = document.createElement('img');
-            img.src = slide.src;
-            img.alt = slide.alt;
-            thumbWrapper.appendChild(img);
-        }
-
-        thumbWrapper.addEventListener('click', () => select(idx));
-        strip.appendChild(thumbWrapper);
-    }
-
-    // 3D model thumbnail (third position)
-    const modelThumb = document.createElement('div');
-    modelThumb.className = 'thumbnail model';
-    const modelText = document.createElement('span');
-    modelText.textContent = '3D';
-    modelText.style.fontSize = '14px';
-    modelText.style.fontWeight = 'bold';
-    modelThumb.appendChild(modelText);
-    modelThumb.addEventListener('click', () => {
-        strip.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-        modelThumb.classList.add('active');
-        showModel();
-    });
-    strip.appendChild(modelThumb);
-
-    // Remaining thumbnails
-    for (let i = 2; i < visibleCount; i++) {
-        const idx = (firstIndex + i + total) % total;
-        const slide = allThumbs[idx];
-
-        const thumbWrapper = document.createElement('div');
-        thumbWrapper.className = 'thumbnail'
-            + (slide.isVideo ? ' video' : '')
-            + (idx === selectedIndex ? ' active' : '');
-        thumbWrapper.dataset.idx = idx;
-
-        if (slide.isVideo) {
+        if (slide.is3D) {
+            const modelText = document.createElement('span');
+            modelText.textContent = '3D';
+            modelText.style.fontSize = '14px';
+            modelText.style.fontWeight = 'bold';
+            thumbWrapper.appendChild(modelText);
+        } else if (slide.isVideo) {
             const vid = document.createElement('video');
             vid.muted = true;
             vid.preload = 'metadata';
@@ -2147,7 +2089,14 @@ function renderStrip() {
 
       renderStrip();
       const slide = allThumbs[selectedIndex];
-      slide.isVideo ? showVideo(slide.dataSrc) : showImage(slide.dataSrc, slide.alt);
+      
+      if (slide.is3D) {
+          showModel();
+      } else if (slide.isVideo) {
+          showVideo(slide.dataSrc);
+      } else {
+          showImage(slide.dataSrc, slide.alt);
+      }
     }
 
     // move forward/back

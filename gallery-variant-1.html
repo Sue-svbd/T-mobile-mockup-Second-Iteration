@@ -1406,6 +1406,39 @@
         outline: 2px solid blue;
         outline-offset: 2px;
     }
+
+    /* Add this to the CSS section */
+    .model-indicator {
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 8px 12px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #262626;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .model-indicator i {
+        font-size: 12px;
+        color: var(--magenta);
+    }
+
+    .model-indicator .rotate-icon {
+        display: inline-flex;
+        align-items: center;
+        animation: rotate 2s infinite linear;
+    }
+
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
     </style>
 </head>
 <body>
@@ -1435,14 +1468,12 @@
 <div class="nav-menu-container">
   <!-- Nav menu -->
   <ul class="nav-menu">
-      <li><a href="#" class="nav-link">Magenta 1</a></li>
-      <li><a href="#" class="nav-link">Mobilní služby</a></li>
-      <li><a href="#" class="nav-link">Internet</a></li>
-      <li><a href="#" class="nav-link">Televize</a></li>
+
       <li><a href="#" class="nav-link active">Telefony a jiné</a></li>
-      <li><a href="#" class="nav-link">Akce</a></li>
-      <li><a href="#" class="nav-link">Podpora</a></li>
+
       <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
+      <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
+
   </ul>
         <!-- Header Icons -->
 <div class="header-icons">
@@ -2076,41 +2107,66 @@ function renderStrip() {
               min-camera-orbit="-Infinity 0deg auto"
               max-camera-orbit="Infinity 360deg auto"
               tabindex="0">
-              <div class="view-controls" role="toolbar" aria-label="Model rotation controls">
-                  <button class="view-control-btn" data-orbit="0deg 90deg 1.2m" aria-label="Front View"><i class="fas fa-mobile-alt"></i></button>
-                  <button class="view-control-btn" data-orbit="-90deg 90deg 1.2m" aria-label="Left View"><i class="fas fa-caret-left"></i></button>
-                  <button class="view-control-btn" data-orbit="90deg 90deg 1.2m" aria-label="Right View"><i class="fas fa-caret-right"></i></button>
-                  <button class="view-control-btn" data-orbit="0deg 0deg 1.2m" aria-label="Top View"><i class="fas fa-caret-up"></i></button>
-                  <button class="view-control-btn" data-orbit="0deg 180deg 1.2m" aria-label="Bottom View"><i class="fas fa-caret-down"></i></button>
+              <div class="model-indicator" aria-label="3D interactive model">
+                  <i class="fas fa-arrows-rotate rotate-icon"></i>
+                  <span>3D</span>
               </div>
           </model-viewer>
       `;
 
       const viewer = mainContainer.querySelector('model-viewer');
-      const rotationControls = Array.from(mainContainer.querySelectorAll('.view-control-btn'));
 
-      // Set up rotation controls
-      rotationControls.forEach(btn => {
-          btn.addEventListener('click', () => {
-              const orbit = btn.getAttribute('data-orbit');
-              viewer.cameraOrbit = orbit;
-          });
+      // Handle keyboard navigation for model rotation
+      viewer.addEventListener('keydown', (e) => {
+          const ROTATION_AMOUNT = 15; // degrees to rotate per keypress
+          let currentOrbit = viewer.getCameraOrbit();
+          let [theta, phi, radius] = currentOrbit.split(' ').map(val => parseFloat(val));
 
-          // Handle keyboard activation
-          btn.addEventListener('keydown', (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
+          switch(e.key) {
+              case 'ArrowLeft':
                   e.preventDefault();
-                  btn.click();
-              }
-          });
+                  theta = (theta - ROTATION_AMOUNT) % 360;
+                  viewer.cameraOrbit = `${theta}deg ${phi}deg ${radius}m`;
+                  break;
+              case 'ArrowRight':
+                  e.preventDefault();
+                  theta = (theta + ROTATION_AMOUNT) % 360;
+                  viewer.cameraOrbit = `${theta}deg ${phi}deg ${radius}m`;
+                  break;
+              case 'ArrowUp':
+                  e.preventDefault();
+                  phi = Math.max(0, phi - ROTATION_AMOUNT);
+                  viewer.cameraOrbit = `${theta}deg ${phi}deg ${radius}m`;
+                  break;
+              case 'ArrowDown':
+                  e.preventDefault();
+                  phi = Math.min(180, phi + ROTATION_AMOUNT);
+                  viewer.cameraOrbit = `${theta}deg ${phi}deg ${radius}m`;
+                  break;
+              case 'Tab':
+                  if (!e.shiftKey) {
+                      e.preventDefault();
+                      strip.focus();
+                  }
+                  break;
+          }
       });
 
-      // Handle model viewer keyboard navigation
-      viewer.addEventListener('keydown', (e) => {
-          if (e.key === 'Tab' && e.shiftKey) {
-              e.preventDefault();
-              prevBtn.focus();
+      // Add focus styles
+      viewer.addEventListener('focus', () => {
+          if (mouseDownTarget !== viewer) {
+              viewer.style.outline = '2px solid blue';
+              viewer.style.outlineOffset = '2px';
           }
+      });
+
+      viewer.addEventListener('blur', () => {
+          viewer.style.outline = '';
+          viewer.style.outlineOffset = '';
+      });
+
+      viewer.addEventListener('mousedown', () => {
+          mouseDownTarget = viewer;
       });
 
       // Add passive wheel event listener
@@ -2200,13 +2256,13 @@ function renderStrip() {
         e.stopPropagation();
         move(false);
       } else if (e.key === 'Tab') {
-        const mainContent = mainContainer.querySelector('video[controls], model-viewer');
-        if (mainContent) {
-          // If there's a video or 3D model, focus it
+        const mainContent = mainContainer.querySelector('model-viewer');
+        if (mainContent && allThumbs[selectedIndex].is3D) {
+          // If we're showing the 3D model, focus it
           e.preventDefault();
           mainContent.focus();
         } else {
-          // If no video or 3D model, go to next arrow
+          // Otherwise go to next arrow
           e.preventDefault();
           nextBtn.focus();
         }
@@ -2231,13 +2287,13 @@ function renderStrip() {
         move(true);
       } else if (e.key === 'Tab' && e.shiftKey) {
         // Shift+Tab from next arrow
-        const mainContent = mainContainer.querySelector('video[controls], model-viewer');
-        if (mainContent) {
-          // If there's a video or 3D model with controls, focus it
+        const mainContent = mainContainer.querySelector('model-viewer');
+        if (mainContent && allThumbs[selectedIndex].is3D) {
+          // If we're showing the 3D model, focus it
           e.preventDefault();
           mainContent.focus();
         } else {
-          // If no video or 3D model, go to strip
+          // Otherwise go to strip
           e.preventDefault();
           strip.focus();
         }

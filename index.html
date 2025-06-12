@@ -984,22 +984,65 @@
         .thumbnail {
             display: none !important;
         }
-
-        .thumbnails {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+        .product-details{
+            display: none;
         }
 
+        /* style the strip container to center the dots */
         .thumbnail-container {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 0.5rem;
             overflow: hidden;
-            flex: 1;
+            flex: 1;  /* arrows still flex:0 0 20px */
+        }
+
+        /* base dot */
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #302f2f;
+            cursor: pointer;
+            position: relative;
+            flex: none;
+        }
+        .dot.active {
+            background: var(--magenta);
+        }
+        body > main > div > div.product-images > div.product-images-container > div.thumbnails > div > div.dot.video.active{
+            border: none;
+            color: var(--magenta);
+        }
+
+        /* video dots: bigger, show play icon */
+        .dot.video {
+            width: 16px;
+            height: 16px;
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .dot.video .play-icon {
+            font-size: 0.75rem;
+            color: #302f2f;
+            pointer-events: none;
+        }
+
+        /* Only the 3D model dot should have no background */
+        .dot.model {
+            background: transparent !important;
+        }
+        .dot.model.active {
+            background: transparent !important;
+        }
+        .dot.model span {
+            color: #302f2f;
+        }
+        .dot.model.active span {
+            color: var(--magenta);
         }
 
         /* Explicitly show and style the nav arrows */
@@ -1024,120 +1067,8 @@
             color: var(--magenta);
         }
 
-        /* base dot */
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #302f2f;
-            cursor: pointer;
-            position: relative;
-            flex: none;
-            opacity: 0.7;
-            transition: opacity 0.2s;
-        }
-
-        .dot.active {
-            opacity: 1;
-            background: #302f2f;
-        }
-
-        /* video dots: bigger, show play icon */
-        .dot.video {
-            width: 10px;
-            height: 10px;
-            background: transparent;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .dot.video .play-icon {
-            font-size: 0.75rem;
-            color: #302f2f;
-            pointer-events: none;
-        }
-    }
-  
-    /* Header changes */
-
-    @media (max-width: 1365px){
-             .header-container {
-         display:none;
-        }
-         body > header > div.header-container.mobile {
-      max-width: 1400px;
-        margin: 0 auto;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 20px;
-        min-height: 80px;
-        justify-content: flex-start;
-        gap: 24px;
-        flex-direction: row;
-    }
-.main-navigation{
-  border: none;
-}
-
-.nav-menu-container{
-justify-content: flex-end;
-        padding-top: 15px;
-}
-    }
-   @media (max-width: 480px) {
-        .thumbnail {
-    display: none !important;
-  }
-.product-details{
-  display: none;
-}
-  /* style the strip container to center the dots */
-  .thumbnail-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
-    overflow: hidden;
-    flex: 1;  /* arrows still flex:0 0 20px */
-  }
-
-  /* base dot */
-  .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #302f2f;
-    cursor: pointer;
-    position: relative;
-    flex: none;
-  }
-  .dot.active {
-    background: var(--magenta);
-  }
-  body > main > div > div.product-images > div.product-images-container > div.thumbnails > div > div.dot.video.active{
-    border: none;
-    color: var(--magenta);
-  }
- 
-
-  /* video dots: bigger, show play icon */
-  .dot.video {
-    width: 16px;
-    height: 16px;
-    background: transparent;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .dot.video .play-icon {
-    font-size: 0.75rem;
-    color: #302f2f;
-    pointer-events: none;
-  }
         .header-container {
-         display:none;
+            display: none;
         }
          body > header > div.header-container.mobile {
        max-width: 1400px;

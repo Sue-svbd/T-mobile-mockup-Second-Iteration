@@ -1424,20 +1424,70 @@
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    .model-indicator i {
-        font-size: 12px;
-        color: var(--magenta);
-    }
-
-    .model-indicator .rotate-icon {
-        display: inline-flex;
+    .model-controls-wrapper {
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        display: flex;
         align-items: center;
-        animation: rotate 2s infinite linear;
+        gap: 12px;
     }
 
-    @keyframes rotate {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
+    .view-controls {
+        position: absolute;
+        right: 100%;
+        display: flex;
+        gap: 5px;
+        opacity: 0;
+        transform: translateX(20px);
+        pointer-events: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-right: 8px;
+    }
+
+    .view-controls.visible {
+        opacity: 1;
+        transform: translateX(0);
+        pointer-events: auto;
+    }
+
+    .toggle-controls-btn {
+        width: 32px;
+        height: 32px;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .toggle-controls-btn.active {
+        background-color: var(--magenta);
+        color: white;
+        transform: rotate(90deg);
+    }
+
+    .model-indicator {
+        height: 32px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 0 12px;
+        border-radius: 16px;
+        font-weight: bold;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    @media (max-width: 768px) {
+        .model-controls-wrapper {
+            bottom: 8px;
+            right: 8px;
+            gap: 8px;
+        }
     }
     </style>
 </head>
@@ -1469,9 +1519,12 @@
   <!-- Nav menu -->
   <ul class="nav-menu">
 
-      <li><a href="#" class="nav-link active">Telefony a jiné</a></li>
+      <li><a href="#" class="nav-link active">Variant 3</a></li>
 
       <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
+      <li><a href="gallery-variant-1.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
+      <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
+
   </ul>
         <!-- Header Icons -->
 <div class="header-icons">
@@ -1593,10 +1646,6 @@
       </div>
       <h1 class="product-title">
         Apple iPhone 16
-        <div class="variant-nav">
-          <a href="index.html" class="variant-link">View Gallery Variant 1</a>
-          <a href="gallery-variant-1.html" class="variant-link">View Gallery Variant 2</a>
-        </div>
       </h1>
       <div class="tags">
         <div class="ready-to-ship">
@@ -2106,14 +2155,61 @@ function renderStrip() {
               min-camera-orbit="-Infinity 0deg auto"
               max-camera-orbit="Infinity 360deg auto"
               tabindex="0">
-              <div class="model-indicator" aria-label="3D interactive model">
-                  <i class="fas fa-arrows-rotate rotate-icon"></i>
-                  <span>3D</span>
+              <div class="model-controls-wrapper">
+                  <div class="view-controls" role="toolbar" aria-label="Model rotation controls">
+                      <button class="view-control-btn" data-orbit="0deg 90deg 1.2m" aria-label="Front View">
+                          <i class="fas fa-mobile-alt"></i>
+                      </button>
+                      <button class="view-control-btn" data-orbit="-90deg 90deg 1.2m" aria-label="Left View">
+                          <i class="fas fa-caret-left"></i>
+                      </button>
+                      <button class="view-control-btn" data-orbit="90deg 90deg 1.2m" aria-label="Right View">
+                          <i class="fas fa-caret-right"></i>
+                      </button>
+                      <button class="view-control-btn" data-orbit="0deg 0deg 1.2m" aria-label="Top View">
+                          <i class="fas fa-caret-up"></i>
+                      </button>
+                      <button class="view-control-btn" data-orbit="0deg 180deg 1.2m" aria-label="Bottom View">
+                          <i class="fas fa-caret-down"></i>
+                      </button>
+                  </div>
+                  <button class="toggle-controls-btn" aria-label="Toggle rotation controls">
+                      <i class="fas fa-ellipsis-v"></i>
+                  </button>
+                  <div class="model-indicator" aria-label="3D interactive model">
+                      <i class="fas fa-arrows-rotate rotate-icon"></i>
+                      <span>3D</span>
+                  </div>
               </div>
           </model-viewer>
       `;
 
       const viewer = mainContainer.querySelector('model-viewer');
+      const toggleBtn = mainContainer.querySelector('.toggle-controls-btn');
+      const viewControls = mainContainer.querySelector('.view-controls');
+      const rotationControls = Array.from(mainContainer.querySelectorAll('.view-control-btn'));
+
+      // Toggle rotation controls visibility
+      toggleBtn.addEventListener('click', () => {
+          viewControls.classList.toggle('visible');
+          toggleBtn.classList.toggle('active');
+      });
+
+      // Set up rotation controls
+      rotationControls.forEach(btn => {
+          btn.addEventListener('click', () => {
+              const orbit = btn.getAttribute('data-orbit');
+              viewer.cameraOrbit = orbit;
+          });
+
+          // Handle keyboard activation
+          btn.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  btn.click();
+              }
+          });
+      });
 
       // Handle keyboard navigation for model rotation
       viewer.addEventListener('keydown', (e) => {

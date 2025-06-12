@@ -1126,9 +1126,17 @@
     .thumbnail-nav.prev:focus-visible,
     .thumbnail-nav.next:focus-visible,
     .thumbnail-container:focus-visible,
-    video:focus-visible {
+    video:focus-visible,
+    model-viewer:focus-visible {
         outline: 2px solid blue;
         outline-offset: 2px;
+    }
+
+    .view-control-btn:focus-visible {
+        outline: 2px solid blue;
+        outline-offset: 2px;
+        background-color: var(--magenta);
+        color: white;
     }
     
     .btn-primary:focus-visible,
@@ -1379,6 +1387,24 @@
         --progress-bar-height: 0;
         background-color: transparent;
         --model-scale: 1.5;
+    }
+
+    /* Add these styles to ensure buttons are properly focusable */
+    .view-control-btn {
+        cursor: pointer;
+        padding: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .view-control-btn:hover,
+    .view-control-btn:focus {
+        background-color: var(--magenta);
+        color: white;
+    }
+
+    .view-control-btn:focus-visible {
+        outline: 2px solid blue;
+        outline-offset: 2px;
     }
     </style>
 </head>
@@ -1875,7 +1901,7 @@ function renderStrip() {
     }
 
     function setupMainContainerFocus() {
-      const mainContent = mainContainer.querySelector('img, video');
+      const mainContent = mainContainer.querySelector('img, video, model-viewer');
       if (mainContent && mainContent.tagName === 'VIDEO') {
         // For videos, ensure proper tab order integration
         mainContent.addEventListener('keydown', (e) => {
@@ -1903,7 +1929,6 @@ function renderStrip() {
           }
         });
         
-        // Add focus and blur event listeners for video outline
         mainContent.addEventListener('focus', () => {
           if (mouseDownTarget !== mainContent) {
             mainContent.style.outline = '2px solid blue';
@@ -1916,13 +1941,87 @@ function renderStrip() {
           mainContent.style.outlineOffset = '';
         });
         
-        // Track mouse interactions with video
         mainContent.addEventListener('mousedown', () => {
           mouseDownTarget = mainContent;
         });
         
-        // Ensure video is focusable but doesn't interfere with main tab order
         mainContent.tabIndex = 0;
+      } else if (mainContent && mainContent.tagName === 'MODEL-VIEWER') {
+        // For 3D model, handle rotation controls tab order
+        const rotationControls = mainContainer.querySelectorAll('.view-control-btn');
+        
+        // Make model viewer focusable
+        mainContent.tabIndex = 0;
+        
+        // Make rotation controls focusable
+        rotationControls.forEach(btn => {
+          btn.tabIndex = 0;
+          
+          // Add focus styles
+          btn.addEventListener('focus', () => {
+            if (mouseDownTarget !== btn) {
+              btn.style.outline = '2px solid blue';
+              btn.style.outlineOffset = '2px';
+            }
+          });
+          
+          btn.addEventListener('blur', () => {
+            btn.style.outline = '';
+            btn.style.outlineOffset = '';
+          });
+          
+          btn.addEventListener('mousedown', () => {
+            mouseDownTarget = btn;
+          });
+          
+          // Handle tab navigation
+          btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+              const lastControl = rotationControls[rotationControls.length - 1];
+              if (!e.shiftKey && btn === lastControl) {
+                // Tab from last rotation control should go to strip
+                e.preventDefault();
+                strip.focus();
+              } else if (e.shiftKey && btn === rotationControls[0]) {
+                // Shift+Tab from first rotation control should go to model viewer
+                e.preventDefault();
+                mainContent.focus();
+              }
+            }
+          });
+        });
+        
+        // Handle model viewer tab navigation
+        mainContent.addEventListener('keydown', (e) => {
+          if (e.key === 'Tab') {
+            if (!e.shiftKey) {
+              // Tab from model viewer to first rotation control
+              e.preventDefault();
+              rotationControls[0].focus();
+            } else {
+              // Shift+Tab from model viewer to prev arrow
+              e.preventDefault();
+              prevBtn.focus();
+            }
+          }
+        });
+        
+        // Add focus styles to model viewer
+        mainContent.addEventListener('focus', () => {
+          if (mouseDownTarget !== mainContent) {
+            mainContent.style.outline = '2px solid blue';
+            mainContent.style.outlineOffset = '2px';
+          }
+        });
+        
+        mainContent.addEventListener('blur', () => {
+          mainContent.style.outline = '';
+          mainContent.style.outlineOffset = '';
+        });
+        
+        mainContent.addEventListener('mousedown', () => {
+          mouseDownTarget = mainContent;
+        });
       } else if (mainContent) {
         // For images, remove from tab order
         mainContent.tabIndex = -1;
@@ -1969,35 +2068,54 @@ function renderStrip() {
               scale="2 2 2"
               disable-zoom
               min-camera-orbit="-Infinity 0deg auto"
-              max-camera-orbit="Infinity 360deg auto">
-              <div class="view-controls">
-                  <button class="view-control-btn" data-orbit="0deg 90deg 1.2m" title="Front View"><i class="fas fa-mobile-alt"></i></button>
-                  <button class="view-control-btn" data-orbit="-90deg 90deg 1.2m" title="Left View"><i class="fas fa-caret-left"></i></button>
-                  <button class="view-control-btn" data-orbit="90deg 90deg 1.2m" title="Right View"><i class="fas fa-caret-right"></i></button>
-                  <button class="view-control-btn" data-orbit="0deg 0deg 1.2m" title="Top View"><i class="fas fa-caret-up"></i></button>
-                  <button class="view-control-btn" data-orbit="0deg 180deg 1.2m" title="Bottom View"><i class="fas fa-caret-down"></i></button>
+              max-camera-orbit="Infinity 360deg auto"
+              tabindex="0">
+              <div class="view-controls" role="toolbar" aria-label="Model rotation controls">
+                  <button class="view-control-btn" data-orbit="0deg 90deg 1.2m" aria-label="Front View"><i class="fas fa-mobile-alt"></i></button>
+                  <button class="view-control-btn" data-orbit="-90deg 90deg 1.2m" aria-label="Left View"><i class="fas fa-caret-left"></i></button>
+                  <button class="view-control-btn" data-orbit="90deg 90deg 1.2m" aria-label="Right View"><i class="fas fa-caret-right"></i></button>
+                  <button class="view-control-btn" data-orbit="0deg 0deg 1.2m" aria-label="Top View"><i class="fas fa-caret-up"></i></button>
+                  <button class="view-control-btn" data-orbit="0deg 180deg 1.2m" aria-label="Bottom View"><i class="fas fa-caret-down"></i></button>
               </div>
           </model-viewer>
       `;
 
-      // Add click handlers for view control buttons
       const viewer = mainContainer.querySelector('model-viewer');
-      mainContainer.querySelectorAll('.view-control-btn').forEach(button => {
-          button.addEventListener('click', () => {
-              const orbit = button.getAttribute('data-orbit');
+      const rotationControls = Array.from(mainContainer.querySelectorAll('.view-control-btn'));
+
+      // Set up rotation controls
+      rotationControls.forEach(btn => {
+          btn.addEventListener('click', () => {
+              const orbit = btn.getAttribute('data-orbit');
               viewer.cameraOrbit = orbit;
+          });
+
+          // Handle keyboard activation
+          btn.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  btn.click();
+              }
           });
       });
 
+      // Handle model viewer keyboard navigation
+      viewer.addEventListener('keydown', (e) => {
+          if (e.key === 'Tab' && e.shiftKey) {
+              e.preventDefault();
+              prevBtn.focus();
+          }
+      });
+
       // Add passive wheel event listener
-      modelViewer.addEventListener('wheel', () => {}, { passive: true });
+      viewer.addEventListener('wheel', () => {}, { passive: true });
 
       // Prevent scrolling when interacting with the model
-      modelViewer.addEventListener('mouseenter', () => {
+      viewer.addEventListener('mouseenter', () => {
           document.body.style.overflow = 'hidden';
       });
 
-      modelViewer.addEventListener('mouseleave', () => {
+      viewer.addEventListener('mouseleave', () => {
           document.body.style.overflow = '';
       });
     }
@@ -2076,22 +2194,15 @@ function renderStrip() {
         e.stopPropagation();
         move(false);
       } else if (e.key === 'Tab') {
-        if (!e.shiftKey) {
-          // Forward tab from strip
-          const mainContent = mainContainer.querySelector('video[controls]');
-          if (mainContent) {
-            // If there's a video with controls, focus it
-            e.preventDefault();
-            mainContent.focus();
-          } else {
-            // If no video, go to next arrow
-            e.preventDefault();
-            nextBtn.focus();
-          }
-        } else {
-          // Shift+Tab from strip goes to prev arrow
+        const mainContent = mainContainer.querySelector('video[controls], model-viewer');
+        if (mainContent) {
+          // If there's a video or 3D model, focus it
           e.preventDefault();
-          prevBtn.focus();
+          mainContent.focus();
+        } else {
+          // If no video or 3D model, go to next arrow
+          e.preventDefault();
+          nextBtn.focus();
         }
       }
     });
@@ -2114,13 +2225,13 @@ function renderStrip() {
         move(true);
       } else if (e.key === 'Tab' && e.shiftKey) {
         // Shift+Tab from next arrow
-        const mainContent = mainContainer.querySelector('video[controls]');
+        const mainContent = mainContainer.querySelector('video[controls], model-viewer');
         if (mainContent) {
-          // If there's a video with controls, focus it
+          // If there's a video or 3D model with controls, focus it
           e.preventDefault();
           mainContent.focus();
         } else {
-          // If no video, go to strip
+          // If no video or 3D model, go to strip
           e.preventDefault();
           strip.focus();
         }

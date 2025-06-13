@@ -1354,6 +1354,7 @@
 
     .view-controls {
         position: absolute;
+        top: 4px;
         bottom: 10px;
         right: 10px;
         display: flex;
@@ -1409,9 +1410,6 @@
 
     /* Add this to the CSS section */
     .model-indicator {
-        position: absolute;
-        bottom: 16px;
-        right: 16px;
         background-color: rgba(255, 255, 255, 0.9);
         padding: 8px 12px;
         border-radius: 20px;
@@ -1422,6 +1420,22 @@
         font-weight: bold;
         color: #262626;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .model-indicator i {
+        font-size: 12px;
+        color: var(--magenta);
+    }
+
+    .model-indicator .rotate-icon {
+        display: inline-flex;
+        align-items: center;
+        animation: rotate 2s infinite linear;
+    }
+
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
     }
 
     .model-controls-wrapper {
@@ -1468,18 +1482,6 @@
         background-color: var(--magenta);
         color: white;
         transform: rotate(90deg);
-    }
-
-    .model-indicator {
-        height: 32px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        background: rgba(255, 255, 255, 0.9);
-        padding: 0 12px;
-        border-radius: 16px;
-        font-weight: bold;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     @media (max-width: 768px) {
@@ -2156,26 +2158,28 @@ function renderStrip() {
               max-camera-orbit="Infinity 360deg auto"
               tabindex="0">
               <div class="model-controls-wrapper">
-                  <div class="view-controls" role="toolbar" aria-label="Model rotation controls">
-                      <button class="view-control-btn" data-orbit="0deg 90deg 1.2m" aria-label="Front View">
-                          <i class="fas fa-mobile-alt"></i>
-                      </button>
-                      <button class="view-control-btn" data-orbit="-90deg 90deg 1.2m" aria-label="Left View">
-                          <i class="fas fa-caret-left"></i>
-                      </button>
-                      <button class="view-control-btn" data-orbit="90deg 90deg 1.2m" aria-label="Right View">
-                          <i class="fas fa-caret-right"></i>
-                      </button>
-                      <button class="view-control-btn" data-orbit="0deg 0deg 1.2m" aria-label="Top View">
-                          <i class="fas fa-caret-up"></i>
-                      </button>
-                      <button class="view-control-btn" data-orbit="0deg 180deg 1.2m" aria-label="Bottom View">
-                          <i class="fas fa-caret-down"></i>
+                  <div class="model-controls-inner">
+                      <div class="view-controls" role="toolbar" aria-label="Model rotation controls">
+                          <button class="view-control-btn" data-orbit="0deg 90deg 1.2m" aria-label="Front View">
+                              <i class="fas fa-mobile-alt"></i>
+                          </button>
+                          <button class="view-control-btn" data-orbit="-90deg 90deg 1.2m" aria-label="Left View">
+                              <i class="fas fa-caret-left"></i>
+                          </button>
+                          <button class="view-control-btn" data-orbit="90deg 90deg 1.2m" aria-label="Right View">
+                              <i class="fas fa-caret-right"></i>
+                          </button>
+                          <button class="view-control-btn" data-orbit="0deg 0deg 1.2m" aria-label="Top View">
+                              <i class="fas fa-caret-up"></i>
+                          </button>
+                          <button class="view-control-btn" data-orbit="0deg 180deg 1.2m" aria-label="Bottom View">
+                              <i class="fas fa-caret-down"></i>
+                          </button>
+                      </div>
+                      <button class="toggle-controls-btn" aria-label="Toggle rotation controls">
+                          <i class="fas fa-ellipsis-v"></i>
                       </button>
                   </div>
-                  <button class="toggle-controls-btn" aria-label="Toggle rotation controls">
-                      <i class="fas fa-ellipsis-v"></i>
-                  </button>
                   <div class="model-indicator" aria-label="3D interactive model">
                       <i class="fas fa-arrows-rotate rotate-icon"></i>
                       <span>3D</span>

@@ -1533,6 +1533,10 @@
         border-bottom: none;
     }
 
+    .overlay-button-text{
+      font-size: 12.8px;
+    }
+
     @media (max-width: 480px) {
         .hamburger-menu {
             display: block;
@@ -2483,7 +2487,7 @@ function showModel() {
       <div id="activate3dOverlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;z-index:2;cursor:pointer;">
         <div style="background:rgba(226,0,116,0.9);color:white;padding:12px 20px;border-radius:24px;font-size:1.1rem;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,0.15);">
           <i class="fas fa-hand-pointer" style="font-size:1.5rem;animation:handwave 1.2s infinite alternate;"></i>
-          <span>Tap to view 3D fullscreen</span>
+          <span class="overlay-button-text">Tap to view 3D fullscreen</span>
         </div>
       </div>
       <div id="aria3dLive" aria-live="polite" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;"></div>
@@ -2502,25 +2506,17 @@ function showModel() {
     overlay.setAttribute('role', 'button');
     overlay.setAttribute('aria-label', 'Open fullscreen 3D model');
 
-    // Open modal on overlay click or keyboard
+    // Open modal on keyboard interaction only (touch is handled by main touch handler)
     function open3DModal() {
       modal.openModal();
       ariaLive.textContent = '3D fullscreen mode activated. Drag to rotate. Tap close or press Escape to return to gallery.';
     }
-    overlay.addEventListener('click', (e) => {
-      e.stopPropagation();
-      open3DModal();
-    });
+    
     overlay.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
         open3DModal();
       }
-    });
-
-    // Optionally: allow tapping the preview model itself to open modal
-    const previewModel = mainContainer.querySelector('#main3dModel');
-    previewModel.addEventListener('click', (e) => {
-      open3DModal();
     });
 
   } else {
@@ -2732,31 +2728,29 @@ function showModel() {
     // ——— SWIPE HANDLING for tablet/mobile ———
     let touchStartX = 0;
     let touchStartY = 0;
-    let isTouchingModel = false;
+    let touchStartTime = 0;
+    let hasMoved = false;
 
     mainContainer.addEventListener('touchstart', e => {
       if (window.innerWidth <= TABLET_BP) {
         touchStartX = e.changedTouches[0].clientX;
         touchStartY = e.changedTouches[0].clientY;
-        
-        // Check if touch is on the model viewer
-        const modelViewer = mainContainer.querySelector('model-viewer');
-        if (modelViewer) {
-          const rect = modelViewer.getBoundingClientRect();
-          isTouchingModel = (
-            touchStartX >= rect.left &&
-            touchStartX <= rect.right &&
-            touchStartY >= rect.top &&
-            touchStartY <= rect.bottom
-          );
-        }
+        touchStartTime = Date.now();
+        hasMoved = false;
       }
     });
 
     mainContainer.addEventListener('touchmove', e => {
       if (window.innerWidth <= TABLET_BP) {
-        // If touching the model, prevent the default swipe behavior
-        if (isTouchingModel) {
+        const currentX = e.changedTouches[0].clientX;
+        const currentY = e.changedTouches[0].clientY;
+        const deltaX = Math.abs(currentX - touchStartX);
+        const deltaY = Math.abs(currentY - touchStartY);
+        
+        // If horizontal movement is greater than vertical, it's likely a swipe
+        if (deltaX > deltaY && deltaX > 10) {
+          hasMoved = true;
+          // Prevent default to avoid scrolling during horizontal swipe
           e.preventDefault();
         }
       }
@@ -2764,16 +2758,37 @@ function showModel() {
 
     mainContainer.addEventListener('touchend', e => {
       if (window.innerWidth <= TABLET_BP) {
-        // Only handle swipe navigation if we weren't touching the model
-        if (!isTouchingModel) {
-          const dx = e.changedTouches[0].clientX - touchStartX;
-          const THRESHOLD = 50;
-          if (Math.abs(dx) > THRESHOLD) {
-            move(dx < 0);
+        const touchEndTime = Date.now();
+        const touchDuration = touchEndTime - touchStartTime;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        const SWIPE_THRESHOLD = 50;
+        const MAX_SWIPE_TIME = 300; // Maximum time for a swipe gesture
+        
+        // Check if this was a swipe gesture
+        if (hasMoved && 
+            Math.abs(dx) > SWIPE_THRESHOLD && 
+            Math.abs(dx) > Math.abs(dy) && 
+            touchDuration < MAX_SWIPE_TIME) {
+          // This is a swipe - navigate
+          move(dx < 0);
+        } else if (!hasMoved && touchDuration < 200) {
+          // This is a tap - check if we should open 3D modal
+          const overlay = mainContainer.querySelector('#activate3dOverlay');
+          if (overlay && allThumbs[selectedIndex].is3D) {
+            const modal = document.getElementById('fullscreen3dModal');
+            if (modal && modal.openModal) {
+              modal.openModal();
+              const ariaLive = mainContainer.querySelector('#aria3dLive');
+              if (ariaLive) {
+                ariaLive.textContent = '3D fullscreen mode activated. Drag to rotate. Tap close or press Escape to return to gallery.';
+              }
+            }
           }
         }
-        // Reset the touching state
-        isTouchingModel = false;
+        
+        // Reset state
+        hasMoved = false;
       }
     });
 

@@ -2258,6 +2258,8 @@
       interactionMode = false;
       overlay.style.display = 'flex';
       exitBtn.style.display = 'none';
+      // Reset 3D model to initial front view position
+      viewer.cameraOrbit = '0deg 90deg 1.2m';
       ariaLive.textContent = '3D interaction mode deactivated. Swipe to change gallery.';
     }
 

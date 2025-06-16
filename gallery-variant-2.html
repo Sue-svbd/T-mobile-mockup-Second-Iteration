@@ -1420,6 +1420,10 @@
         font-weight: bold;
         color: #262626;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        z-index: 10;
     }
 
     .model-indicator i {
@@ -1628,7 +1632,6 @@
     </ul>
 </div>
 
-</header>
 
   <!-- Breadcrumb -->
   <div class="breadcrumb-container">
@@ -2221,185 +2224,337 @@ function renderStrip() {
     `;
     }
 
-    function showModel() {
-      const mainContainer = document.querySelector('.main-image');
-      // First set the height to ensure the container doesn't collapse
-      mainContainer.style.height = mainContainer.offsetHeight + 'px';
-      
-      mainContainer.innerHTML = `
-          <model-viewer 
-              src="models/iPhone13.glb"
-              camera-controls
-              interaction-prompt="none"
-              shadow-intensity="1"
-              exposure="1"
-              style="width: 100%; height: 100%;"
-              environment-image="neutral"
-              loading="eager"
-              touch-action="pan-y"
-              interaction-policy="allow-when-focused"
-              camera-orbit="0deg 90deg 1.2m"
-              camera-target="0m 0m 0m"
-              scale="2 2 2"
-              disable-zoom
-              min-camera-orbit="-Infinity 0deg auto"
-              max-camera-orbit="Infinity 360deg auto"
-              tabindex="0">
-              <div class="model-controls-wrapper">
-                  <div class="model-controls-inner">
-                      <div class="view-controls" role="toolbar" aria-label="Model rotation controls">
-                          <button class="view-control-btn" data-orbit="0deg 90deg 1.2m" aria-label="Front View">
-                              <i class="fas fa-mobile-alt"></i>
-                          </button>
-                          <button class="view-control-btn" data-orbit="-90deg 90deg 1.2m" aria-label="Left View">
-                              <i class="fas fa-caret-left"></i>
-                          </button>
-                          <button class="view-control-btn" data-orbit="90deg 90deg 1.2m" aria-label="Right View">
-                              <i class="fas fa-caret-right"></i>
-                          </button>
-                          <button class="view-control-btn" data-orbit="0deg 0deg 1.2m" aria-label="Top View">
-                              <i class="fas fa-caret-up"></i>
-                          </button>
-                          <button class="view-control-btn" data-orbit="0deg 180deg 1.2m" aria-label="Bottom View">
-                              <i class="fas fa-caret-down"></i>
-                          </button>
-                      </div>
-                      <button class="toggle-controls-btn" aria-label="Toggle rotation controls">
-                          <i class="fas fa-ellipsis-v"></i>
-                      </button>
-                  </div>
-                  <div class="model-indicator" aria-label="3D interactive model">
-                      <i class="fas fa-arrows-rotate rotate-icon"></i>
-                      <span>3D</span>
-                  </div>
-              </div>
-          </model-viewer>
+/**
+ * Enhanced showModel() with mobile fullscreen 3D modal.
+ * - On mobile, tapping the 3D model or overlay opens a fullscreen modal with full 3D controls.
+ * - Modal is accessible, focus-trapped, closes with Escape or close button, and returns focus.
+ * - On desktop/tablet, behavior is unchanged.
+ * 
+ * To use: Replace your existing showModel() with this version and include this file after DOMContentLoaded.
+ */
+
+function showModel() {
+  const mainContainer = document.querySelector('.main-image');
+  mainContainer.style.height = mainContainer.offsetHeight + 'px';
+
+  // Helper: create modal if not present
+  function ensure3DModal() {
+    if (document.getElementById('fullscreen3dModal')) return;
+    const modal = document.createElement('div');
+    modal.id = 'fullscreen3dModal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', '3D model viewer');
+    modal.tabIndex = -1;
+    modal.style.display = 'none';
+    modal.innerHTML = `
+      <div class="fullscreen3d-modal-backdrop"></div>
+      <div class="fullscreen3d-modal-content" tabindex="0">
+        <button class="fullscreen3d-close-btn" aria-label="Close 3D model">
+          <i class="fas fa-times"></i>
+        </button>
+        <model-viewer
+          id="fullscreen3dModel"
+          src="models/iPhone13.glb"
+          camera-controls
+          interaction-prompt="none"
+          shadow-intensity="1"
+          exposure="1"
+          style="width: 100vw; height: 65vh; background: #fff;"
+          environment-image="neutral"
+          loading="eager"
+          touch-action="pan-y"
+          interaction-policy="always-allow"
+          camera-orbit="0deg 90deg 1.2m"
+          camera-target="0m 0m 0m"
+          scale="2 2 2"
+          auto-rotate
+          min-camera-orbit="-Infinity 0deg auto"
+          max-camera-orbit="Infinity 360deg auto"
+          tabindex="0">
+          <div class="model-indicator" aria-label="3D interactive model">
+            <i class="fas fa-arrows-rotate rotate-icon"></i>
+            <span>3D</span>
+          </div>
+        </model-viewer>
+        <div class="modal-view-controls" role="toolbar" aria-label="Model rotation controls">
+          <button class="modal-view-control-btn" data-orbit="0deg 90deg 1.2m" aria-label="Front View"><i class="fas fa-mobile-alt"></i></button>
+          <button class="modal-view-control-btn" data-orbit="-90deg 90deg 1.2m" aria-label="Left View"><i class="fas fa-caret-left"></i></button>
+          <button class="modal-view-control-btn" data-orbit="90deg 90deg 1.2m" aria-label="Right View"><i class="fas fa-caret-right"></i></button>
+          <button class="modal-view-control-btn" data-orbit="0deg 0deg 1.2m" aria-label="Top View"><i class="fas fa-caret-up"></i></button>
+          <button class="modal-view-control-btn" data-orbit="0deg 180deg 1.2m" aria-label="Bottom View"><i class="fas fa-caret-down"></i></button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Modal CSS (can be moved to a CSS file)
+    if (!document.getElementById('fullscreen3dModalStyles')) {
+      const style = document.createElement('style');
+      style.id = 'fullscreen3dModalStyles';
+      style.textContent = `
+        #fullscreen3dModal {
+          position: fixed; z-index: 9999; inset: 0; display: flex; align-items: center; justify-content: center;
+        }
+        .fullscreen3d-modal-backdrop {
+          position: absolute; inset: 0; background: rgba(0,0,0,0.7);
+        }
+        .fullscreen3d-modal-content {
+          position: relative;
+          background: #fff;
+          border-radius: 16px;
+          width: 96vw;
+          max-width: 600px;
+          box-shadow: 0 4px 32px rgba(0,0,0,0.25);
+          outline: none;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 0 0 24px 0;
+          margin: 0 auto;
+          animation: modalIn 0.2s;
+          min-height: 80vh;
+          overflow: visible;
+        }
+        .fullscreen3d-close-btn {
+          position: absolute; top: 12px; right: 12px; z-index: 2; background: rgba(226,0,116,0.9); color: #fff; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+        .modal-view-controls {
+          display: flex !important;
+          gap: 12px;
+          justify-content: center;
+          margin-top: 20px;
+          margin-bottom: 16px;
+          z-index: 10000;
+          background: rgba(255,255,255,0.98);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+          border-radius: 24px;
+          padding: 12px 16px;
+          position: relative;
+        }
+        .modal-view-control-btn {
+          background-color: rgba(255,255,255,0.9) !important;
+          border: 1px solid #ddd;
+          border-radius: 50%;
+          padding: 8px;
+          width: 40px;
+          height: 40px;
+          display: flex !important;
+          align-items: center;
+          justify-content: center;
+          font-size: 16px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          color: #302f2f;
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+        .modal-view-control-btn:hover,
+        .modal-view-control-btn:focus {
+          background-color: #e20074 !important;
+          color: #fff !important;
+          border-color: #e20074;
+        }
+        .modal-view-control-btn:focus-visible {
+          outline: 2px solid blue;
+          outline-offset: 2px;
+        }
+        @media (max-width: 768px) {
+          .fullscreen3d-modal-content { width: 100vw; height: 100vh; border-radius: 0; }
+          #fullscreen3dModel { height: 100vh !important; }
+        }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.98);} to { opacity: 1; transform: scale(1);} }
       `;
-
-      const viewer = mainContainer.querySelector('model-viewer');
-      const toggleBtn = mainContainer.querySelector('.toggle-controls-btn');
-      const viewControls = mainContainer.querySelector('.view-controls');
-      const rotationControls = Array.from(mainContainer.querySelectorAll('.view-control-btn'));
-
-      // Focus the model viewer after a short delay to ensure it's loaded
-      setTimeout(() => {
-        viewer.focus();
-      }, 100);
-
-      // Toggle rotation controls visibility
-      toggleBtn.addEventListener('click', () => {
-          viewControls.classList.toggle('visible');
-          toggleBtn.classList.toggle('active');
-      });
-
-      // Set up rotation controls
-      rotationControls.forEach(btn => {
-          btn.addEventListener('click', () => {
-              const orbit = btn.getAttribute('data-orbit');
-              viewer.cameraOrbit = orbit;
-          });
-
-          // Handle keyboard activation
-          btn.addEventListener('keydown', (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  btn.click();
-              }
-          });
-      });
-
-      // Handle keyboard navigation for model rotation
-      viewer.addEventListener('keydown', (e) => {
-          const ROTATION_AMOUNT = 15; // degrees to rotate per keypress
-          let currentOrbit = viewer.getCameraOrbit();
-          let theta = currentOrbit.theta * (180 / Math.PI); // Convert to degrees
-          let phi = currentOrbit.phi * (180 / Math.PI); // Convert to degrees
-          let radius = currentOrbit.radius;
-
-          switch(e.key) {
-              case 'ArrowLeft':
-                  e.preventDefault();
-                  theta = (theta - ROTATION_AMOUNT) % 360;
-                  viewer.cameraOrbit = `${theta}deg ${phi}deg ${radius}m`;
-                  break;
-              case 'ArrowRight':
-                  e.preventDefault();
-                  theta = (theta + ROTATION_AMOUNT) % 360;
-                  viewer.cameraOrbit = `${theta}deg ${phi}deg ${radius}m`;
-                  break;
-              case 'ArrowUp':
-                  e.preventDefault();
-                  phi = Math.max(0, phi - ROTATION_AMOUNT);
-                  viewer.cameraOrbit = `${theta}deg ${phi}deg ${radius}m`;
-                  break;
-              case 'ArrowDown':
-                  e.preventDefault();
-                  phi = Math.min(180, phi + ROTATION_AMOUNT);
-                  viewer.cameraOrbit = `${theta}deg ${phi}deg ${radius}m`;
-                  break;
-              case 'Tab':
-                  if (!e.shiftKey) {
-                      e.preventDefault();
-                      const firstControl = rotationControls[0];
-                      if (firstControl) {
-                          firstControl.focus();
-                      }
-                  }
-                  break;
-          }
-      });
-
-      // Add focus styles
-      viewer.addEventListener('focus', () => {
-          if (mouseDownTarget !== viewer) {
-              viewer.style.outline = '2px solid blue';
-              viewer.style.outlineOffset = '2px';
-          }
-      });
-
-      viewer.addEventListener('blur', () => {
-          viewer.style.outline = '';
-          viewer.style.outlineOffset = '';
-      });
-
-      viewer.addEventListener('mousedown', () => {
-          mouseDownTarget = viewer;
-      });
-
-      // Add passive wheel event listener
-      viewer.addEventListener('wheel', () => {}, { passive: true });
-
-      // Prevent scrolling when interacting with the model
-      viewer.addEventListener('mouseenter', () => {
-          document.body.style.overflow = 'hidden';
-      });
-
-      viewer.addEventListener('mouseleave', () => {
-          document.body.style.overflow = '';
-      });
-
-      // Set up proper tab order for controls
-      rotationControls.forEach((btn, index) => {
-          btn.tabIndex = 0;
-          
-          btn.addEventListener('keydown', (e) => {
-              if (e.key === 'Tab') {
-                  if (!e.shiftKey && index === rotationControls.length - 1) {
-                      // Tab from last control to strip
-                      e.preventDefault();
-                      strip.focus();
-                  } else if (e.shiftKey && index === 0) {
-                      // Shift+Tab from first control to model viewer
-                      e.preventDefault();
-                      viewer.focus();
-                  }
-              }
-          });
-      });
-
-      // Make sure the model viewer is focusable
-      viewer.tabIndex = 0;
+      document.head.appendChild(style);
     }
+
+    // Focus trap
+    function trapFocus(e) {
+      const focusable = modal.querySelectorAll('button, [tabindex]:not([tabindex="-1"])');
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.key === 'Tab') {
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault(); last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault(); first.focus();
+        }
+      }
+    }
+
+    // Open/close modal logic
+    let lastFocused = null;
+    function openModal() {
+      lastFocused = document.activeElement;
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => {
+        modal.querySelector('.fullscreen3d-modal-content').focus();
+      }, 50);
+      document.addEventListener('keydown', handleKeydown);
+      modal.addEventListener('keydown', trapFocus);
+    }
+    function closeModal() {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', handleKeydown);
+      modal.removeEventListener('keydown', trapFocus);
+      if (lastFocused) lastFocused.focus();
+    }
+    function handleKeydown(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    }
+    modal.querySelector('.fullscreen3d-close-btn').addEventListener('click', closeModal);
+    modal.querySelector('.fullscreen3d-modal-backdrop').addEventListener('click', closeModal);
+
+    // Expose openModal for outside use
+    modal.openModal = openModal;
+    // Add rotation controls event listeners
+    modal.addEventListener('shown', function() {
+      const viewer = modal.querySelector('#fullscreen3dModel');
+      const controls = modal.querySelectorAll('.modal-view-control-btn');
+      controls.forEach(btn => {
+        btn.onclick = function() {
+          viewer.cameraOrbit = btn.getAttribute('data-orbit');
+        };
+        btn.onkeydown = function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            btn.click();
+          }
+        };
+      });
+    });
+    // Also trigger on openModal
+    const origOpenModal = modal.openModal;
+    modal.openModal = function() {
+      origOpenModal();
+      const viewer = modal.querySelector('#fullscreen3dModel');
+      const controls = modal.querySelectorAll('.modal-view-control-btn');
+      controls.forEach(btn => {
+        btn.onclick = function() {
+          viewer.cameraOrbit = btn.getAttribute('data-orbit');
+        };
+        btn.onkeydown = function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            btn.click();
+          }
+        };
+      });
+    };
+  }
+
+  if (window.innerWidth <= 768) {
+    // MOBILE: Show static 3D preview with overlay, tap to open modal
+    mainContainer.innerHTML = '';
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'relative';
+    wrapper.style.width = '100%';
+    wrapper.style.height = '100%';
+    wrapper.innerHTML = `
+      <model-viewer 
+        id="main3dModel"
+        src="models/iPhone13.glb"
+        camera-controls
+        interaction-prompt="none"
+        shadow-intensity="1"
+        exposure="1"
+        style="width: 100%; height: 100%; pointer-events: none;"
+        environment-image="neutral"
+        loading="eager"
+        touch-action="none"
+        interaction-policy="none"
+        camera-orbit="0deg 90deg 1.2m"
+        camera-target="0m 0m 0m"
+        scale="2 2 2"
+        disable-zoom
+        auto-rotate
+        min-camera-orbit="-Infinity 0deg auto"
+        max-camera-orbit="Infinity 360deg auto"
+        tabindex="-1">
+        <div class="model-indicator" aria-label="3D interactive model">
+          <i class="fas fa-arrows-rotate rotate-icon"></i>
+          <span>3D</span>
+        </div>
+      </model-viewer>
+      <div id="activate3dOverlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;z-index:2;cursor:pointer;">
+        <div style="background:rgba(226,0,116,0.9);color:white;padding:12px 20px;border-radius:24px;font-size:1.1rem;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+          <i class="fas fa-hand-pointer" style="font-size:1.5rem;animation:handwave 1.2s infinite alternate;"></i>
+          <span>Tap to view 3D fullscreen</span>
+        </div>
+      </div>
+      <div id="aria3dLive" aria-live="polite" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;"></div>
+      <style>@keyframes handwave{0%{transform:rotate(-10deg);}100%{transform:rotate(20deg);}}</style>
+    `;
+    mainContainer.appendChild(wrapper);
+
+    ensure3DModal();
+
+    const overlay = mainContainer.querySelector('#activate3dOverlay');
+    const ariaLive = mainContainer.querySelector('#aria3dLive');
+    const modal = document.getElementById('fullscreen3dModal');
+
+    // Accessibility: focus on overlay when shown
+    overlay.tabIndex = 0;
+    overlay.setAttribute('role', 'button');
+    overlay.setAttribute('aria-label', 'Open fullscreen 3D model');
+
+    // Open modal on overlay click or keyboard
+    function open3DModal() {
+      modal.openModal();
+      ariaLive.textContent = '3D fullscreen mode activated. Drag to rotate. Tap close or press Escape to return to gallery.';
+    }
+    overlay.addEventListener('click', (e) => {
+      e.stopPropagation();
+      open3DModal();
+    });
+    overlay.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        open3DModal();
+      }
+    });
+
+    // Optionally: allow tapping the preview model itself to open modal
+    const previewModel = mainContainer.querySelector('#main3dModel');
+    previewModel.addEventListener('click', (e) => {
+      open3DModal();
+    });
+
+  } else {
+    // DESKTOP/TABLET: Show 3D model as before, no overlay or modal
+    mainContainer.innerHTML = `
+      <model-viewer 
+          id="main3dModel"
+          src="models/iPhone13.glb"
+          camera-controls
+          interaction-prompt="none"
+          shadow-intensity="1"
+          exposure="1"
+          style="width: 100%; height: 100%;"
+          environment-image="neutral"
+          loading="eager"
+          touch-action="pan-y"
+          interaction-policy="allow-when-focused"
+          camera-orbit="0deg 90deg 1.2m"
+          camera-target="0m 0m 0m"
+          scale="2 2 2"
+          disable-zoom
+          auto-rotate
+          min-camera-orbit="-Infinity 0deg auto"
+          max-camera-orbit="Infinity 360deg auto"
+          tabindex="0">
+          <div class="model-indicator" aria-label="3D interactive model">
+              <i class="fas fa-arrows-rotate rotate-icon"></i>
+              <span>3D</span>
+          </div>
+      </model-viewer>
+    `;
+  }
+}
+
 
     // select slide by index
     function select(idx) {
@@ -2623,79 +2778,7 @@ function renderStrip() {
     });
 
     // Add touch event handling for the model viewer
-    function showModel() {
-      const mainContainer = document.querySelector('.main-image');
-      // First set the height to ensure the container doesn't collapse
-      mainContainer.style.height = mainContainer.offsetHeight + 'px';
-      
-      mainContainer.innerHTML = `
-          <model-viewer 
-              src="models/iPhone13.glb"
-              camera-controls
-              interaction-prompt="none"
-              shadow-intensity="1"
-              exposure="1"
-              style="width: 100%; height: 100%;"
-              environment-image="neutral"
-              loading="eager"
-              touch-action="pan-y"
-              interaction-policy="allow-when-focused"
-              camera-orbit="0deg 90deg 1.2m"
-              camera-target="0m 0m 0m"
-              scale="2 2 2"
-              disable-zoom
-              min-camera-orbit="-Infinity 0deg auto"
-              max-camera-orbit="Infinity 360deg auto"
-              tabindex="0">
-              <div class="model-controls-wrapper">
-                  <div class="model-controls-inner">
-                      <div class="view-controls" role="toolbar" aria-label="Model rotation controls">
-                          <button class="view-control-btn" data-orbit="0deg 90deg 1.2m" aria-label="Front View">
-                              <i class="fas fa-mobile-alt"></i>
-                          </button>
-                          <button class="view-control-btn" data-orbit="-90deg 90deg 1.2m" aria-label="Left View">
-                              <i class="fas fa-caret-left"></i>
-                          </button>
-                          <button class="view-control-btn" data-orbit="90deg 90deg 1.2m" aria-label="Right View">
-                              <i class="fas fa-caret-right"></i>
-                          </button>
-                          <button class="view-control-btn" data-orbit="0deg 0deg 1.2m" aria-label="Top View">
-                              <i class="fas fa-caret-up"></i>
-                          </button>
-                          <button class="view-control-btn" data-orbit="0deg 180deg 1.2m" aria-label="Bottom View">
-                              <i class="fas fa-caret-down"></i>
-                          </button>
-                      </div>
-                      <button class="toggle-controls-btn" aria-label="Toggle rotation controls">
-                          <i class="fas fa-ellipsis-v"></i>
-                      </button>
-                  </div>
-                  <div class="model-indicator" aria-label="3D interactive model">
-                      <i class="fas fa-arrows-rotate rotate-icon"></i>
-                      <span>3D</span>
-                  </div>
-              </div>
-          </model-viewer>
-      `;
-
-      const viewer = mainContainer.querySelector('model-viewer');
-      
-      // Add touch event listeners to the model viewer
-      viewer.addEventListener('touchstart', (e) => {
-        if (window.innerWidth <= TABLET_BP) {
-          isTouchingModel = true;
-        }
-      });
-
-      viewer.addEventListener('touchend', () => {
-        if (window.innerWidth <= TABLET_BP) {
-          isTouchingModel = false;
-        }
-      });
-
-      // Rest of the showModel function remains the same...
-    }
-
+ 
     // Initialize gallery
     renderStrip();
     select(0);

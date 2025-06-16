@@ -1475,6 +1475,10 @@
         font-weight: bold;
         color: #262626;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        z-index: 10;
     }
 
     .model-indicator i {
@@ -2166,105 +2170,180 @@
         `;
         }
 
-        function showModel() {
-          const mainContainer = document.querySelector('.main-image');
-          // First set the height to ensure the container doesn't collapse
-          mainContainer.style.height = mainContainer.offsetHeight + 'px';
-          
-          mainContainer.innerHTML = `
-              <model-viewer 
-                  src="models/iPhone13.glb"
-                  camera-controls
-                  interaction-prompt="none"
-                  shadow-intensity="1"
-                  exposure="1"
-                  style="width: 100%; height: 100%;"
-                  environment-image="neutral"
-                  loading="eager"
-                  touch-action="pan-y"
-                  interaction-policy="allow-when-focused"
-                  camera-orbit="0deg 90deg 1.2m"
-                  camera-target="0m 0m 0m"
-                  scale="2 2 2"
-                  disable-zoom
-                  auto-rotate
-                  min-camera-orbit="-Infinity 0deg auto"
-                  max-camera-orbit="Infinity 360deg auto"
-                  tabindex="0">
-                  <div class="model-indicator" aria-label="3D interactive model">
-                      <i class="fas fa-arrows-rotate rotate-icon"></i>
-                      <span>3D</span>
-                  </div>
-              </model-viewer>
-          `;
 
-          const viewer = mainContainer.querySelector('model-viewer');
+ function showModel() {
+  const mainContainer = document.querySelector('.main-image');
+  mainContainer.style.height = mainContainer.offsetHeight + 'px';
 
-          // Handle keyboard navigation for model rotation
-          viewer.addEventListener('keydown', (e) => {
-              const ROTATION_AMOUNT = 15; // degrees to rotate per keypress
-              let currentOrbit = viewer.getCameraOrbit();
-              let [theta, phi, radius] = currentOrbit.split(' ').map(val => parseFloat(val));
+  if (window.innerWidth <= 768) {
+    mainContainer.innerHTML = `
+      <div style="position:relative;width:100%;height:100%;">
+        <model-viewer 
+            id="main3dModel"
+            src="models/iPhone13.glb"
+            camera-controls
+            interaction-prompt="none"
+            shadow-intensity="1"
+            exposure="1"
+            style="width: 100%; height: 100%;"
+            environment-image="neutral"
+            loading="eager"
+            touch-action="pan-y"
+            interaction-policy="allow-when-focused"
+            camera-orbit="0deg 90deg 1.2m"
+            camera-target="0m 0m 0m"
+            scale="2 2 2"
+            disable-zoom
+            auto-rotate
+            min-camera-orbit="-Infinity 0deg auto"
+            max-camera-orbit="Infinity 360deg auto"
+            tabindex="0">
+            <div class="model-indicator" aria-label="3D interactive model">
+                <i class="fas fa-arrows-rotate rotate-icon"></i>
+                <span>3D</span>
+            </div>
+        </model-viewer>
+        <div id="activate3dOverlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;z-index:2;cursor:pointer;">
+          <div style="background:rgba(226,0,116,0.9);color:white;padding:12px 20px;border-radius:24px;font-size:1.1rem;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+            <i class="fas fa-hand-pointer" style="font-size:1.5rem;animation:handwave 1.2s infinite alternate;"></i>
+            <span>Tap to interact with 3D model</span>
+          </div>
+        </div>
+        <button id="exit3dModeBtn" style="display:none;position:absolute;top:16px;right:16px;z-index:3;background:rgba(226,0,116,0.9);color:white;border:none;border-radius:20px;padding:8px 16px;font-size:1rem;cursor:pointer;align-items:center;gap:8px;">
+          <i class="fas fa-arrow-left"></i> Exit 3D Mode
+        </button>
+        <div id="aria3dLive" aria-live="polite" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;"></div>
+      </div>
+      <style>@keyframes handwave{0%{transform:rotate(-10deg);}100%{transform:rotate(20deg);}}</style>
+    `;
 
-              switch(e.key) {
-                  case 'ArrowLeft':
-                      e.preventDefault();
-                      theta = (theta - ROTATION_AMOUNT) % 360;
-                      viewer.cameraOrbit = `${theta}deg ${phi}deg ${radius}m`;
-                      break;
-                  case 'ArrowRight':
-                      e.preventDefault();
-                      theta = (theta + ROTATION_AMOUNT) % 360;
-                      viewer.cameraOrbit = `${theta}deg ${phi}deg ${radius}m`;
-                      break;
-                  case 'ArrowUp':
-                      e.preventDefault();
-                      phi = Math.max(0, phi - ROTATION_AMOUNT);
-                      viewer.cameraOrbit = `${theta}deg ${phi}deg ${radius}m`;
-                      break;
-                  case 'ArrowDown':
-                      e.preventDefault();
-                      phi = Math.min(180, phi + ROTATION_AMOUNT);
-                      viewer.cameraOrbit = `${theta}deg ${phi}deg ${radius}m`;
-                      break;
-                  case 'Tab':
-                      if (!e.shiftKey) {
-                          e.preventDefault();
-                          strip.focus();
-                      }
-                      break;
-              }
-          });
+    const viewer = mainContainer.querySelector('#main3dModel');
+    const overlay = mainContainer.querySelector('#activate3dOverlay');
+    const exitBtn = mainContainer.querySelector('#exit3dModeBtn');
+    const ariaLive = mainContainer.querySelector('#aria3dLive');
 
-          // Add focus styles
-          viewer.addEventListener('focus', () => {
-              if (mouseDownTarget !== viewer) {
-                  viewer.style.outline = '2px solid blue';
-                  viewer.style.outlineOffset = '2px';
-              }
-          });
+    let interactionMode = false;
 
-          viewer.addEventListener('blur', () => {
-              viewer.style.outline = '';
-              viewer.style.outlineOffset = '';
-          });
+    function activate3DMode() {
+      interactionMode = true;
+      overlay.style.display = 'none';
+      exitBtn.style.display = 'flex';
+      ariaLive.textContent = '3D interaction mode activated. Drag to rotate. Tap exit or press Escape to return to gallery.';
+    }
+    function deactivate3DMode() {
+      interactionMode = false;
+      overlay.style.display = 'flex';
+      exitBtn.style.display = 'none';
+      ariaLive.textContent = '3D interaction mode deactivated. Swipe to change gallery.';
+    }
 
-          viewer.addEventListener('mousedown', () => {
-              mouseDownTarget = viewer;
-          });
+    overlay.addEventListener('click', (e) => {
+      e.stopPropagation();
+      activate3DMode();
+    });
+    exitBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      deactivate3DMode();
+    });
 
-          // Add passive wheel event listener
-          viewer.addEventListener('wheel', () => {}, { passive: true });
+    // Tap outside model to deactivate
+    mainContainer.addEventListener('click', (e) => {
+      if (interactionMode && !viewer.contains(e.target) && e.target !== exitBtn) {
+        deactivate3DMode();
+      }
+    });
 
-          // Prevent scrolling when interacting with the model
-          viewer.addEventListener('mouseenter', () => {
-              document.body.style.overflow = 'hidden';
-          });
+    // Escape key to deactivate
+    document.addEventListener('keydown', (e) => {
+      if (interactionMode && e.key === 'Escape') {
+        deactivate3DMode();
+      }
+    });
 
-          viewer.addEventListener('mouseleave', () => {
-              document.body.style.overflow = '';
-          });
+    // Touch event handling
+    let touchStartX = 0;
+    let touchMoved = false;
+    viewer.addEventListener('touchstart', (e) => {
+      if (!interactionMode) {
+        touchStartX = e.changedTouches[0].clientX;
+        touchMoved = false;
+      }
+    });
+    viewer.addEventListener('touchmove', (e) => {
+      if (!interactionMode) {
+        touchMoved = true;
+      } else {
+        // Prevent gallery swipe in 3D mode
+        e.stopPropagation();
+      }
+    });
+    viewer.addEventListener('touchend', (e) => {
+      if (!interactionMode && touchMoved) {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const THRESHOLD = 50;
+        if (Math.abs(dx) > THRESHOLD) {
+          // Simulate gallery swipe
+          if (dx < 0) {
+            const nextBtn = document.querySelector('.thumbnail-nav.next');
+            if (nextBtn) nextBtn.click();
+          } else {
+            const prevBtn = document.querySelector('.thumbnail-nav.prev');
+            if (prevBtn) prevBtn.click();
+          }
         }
+      } else if (interactionMode) {
+        e.stopPropagation();
+      }
+    });
+
+    // Prevent swipe on overlay
+    overlay.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+    }, {passive:false});
+
+    // Accessibility: focus on overlay when shown
+    overlay.tabIndex = 0;
+    overlay.setAttribute('role', 'button');
+    overlay.setAttribute('aria-label', 'Activate 3D interaction mode');
+
+    // Keyboard activation
+    overlay.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        activate3DMode();
+      }
+    });
+  } else {
+    // Desktop/tablet: show 3D model as before, no overlay or tap-to-interact
+    mainContainer.innerHTML = `
+      <model-viewer 
+          id="main3dModel"
+          src="models/iPhone13.glb"
+          camera-controls
+          interaction-prompt="none"
+          shadow-intensity="1"
+          exposure="1"
+          style="width: 100%; height: 100%;"
+          environment-image="neutral"
+          loading="eager"
+          touch-action="pan-y"
+          interaction-policy="allow-when-focused"
+          camera-orbit="0deg 90deg 1.2m"
+          camera-target="0m 0m 0m"
+          scale="2 2 2"
+          disable-zoom
+          auto-rotate
+          min-camera-orbit="-Infinity 0deg auto"
+          max-camera-orbit="Infinity 360deg auto"
+          tabindex="0">
+          <div class="model-indicator" aria-label="3D interactive model">
+              <i class="fas fa-arrows-rotate rotate-icon"></i>
+              <span>3D</span>
+          </div>
+      </model-viewer>
+    `;
+  }
+}
+ 
 
         // select slide by index
         function select(idx) {

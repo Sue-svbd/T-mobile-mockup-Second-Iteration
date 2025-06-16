@@ -1491,7 +1491,54 @@
             gap: 8px;
         }
     }
-    </style>
+    .hamburger-menu {
+        display: none;
+        font-size: 1.5rem;
+        color: var(--black);
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 80px;
+        left: 0;
+        right: 0;
+        background-color: var(--white);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        z-index: 1000;
+        padding: 20px;
+    }
+
+    .mobile-menu.active {
+        display: block;
+    }
+
+    .mobile-menu .nav-menu {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .mobile-menu .nav-link {
+        padding: 10px 0;
+        border-bottom: 1px solid var(--gray);
+    }
+
+    .mobile-menu .nav-link:last-child {
+        border-bottom: none;
+    }
+
+    @media (max-width: 480px) {
+        .hamburger-menu {
+            display: block;
+        }
+        
+        .nav-menu-container {
+            display: none;
+        }
+    }
+  </style>
 </head>
 <body>
   <!-- Header -->
@@ -1544,39 +1591,43 @@
 </div>
 </div>
       </div>
-        <div class="header-container mobile">
-      <!-- Logo Section -->
-      <div class="logo-section">
-          <div class="logo-square">
-              <span class="logo-t">T</span>
-          </div>
-          
+         <div class="header-container mobile">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <div class="logo-square">
+                    <span class="logo-t">T</span>
+                </div>
+            </div>
+            <div class="nav-container">
+                <button class="hamburger-menu" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-icons">
+                    <button class="icon-btn" aria-label="Vyhledávání">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="icon-btn" aria-label="Nákupní košík">
+                        <i class="fas fa-shopping-cart"></i>
+                    </button>
+                    <button class="icon-btn" aria-label="Uživatelský účet">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+            </nav>
 
-  
 
-</div>
-<div class="nav-container">
-  <!-- Main Navigation -->
-<nav class="main-navigation">
-<div class="nav-menu-container">
-        <!-- Header Icons -->
-<div class="header-icons">
-<button class="icon-btn" aria-label="Vyhledávání">
-    <i class="fas fa-search"></i>
-</button>
-<button class="icon-btn" aria-label="Nákupní košík">
-    <i class="fas fa-shopping-cart"></i>
-</button>
-<button class="icon-btn" aria-label="Uživatelský účet">
-    <i class="fas fa-user"></i>
-</button>
+<!-- Add mobile menu -->
+<div class="mobile-menu">
+    <ul class="nav-menu">
+        <li><a href="#" class="nav-link active">Variant 1</a></li>
+        <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
+        <li><a href="gallery-variant-1.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
+        <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
+    </ul>
 </div>
 
-</div>
-</div>
-      </div>
-  </nav>
-</header>
 
   <!-- Breadcrumb -->
   <div class="breadcrumb-container">
@@ -1835,13 +1886,49 @@
 </main>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+ document.addEventListener('DOMContentLoaded', function() {
     const mainContainer = document.querySelector('.main-image');
     const prevBtn       = document.querySelector('.thumbnail-nav.prev');
     const nextBtn       = document.querySelector('.thumbnail-nav.next');
     const strip         = document.querySelector('.thumbnail-container');
     const TABLET_BP     = 768;
+       const hamburgerMenu = document.querySelector('.hamburger-menu');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        
+        hamburgerMenu.addEventListener('click', function() {
+          console.log('aaaa')
+            mobileMenu.classList.toggle('active');
+            // Toggle between bars and times icon
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
 
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!hamburgerMenu.contains(event.target) && !mobileMenu.contains(event.target)) {
+                mobileMenu.classList.remove('active');
+                const icon = hamburgerMenu.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Close menu when clicking a link
+        const mobileLinks = mobileMenu.querySelectorAll('.nav-link');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenu.classList.remove('active');
+                const icon = hamburgerMenu.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+        });
     // dynamic visibleCount based on viewport
     function getVisibleCount() {
       return window.innerWidth <= TABLET_BP ? 3 : 5;
@@ -2193,6 +2280,11 @@ function renderStrip() {
       const viewControls = mainContainer.querySelector('.view-controls');
       const rotationControls = Array.from(mainContainer.querySelectorAll('.view-control-btn'));
 
+      // Focus the model viewer after a short delay to ensure it's loaded
+      setTimeout(() => {
+        viewer.focus();
+      }, 100);
+
       // Toggle rotation controls visibility
       toggleBtn.addEventListener('click', () => {
           viewControls.classList.toggle('visible');
@@ -2219,7 +2311,9 @@ function renderStrip() {
       viewer.addEventListener('keydown', (e) => {
           const ROTATION_AMOUNT = 15; // degrees to rotate per keypress
           let currentOrbit = viewer.getCameraOrbit();
-          let [theta, phi, radius] = currentOrbit.split(' ').map(val => parseFloat(val));
+          let theta = currentOrbit.theta * (180 / Math.PI); // Convert to degrees
+          let phi = currentOrbit.phi * (180 / Math.PI); // Convert to degrees
+          let radius = currentOrbit.radius;
 
           switch(e.key) {
               case 'ArrowLeft':
@@ -2245,7 +2339,10 @@ function renderStrip() {
               case 'Tab':
                   if (!e.shiftKey) {
                       e.preventDefault();
-                      strip.focus();
+                      const firstControl = rotationControls[0];
+                      if (firstControl) {
+                          firstControl.focus();
+                      }
                   }
                   break;
           }
@@ -2279,6 +2376,28 @@ function renderStrip() {
       viewer.addEventListener('mouseleave', () => {
           document.body.style.overflow = '';
       });
+
+      // Set up proper tab order for controls
+      rotationControls.forEach((btn, index) => {
+          btn.tabIndex = 0;
+          
+          btn.addEventListener('keydown', (e) => {
+              if (e.key === 'Tab') {
+                  if (!e.shiftKey && index === rotationControls.length - 1) {
+                      // Tab from last control to strip
+                      e.preventDefault();
+                      strip.focus();
+                  } else if (e.shiftKey && index === 0) {
+                      // Shift+Tab from first control to model viewer
+                      e.preventDefault();
+                      viewer.focus();
+                  }
+              }
+          });
+      });
+
+      // Make sure the model viewer is focusable
+      viewer.tabIndex = 0;
     }
 
     // select slide by index
@@ -2456,27 +2575,132 @@ function renderStrip() {
 
     // ——— SWIPE HANDLING for tablet/mobile ———
     let touchStartX = 0;
+    let touchStartY = 0;
+    let isTouchingModel = false;
+
     mainContainer.addEventListener('touchstart', e => {
       if (window.innerWidth <= TABLET_BP) {
         touchStartX = e.changedTouches[0].clientX;
-      }
-    });
-    mainContainer.addEventListener('touchend', e => {
-      if (window.innerWidth <= TABLET_BP) {
-        const dx = e.changedTouches[0].clientX - touchStartX;
-        const THRESHOLD = 50;
-        if (Math.abs(dx) > THRESHOLD) {
-          move(dx < 0);
+        touchStartY = e.changedTouches[0].clientY;
+        
+        // Check if touch is on the model viewer
+        const modelViewer = mainContainer.querySelector('model-viewer');
+        if (modelViewer) {
+          const rect = modelViewer.getBoundingClientRect();
+          isTouchingModel = (
+            touchStartX >= rect.left &&
+            touchStartX <= rect.right &&
+            touchStartY >= rect.top &&
+            touchStartY <= rect.bottom
+          );
         }
       }
     });
-    // ——— end swipe ———
+
+    mainContainer.addEventListener('touchmove', e => {
+      if (window.innerWidth <= TABLET_BP) {
+        // If touching the model, prevent the default swipe behavior
+        if (isTouchingModel) {
+          e.preventDefault();
+        }
+      }
+    });
+
+    mainContainer.addEventListener('touchend', e => {
+      if (window.innerWidth <= TABLET_BP) {
+        // Only handle swipe navigation if we weren't touching the model
+        if (!isTouchingModel) {
+          const dx = e.changedTouches[0].clientX - touchStartX;
+          const THRESHOLD = 50;
+          if (Math.abs(dx) > THRESHOLD) {
+            move(dx < 0);
+          }
+        }
+        // Reset the touching state
+        isTouchingModel = false;
+      }
+    });
+
+    // Add touch event handling for the model viewer
+    function showModel() {
+      const mainContainer = document.querySelector('.main-image');
+      // First set the height to ensure the container doesn't collapse
+      mainContainer.style.height = mainContainer.offsetHeight + 'px';
+      
+      mainContainer.innerHTML = `
+          <model-viewer 
+              src="models/iPhone13.glb"
+              camera-controls
+              interaction-prompt="none"
+              shadow-intensity="1"
+              exposure="1"
+              style="width: 100%; height: 100%;"
+              environment-image="neutral"
+              loading="eager"
+              touch-action="pan-y"
+              interaction-policy="allow-when-focused"
+              camera-orbit="0deg 90deg 1.2m"
+              camera-target="0m 0m 0m"
+              scale="2 2 2"
+              disable-zoom
+              min-camera-orbit="-Infinity 0deg auto"
+              max-camera-orbit="Infinity 360deg auto"
+              tabindex="0">
+              <div class="model-controls-wrapper">
+                  <div class="model-controls-inner">
+                      <div class="view-controls" role="toolbar" aria-label="Model rotation controls">
+                          <button class="view-control-btn" data-orbit="0deg 90deg 1.2m" aria-label="Front View">
+                              <i class="fas fa-mobile-alt"></i>
+                          </button>
+                          <button class="view-control-btn" data-orbit="-90deg 90deg 1.2m" aria-label="Left View">
+                              <i class="fas fa-caret-left"></i>
+                          </button>
+                          <button class="view-control-btn" data-orbit="90deg 90deg 1.2m" aria-label="Right View">
+                              <i class="fas fa-caret-right"></i>
+                          </button>
+                          <button class="view-control-btn" data-orbit="0deg 0deg 1.2m" aria-label="Top View">
+                              <i class="fas fa-caret-up"></i>
+                          </button>
+                          <button class="view-control-btn" data-orbit="0deg 180deg 1.2m" aria-label="Bottom View">
+                              <i class="fas fa-caret-down"></i>
+                          </button>
+                      </div>
+                      <button class="toggle-controls-btn" aria-label="Toggle rotation controls">
+                          <i class="fas fa-ellipsis-v"></i>
+                      </button>
+                  </div>
+                  <div class="model-indicator" aria-label="3D interactive model">
+                      <i class="fas fa-arrows-rotate rotate-icon"></i>
+                      <span>3D</span>
+                  </div>
+              </div>
+          </model-viewer>
+      `;
+
+      const viewer = mainContainer.querySelector('model-viewer');
+      
+      // Add touch event listeners to the model viewer
+      viewer.addEventListener('touchstart', (e) => {
+        if (window.innerWidth <= TABLET_BP) {
+          isTouchingModel = true;
+        }
+      });
+
+      viewer.addEventListener('touchend', () => {
+        if (window.innerWidth <= TABLET_BP) {
+          isTouchingModel = false;
+        }
+      });
+
+      // Rest of the showModel function remains the same...
+    }
 
     // Initialize gallery
     renderStrip();
     select(0);
     setupMainContainerFocus();
   });
+
 </script>
 
 

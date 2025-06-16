@@ -1408,6 +1408,55 @@
         outline: 2px solid blue;
         outline-offset: 2px;
     }
+
+    /* Add these styles in the CSS section */
+    .hamburger-menu {
+        display: none;
+        font-size: 1.5rem;
+        color: var(--black);
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 80px;
+        left: 0;
+        right: 0;
+        background-color: var(--white);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        z-index: 1000;
+        padding: 20px;
+    }
+
+    .mobile-menu.active {
+        display: block;
+    }
+
+    .mobile-menu .nav-menu {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .mobile-menu .nav-link {
+        padding: 10px 0;
+        border-bottom: 1px solid var(--gray);
+    }
+
+    .mobile-menu .nav-link:last-child {
+        border-bottom: none;
+    }
+
+    @media (max-width: 480px) {
+        .hamburger-menu {
+            display: block;
+        }
+        
+        .nav-menu-container {
+            display: none;
+        }
+    }
     </style>
 </head>
 <body>
@@ -1461,38 +1510,41 @@
 </div>
       </div>
         <div class="header-container mobile">
-      <!-- Logo Section -->
-      <div class="logo-section">
-          <div class="logo-square">
-              <span class="logo-t">T</span>
-          </div>
-          
-
-  
-
-</div>
-<div class="nav-container">
-  <!-- Main Navigation -->
-<nav class="main-navigation">
-<div class="nav-menu-container">
-        <!-- Header Icons -->
-<div class="header-icons">
-<button class="icon-btn" aria-label="Vyhledávání">
-    <i class="fas fa-search"></i>
-</button>
-<button class="icon-btn" aria-label="Nákupní košík">
-    <i class="fas fa-shopping-cart"></i>
-</button>
-<button class="icon-btn" aria-label="Uživatelský účet">
-    <i class="fas fa-user"></i>
-</button>
-</div>
-
-</div>
-</div>
-      </div>
-  </nav>
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <div class="logo-square">
+                    <span class="logo-t">T</span>
+                </div>
+            </div>
+            <div class="nav-container">
+                <button class="hamburger-menu" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-icons">
+                    <button class="icon-btn" aria-label="Vyhledávání">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="icon-btn" aria-label="Nákupní košík">
+                        <i class="fas fa-shopping-cart"></i>
+                    </button>
+                    <button class="icon-btn" aria-label="Uživatelský účet">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
 </header>
+
+<!-- Add mobile menu -->
+<div class="mobile-menu">
+    <ul class="nav-menu">
+        <li><a href="#" class="nav-link active">Variant 1</a></li>
+        <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
+        <li><a href="gallery-variant-1.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
+        <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
+    </ul>
+</div>
 
   <!-- Breadcrumb -->
   <div class="breadcrumb-container">
@@ -2321,7 +2373,47 @@ function renderStrip() {
   });
 </script>
 
+<script>
+    // Add this to your existing script
+    document.addEventListener('DOMContentLoaded', function() {
+        const hamburgerMenu = document.querySelector('.hamburger-menu');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        
+        hamburgerMenu.addEventListener('click', function() {
+            mobileMenu.classList.toggle('active');
+            // Toggle between bars and times icon
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
 
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!hamburgerMenu.contains(event.target) && !mobileMenu.contains(event.target)) {
+                mobileMenu.classList.remove('active');
+                const icon = hamburgerMenu.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Close menu when clicking a link
+        const mobileLinks = mobileMenu.querySelectorAll('.nav-link');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenu.classList.remove('active');
+                const icon = hamburgerMenu.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+        });
+    });
+</script>
 
 </body>
 </html>

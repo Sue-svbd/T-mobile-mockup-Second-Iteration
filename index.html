@@ -2349,21 +2349,55 @@ function renderStrip() {
     });
 
     // ——— SWIPE HANDLING for tablet/mobile ———
-    let touchStartX = 0;
-    mainContainer.addEventListener('touchstart', e => {
-      if (window.innerWidth <= TABLET_BP) {
+let touchStartX = 0;
+let touchStartY = 0;
+let isSwiping = false;
+
+mainContainer.addEventListener('touchstart', e => {
+    // Disable swipe if the current item is the 3D model
+    if (allThumbs[selectedIndex].is3D) return;
+
+    if (window.innerWidth <= TABLET_BP) {
         touchStartX = e.changedTouches[0].clientX;
-      }
-    });
-    mainContainer.addEventListener('touchend', e => {
-      if (window.innerWidth <= TABLET_BP) {
-        const dx = e.changedTouches[0].clientX - touchStartX;
-        const THRESHOLD = 50;
-        if (Math.abs(dx) > THRESHOLD) {
-          move(dx < 0);
+        touchStartY = e.changedTouches[0].clientY;
+        isSwiping = false; // Reset on new touch
+    }
+}, { passive: true });
+
+mainContainer.addEventListener('touchmove', e => {
+    // Disable swipe if the current item is the 3D model
+    if (allThumbs[selectedIndex].is3D) return;
+
+    if (window.innerWidth <= TABLET_BP) {
+        // Determine if the user is primarily swiping horizontally
+        if (!isSwiping) {
+            const dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
+            const dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
+            if (dx > dy && dx > 10) {
+                isSwiping = true;
+            }
         }
-      }
-    });
+
+        // If it is a horizontal swipe, prevent the page from scrolling vertically
+        if (isSwiping) {
+            e.preventDefault();
+        }
+    }
+}, { passive: false });
+
+mainContainer.addEventListener('touchend', e => {
+    // Disable swipe if the current item is the 3D model
+    if (allThumbs[selectedIndex].is3D) return;
+
+    if (window.innerWidth <= TABLET_BP && isSwiping) {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const THRESHOLD = 50; // Minimum distance for a swipe
+
+        if (Math.abs(dx) > THRESHOLD) {
+            move(dx < 0); // Navigate to next/previous slide
+        }
+    }
+});
     // ——— end swipe ———
 
     // Initialize gallery

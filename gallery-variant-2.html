@@ -2403,6 +2403,13 @@ function showModel() {
       document.body.style.overflow = '';
       document.removeEventListener('keydown', handleKeydown);
       modal.removeEventListener('keydown', trapFocus);
+      
+      // Reset the phone to initial position when closing modal
+      const mainModelViewer = mainContainer.querySelector('model-viewer');
+      if (mainModelViewer) {
+        mainModelViewer.cameraOrbit = "0deg 90deg 1.2m";
+      }
+      
       if (lastFocused) lastFocused.focus();
     }
     function handleKeydown(e) {
@@ -2437,6 +2444,14 @@ function showModel() {
       origOpenModal();
       const viewer = modal.querySelector('#fullscreen3dModel');
       const controls = modal.querySelectorAll('.modal-view-control-btn');
+      
+      // Reset modal model viewer to initial position when opened
+      setTimeout(() => {
+        if (viewer) {
+          viewer.cameraOrbit = "0deg 90deg 1.2m";
+        }
+      }, 100);
+      
       controls.forEach(btn => {
         btn.onclick = function() {
           viewer.cameraOrbit = btn.getAttribute('data-orbit');
@@ -2542,9 +2557,12 @@ function showModel() {
           min-camera-orbit="-Infinity 0deg auto"
           max-camera-orbit="Infinity 360deg auto"
           tabindex="0">
-          <div class="model-indicator" aria-label="3D interactive model">
-              <i class="fas fa-arrows-rotate rotate-icon"></i>
-              <span>3D</span>
+          <div class="view-controls" role="toolbar" aria-label="Model rotation controls">
+              <button class="view-control-btn" data-orbit="0deg 90deg 1.2m" aria-label="Front View"><i class="fas fa-mobile-alt"></i></button>
+              <button class="view-control-btn" data-orbit="-90deg 90deg 1.2m" aria-label="Left View"><i class="fas fa-caret-left"></i></button>
+              <button class="view-control-btn" data-orbit="90deg 90deg 1.2m" aria-label="Right View"><i class="fas fa-caret-right"></i></button>
+              <button class="view-control-btn" data-orbit="0deg 0deg 1.2m" aria-label="Top View"><i class="fas fa-caret-up"></i></button>
+              <button class="view-control-btn" data-orbit="0deg 180deg 1.2m" aria-label="Bottom View"><i class="fas fa-caret-down"></i></button>
           </div>
       </model-viewer>
     `;

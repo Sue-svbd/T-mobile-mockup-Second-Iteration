@@ -1,3 +1,5 @@
+    <!-- /* Version with no swiping on 3D model on mobile */ -->
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -1491,6 +1493,12 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         border-bottom: none;
     }
 
+       .variant-text{
+      color: var(
+--magenta
+      );
+    }
+
     @media (max-width: 480px) {
         .hamburger-menu {
             display: block;
@@ -1532,8 +1540,9 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
   
       <li><a href="#" class="nav-link active">Variant 1</a></li>
       <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
-      <li><a href="gallery-variant-4.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
-      <li><a href="gallery-variant-3.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
+      <li><a href="gallery-variant-1.0.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
+      <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
+      <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 4</a></li>
 
   </ul>
         <!-- Header Icons -->
@@ -1584,8 +1593,8 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
     <ul class="nav-menu">
         <li><a href="#" class="nav-link active">Variant 1</a></li>
         <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
-        <li><a href="gallery-variant-4.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
-        <li><a href="gallery-variant-3.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
+        <li><a href="gallery-variant-1.0.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
+        <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
     </ul>
 </div>
 
@@ -1596,7 +1605,7 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
       <i class="fas fa-chevron-right"></i>
       <span>Apple iPhone 16</span>
             <i class="fas fa-chevron-right"></i>
-      <span>Variant 1</span>
+      <span class="variant-text">Variant 1</span>
 
     </nav>
   </div>

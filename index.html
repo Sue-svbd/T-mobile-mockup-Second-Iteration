@@ -23,6 +23,35 @@
         line-height: 1.5;
     }
 
+    /* 3D Model Loading Spinner */
+    .model-loading-spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1001;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255,255,255,0.7);
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .model-loading-spinner .spinner {
+        border: 4px solid #e0e0e0;
+        border-top: 4px solid var(--magenta);
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
     /* --- Thumbnail wrapper --- */
 .thumbnail {
   flex: 1 1 0;           /* share space equally */
@@ -1542,7 +1571,7 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
       <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
       <li><a href="gallery-variant-1.0.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
       <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
-      <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 4</a></li>
+      <li><a href="gallery-variant-4.html" class="nav-link variant-link">View Gallery Variant 4</a></li>
 
   </ul>
         <!-- Header Icons -->
@@ -1595,6 +1624,8 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
         <li><a href="gallery-variant-1.0.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
         <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
+                <li><a href="gallery-variant-4.html" class="nav-link variant-link">View Gallery Variant 4</a></li>
+
     </ul>
 </div>
 
@@ -2169,6 +2200,9 @@ function renderStrip() {
       const scale = isMobile ? '2 2 2' : '2 2 2';
       mainContainer.innerHTML = `
           <div class="model-indicator"><i class="fas fa-arrows-rotate"></i> 3D Model</div>
+          <div class="model-loading-spinner" id="modelLoadingSpinner">
+            <div class="spinner"></div>
+          </div>
           <model-viewer 
               src="models/iPhone13.glb"
               camera-controls
@@ -2201,6 +2235,13 @@ function renderStrip() {
       `;
 
       const viewer = mainContainer.querySelector('model-viewer');
+      const spinner = mainContainer.querySelector('#modelLoadingSpinner');
+      if (viewer && spinner) {
+        viewer.addEventListener('load', () => {
+          spinner.style.display = 'none';
+        });
+      }
+
       const rotationControls = Array.from(mainContainer.querySelectorAll('.view-control-btn'));
       const zoomInBtn = mainContainer.querySelector('.view-control-btn.zoom-in');
       const zoomOutBtn = mainContainer.querySelector('.view-control-btn.zoom-out');

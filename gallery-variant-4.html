@@ -2,14 +2,20 @@
 
 <!DOCTYPE html>
 <html lang="de">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Apple iPhone 16| Telekom</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
-  <style>
-    /* Reset and Base Styles */
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apple iPhone 16| Telekom</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script
+      type="module"
+      src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"
+    ></script>
+    <style>
+      /* Reset and Base Styles */
     * {
         margin: 0;
         padding: 0;
@@ -1537,10 +1543,20 @@
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
     }
+
+      /* Focus States for Accessibility (improved for JS toggling) */
+      .focus-outline {
+        outline: 2px solid blue !important;
+        outline-offset: 2px !important;
+      }
+      .focus-border-radius {
+        border-radius: 4px !important;
+      }
+      /* ... (rest of your CSS) ... */
     </style>
-</head>
-<body>
-    <!-- Header -->
+  </head>
+  <body>
+        <!-- Header -->
     <header class="header">
       <div class="header-container">
           <!-- Logo Section -->
@@ -1561,7 +1577,7 @@
               <div class="nav-menu-container">
                 <!-- Nav menu -->
                 <ul class="nav-menu">
-                  <li><a href="#" class="nav-link active">Variant 3</a></li>
+                  <li><a href="#" class="nav-link active">Variant 4</a></li>
                   <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
                   <li><a href="gallery-variant-1.0.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
                   <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
@@ -1613,7 +1629,7 @@
     <!-- Add mobile menu -->
     <div class="mobile-menu">
       <ul class="nav-menu">
-        <li><a href="#" class="nav-link active">Variant 3</a></li>
+        <li><a href="#" class="nav-link active">Variant 4</a></li>
         <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
         <li><a href="gallery-variant-1.0.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
         <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
@@ -1631,7 +1647,7 @@
         <i class="fas fa-chevron-right"></i>
         <span>Apple iPhone 16</span>
             <i class="fas fa-chevron-right"></i>
-      <span class="variant-text">Variant 3</span>
+      <span class="variant-text">Variant 4</span>
       </nav>
     </div>
 
@@ -1882,214 +1898,236 @@
     </section>
     </main>
 
+
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const mainContainer = document.querySelector('.main-image');
-        const prevBtn       = document.querySelector('.thumbnail-nav.prev');
-        const nextBtn       = document.querySelector('.thumbnail-nav.next');
-        const strip         = document.querySelector('.thumbnail-container');
-        const TABLET_BP     = 768;
+      document.addEventListener("DOMContentLoaded", function () {
+        const mainContainer = document.querySelector(".main-image");
+        const prevBtn = document.querySelector(".thumbnail-nav.prev");
+        const nextBtn = document.querySelector(".thumbnail-nav.next");
+        const strip = document.querySelector(".thumbnail-container");
+        const TABLET_BP = 768;
 
+        const hamburgerMenu = document.querySelector(".hamburger-menu");
+        const mobileMenu = document.querySelector(".mobile-menu");
 
-               const hamburgerMenu = document.querySelector('.hamburger-menu');
-            const mobileMenu = document.querySelector('.mobile-menu');
-            
-            hamburgerMenu.addEventListener('click', function() {
-              console.log('aaaa')
-                mobileMenu.classList.toggle('active');
-                // Toggle between bars and times icon
-                const icon = this.querySelector('i');
-                if (icon.classList.contains('fa-bars')) {
-                    icon.classList.remove('fa-bars');
-                    icon.classList.add('fa-times');
-                } else {
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                }
-            });
+        hamburgerMenu.addEventListener("click", function () {
+          console.log("aaaa");
+          mobileMenu.classList.toggle("active");
+          // Toggle between bars and times icon
+          const icon = this.querySelector("i");
+          if (icon.classList.contains("fa-bars")) {
+            icon.classList.remove("fa-bars");
+            icon.classList.add("fa-times");
+          } else {
+            icon.classList.remove("fa-times");
+            icon.classList.add("fa-bars");
+          }
+        });
 
-            // Close menu when clicking outside
-            document.addEventListener('click', function(event) {
-                if (!hamburgerMenu.contains(event.target) && !mobileMenu.contains(event.target)) {
-                    mobileMenu.classList.remove('active');
-                    const icon = hamburgerMenu.querySelector('i');
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                }
-            });
+        // Close menu when clicking outside
+        document.addEventListener("click", function (event) {
+          if (
+            !hamburgerMenu.contains(event.target) &&
+            !mobileMenu.contains(event.target)
+          ) {
+            mobileMenu.classList.remove("active");
+            const icon = hamburgerMenu.querySelector("i");
+            icon.classList.remove("fa-times");
+            icon.classList.add("fa-bars");
+          }
+        });
 
-            // Close menu when clicking a link
-            const mobileLinks = mobileMenu.querySelectorAll('.nav-link');
-            mobileLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    mobileMenu.classList.remove('active');
-                    const icon = hamburgerMenu.querySelector('i');
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                });
-            });
+        // Close menu when clicking a link
+        const mobileLinks = mobileMenu.querySelectorAll(".nav-link");
+        mobileLinks.forEach((link) => {
+          link.addEventListener("click", function () {
+            mobileMenu.classList.remove("active");
+            const icon = hamburgerMenu.querySelector("i");
+            icon.classList.remove("fa-times");
+            icon.classList.add("fa-bars");
+          });
+        });
         // dynamic visibleCount based on viewport
         function getVisibleCount() {
           return window.innerWidth <= TABLET_BP ? 3 : 5;
         }
         let visibleCount = getVisibleCount();
 
-        let firstIndex    = 0;
+        let firstIndex = 0;
         let selectedIndex = 0;
-        let isAnimating   = false;
+        let isAnimating = false;
 
         // Track mouse usage to differentiate between keyboard and mouse focus
         let mouseDownTarget = null;
-      
+
         // Set up proper tab order: prev -> container -> next
         prevBtn.tabIndex = 0;
         strip.tabIndex = 0;
         nextBtn.tabIndex = 0;
 
         // build slides array (images & videos)
-        const allThumbs = Array.from(strip.querySelectorAll('.thumbnail')).map(el => ({
-          src:     el.src,
-          dataSrc: el.getAttribute('data-src'),
-          alt:     el.alt || '',
-          isVideo: el.getAttribute('data-src')?.toLowerCase().endsWith('.mp4'),
-          is3D: false
-        }));
+        const allThumbs = Array.from(strip.querySelectorAll(".thumbnail")).map(
+          (el) => ({
+            src: el.src,
+            dataSrc: el.getAttribute("data-src"),
+            alt: el.alt || "",
+            isVideo: el
+              .getAttribute("data-src")
+              ?.toLowerCase()
+              .endsWith(".mp4"),
+            is3D: false,
+          })
+        );
 
         // Add the 3D model thumbnail to the allThumbs array at index 2
         allThumbs.splice(2, 0, {
-          src: 'models/iPhone13.glb',
-          dataSrc: 'models/iPhone13.glb',
-          alt: '3D Model of iPhone 16',
+          src: "models/iPhone13.glb",
+          dataSrc: "models/iPhone13.glb",
+          alt: "3D Model of iPhone 16",
           isVideo: false,
-          is3D: true
+          is3D: true,
         });
 
         const total = allThumbs.length;
 
-    const MOBILE_BP = 480;
+        const MOBILE_BP = 480;
 
-    function renderStrip() {
-        strip.innerHTML = '';
+        function renderStrip() {
+          strip.innerHTML = "";
 
-        if (window.innerWidth <= MOBILE_BP) {
-            strip.classList.add('mobile-view');
-            strip.classList.remove('desktop-view');
-            
+          if (window.innerWidth <= MOBILE_BP) {
+            strip.classList.add("mobile-view");
+            strip.classList.remove("desktop-view");
+
             // Render all dots including 3D model
             allThumbs.forEach((slide, idx) => {
-                const dot = document.createElement('div');
-                dot.className = 'dot'
-                    + (slide.isVideo ? ' video' : '')
-                    + (slide.is3D ? ' model' : '')
-                    + (idx === selectedIndex ? ' active' : '');
-                dot.dataset.idx = idx;
+              const dot = document.createElement("div");
+              dot.className =
+                "dot" +
+                (slide.isVideo ? " video" : "") +
+                (slide.is3D ? " model" : "") +
+                (idx === selectedIndex ? " active" : "");
+              dot.dataset.idx = idx;
 
-                if (slide.is3D) {
-                    const modelText = document.createElement('span');
-                    modelText.textContent = '3D';
-                    modelText.style.fontSize = '12px';
-                    modelText.style.fontWeight = 'bold';
-                    dot.appendChild(modelText);
-                } else if (slide.isVideo) {
-                    const icon = document.createElement('i');
-                    icon.className = 'fas fa-play play-icon';
-                    dot.appendChild(icon);
-                }
+              if (slide.is3D) {
+                const modelText = document.createElement("span");
+                modelText.textContent = "3D";
+                modelText.style.fontSize = "12px";
+                modelText.style.fontWeight = "bold";
+                dot.appendChild(modelText);
+              } else if (slide.isVideo) {
+                const icon = document.createElement("i");
+                icon.className = "fas fa-play play-icon";
+                dot.appendChild(icon);
+              }
 
-                dot.addEventListener('click', () => select(idx));
-                strip.appendChild(dot);
+              dot.addEventListener("click", () => select(idx));
+              strip.appendChild(dot);
             });
             return;
-        }
+          }
 
-        // Desktop view
-        strip.classList.remove('mobile-view');
-        strip.classList.add('desktop-view');
-        
-        // Render visible thumbnails
-        for (let i = 0; i < visibleCount; i++) {
+          // Desktop view
+          strip.classList.remove("mobile-view");
+          strip.classList.add("desktop-view");
+
+          // Render visible thumbnails
+          for (let i = 0; i < visibleCount; i++) {
             const idx = (firstIndex + i) % total;
             const slide = allThumbs[idx];
 
-            const thumbWrapper = document.createElement('div');
-            thumbWrapper.className = 'thumbnail'
-                + (slide.isVideo ? ' video' : '')
-                + (slide.is3D ? ' model' : '')
-                + (idx === selectedIndex ? ' active' : '');
+            const thumbWrapper = document.createElement("div");
+            thumbWrapper.className =
+              "thumbnail" +
+              (slide.isVideo ? " video" : "") +
+              (slide.is3D ? " model" : "") +
+              (idx === selectedIndex ? " active" : "");
             thumbWrapper.dataset.idx = idx;
 
             if (slide.is3D) {
-                const modelText = document.createElement('span');
-                modelText.textContent = '3D';
-                modelText.style.fontSize = '14px';
-                modelText.style.fontWeight = 'bold';
-                thumbWrapper.appendChild(modelText);
+              const modelText = document.createElement("span");
+              modelText.textContent = "3D";
+              modelText.style.fontSize = "14px";
+              modelText.style.fontWeight = "bold";
+              thumbWrapper.appendChild(modelText);
             } else if (slide.isVideo) {
-                const vid = document.createElement('video');
-                vid.muted = true;
-                vid.preload = 'metadata';
-                vid.src = slide.dataSrc;
-                vid.playsInline = true;
-                thumbWrapper.appendChild(vid);
+              const vid = document.createElement("video");
+              vid.muted = true;
+              vid.preload = "metadata";
+              vid.src = slide.dataSrc;
+              vid.playsInline = true;
+              thumbWrapper.appendChild(vid);
 
-                const icon = document.createElement('i');
-                icon.className = 'fas fa-play play-icon';
-                thumbWrapper.appendChild(icon);
+              const icon = document.createElement("i");
+              icon.className = "fas fa-play play-icon";
+              thumbWrapper.appendChild(icon);
             } else {
-                const img = document.createElement('img');
-                img.src = slide.src;
-                img.alt = slide.alt;
-                thumbWrapper.appendChild(img);
+              const img = document.createElement("img");
+              img.src = slide.src;
+              img.alt = slide.alt;
+              thumbWrapper.appendChild(img);
             }
 
-            thumbWrapper.addEventListener('click', () => select(idx));
+            thumbWrapper.addEventListener("click", () => select(idx));
             strip.appendChild(thumbWrapper);
+          }
         }
-    }
 
         // Show image/video in main container with fade
         function transitionContent(newEl) {
           if (isAnimating) return;
           isAnimating = true;
-          const current = mainContainer.querySelector('img, video');
+          const current = mainContainer.querySelector("img, video");
           if (current) {
-            current.classList.add('fade-out');
+            current.classList.add("fade-out");
             setTimeout(() => {
-              mainContainer.innerHTML = '';
-              newEl.style.opacity = '0';
-              newEl.style.maxWidth = '100%';
-              newEl.style.maxHeight = '100%';
-              newEl.style.objectFit = 'contain';
+              mainContainer.innerHTML = "";
+              newEl.style.opacity = "0";
+              newEl.style.maxWidth = "100%";
+              newEl.style.maxHeight = "100%";
+              newEl.style.objectFit = "contain";
               mainContainer.appendChild(newEl);
               void newEl.offsetWidth;
-              newEl.style.opacity = '1';
-              setTimeout(() => { isAnimating = false; }, 300);
+              newEl.style.opacity = "1";
+              setTimeout(() => {
+                isAnimating = false;
+              }, 300);
             }, 300);
           } else {
-            mainContainer.innerHTML = '';
-            newEl.style.opacity = '1';
+            mainContainer.innerHTML = "";
+            newEl.style.opacity = "1";
             mainContainer.appendChild(newEl);
             isAnimating = false;
           }
         }
 
         function setupMainContainerFocus() {
-          const mainContent = mainContainer.querySelector('img, video, model-viewer');
-          if (mainContent && mainContent.tagName === 'VIDEO') {
+          const mainContent = mainContainer.querySelector(
+            "img, video, model-viewer"
+          );
+          if (mainContent && mainContent.tagName === "VIDEO") {
             // For videos, ensure proper tab order integration
-            mainContent.addEventListener('keydown', (e) => {
+            mainContent.addEventListener("keydown", (e) => {
               // Handle tab navigation within video controls
-              if (e.key === 'Tab') {
-                const videoControls = mainContent.shadowRoot?.querySelectorAll('[tabindex]:not([tabindex="-1"])') || [];
-                const focusableControls = Array.from(videoControls).filter(el => 
-                  !el.hasAttribute('disabled') && 
-                  el.offsetParent !== null
+              if (e.key === "Tab") {
+                const videoControls =
+                  mainContent.shadowRoot?.querySelectorAll(
+                    '[tabindex]:not([tabindex="-1"])'
+                  ) || [];
+                const focusableControls = Array.from(videoControls).filter(
+                  (el) =>
+                    !el.hasAttribute("disabled") && el.offsetParent !== null
                 );
-                
+
                 if (focusableControls.length > 0) {
-                  const currentIndex = focusableControls.indexOf(document.activeElement);
-                  
-                  if (!e.shiftKey && currentIndex === focusableControls.length - 1) {
+                  const currentIndex = focusableControls.indexOf(
+                    document.activeElement
+                  );
+
+                  if (
+                    !e.shiftKey &&
+                    currentIndex === focusableControls.length - 1
+                  ) {
                     // Tab from last video control should go to strip
                     e.preventDefault();
                     strip.focus();
@@ -2101,56 +2139,54 @@
                 }
               }
             });
-            
-            mainContent.addEventListener('focus', () => {
+
+            mainContent.addEventListener("focus", () => {
               if (mouseDownTarget !== mainContent) {
-                mainContent.style.outline = '2px solid blue';
-                mainContent.style.outlineOffset = '2px';
+                mainContent.classList.add("focus-outline");
               }
             });
-            
-            mainContent.addEventListener('blur', () => {
-              mainContent.style.outline = '';
-              mainContent.style.outlineOffset = '';
+
+            mainContent.addEventListener("blur", () => {
+              mainContent.classList.remove("focus-outline");
             });
-            
-            mainContent.addEventListener('mousedown', () => {
+
+            mainContent.addEventListener("mousedown", () => {
               mouseDownTarget = mainContent;
             });
-            
+
             mainContent.tabIndex = 0;
-          } else if (mainContent && mainContent.tagName === 'MODEL-VIEWER') {
+          } else if (mainContent && mainContent.tagName === "MODEL-VIEWER") {
             // For 3D model, handle rotation controls tab order
-            const rotationControls = mainContainer.querySelectorAll('.view-control-btn');
-            
+            const rotationControls =
+              mainContainer.querySelectorAll(".view-control-btn");
+
             // Make model viewer focusable
             mainContent.tabIndex = 0;
-            
+
             // Make rotation controls focusable
-            rotationControls.forEach(btn => {
+            rotationControls.forEach((btn) => {
               btn.tabIndex = 0;
-              
+
               // Add focus styles
-              btn.addEventListener('focus', () => {
+              btn.addEventListener("focus", () => {
                 if (mouseDownTarget !== btn) {
-                  btn.style.outline = '2px solid blue';
-                  btn.style.outlineOffset = '2px';
+                  btn.classList.add("focus-outline");
                 }
               });
-              
-              btn.addEventListener('blur', () => {
-                btn.style.outline = '';
-                btn.style.outlineOffset = '';
+
+              btn.addEventListener("blur", () => {
+                btn.classList.remove("focus-outline");
               });
-              
-              btn.addEventListener('mousedown', () => {
+
+              btn.addEventListener("mousedown", () => {
                 mouseDownTarget = btn;
               });
-              
+
               // Handle tab navigation
-              btn.addEventListener('keydown', (e) => {
-                if (e.key === 'Tab') {
-                  const lastControl = rotationControls[rotationControls.length - 1];
+              btn.addEventListener("keydown", (e) => {
+                if (e.key === "Tab") {
+                  const lastControl =
+                    rotationControls[rotationControls.length - 1];
                   if (!e.shiftKey && btn === lastControl) {
                     // Tab from last rotation control should go to strip
                     e.preventDefault();
@@ -2163,10 +2199,10 @@
                 }
               });
             });
-            
+
             // Handle model viewer tab navigation
-            mainContent.addEventListener('keydown', (e) => {
-              if (e.key === 'Tab') {
+            mainContent.addEventListener("keydown", (e) => {
+              if (e.key === "Tab") {
                 if (!e.shiftKey) {
                   // Tab from model viewer to first rotation control
                   e.preventDefault();
@@ -2178,283 +2214,277 @@
                 }
               }
             });
-            
+
             // Add focus styles to model viewer
-            mainContent.addEventListener('focus', () => {
+            mainContent.addEventListener("focus", () => {
               if (mouseDownTarget !== mainContent) {
-                mainContent.style.outline = '2px solid blue';
-                mainContent.style.outlineOffset = '2px';
+                mainContent.classList.add("focus-outline");
               }
             });
-            
-            mainContent.addEventListener('blur', () => {
-              mainContent.style.outline = '';
-              mainContent.style.outlineOffset = '';
+
+            mainContent.addEventListener("blur", () => {
+              mainContent.classList.remove("focus-outline");
             });
-            
-            mainContent.addEventListener('mousedown', () => {
+
+            mainContent.addEventListener("mousedown", () => {
               mouseDownTarget = mainContent;
             });
           } else if (mainContent) {
             // For images, remove from tab order
             mainContent.tabIndex = -1;
           }
-          
+
           // Make individual thumbnails non-focusable since we're using arrow keys
-          const thumbnails = strip.querySelectorAll('.thumbnail');
-          thumbnails.forEach(thumbnail => {
+          const thumbnails = strip.querySelectorAll(".thumbnail");
+          thumbnails.forEach((thumbnail) => {
             thumbnail.tabIndex = -1;
           });
         }
 
-        function showImage(src, alt='') {
-          const mainContainer = document.querySelector('.main-image');
-          mainContainer.innerHTML = `<img src="${src}" alt="${alt}" id="mainImageContent"/>`;
+        // Sanitize dynamic HTML insertions using DOM methods
+        function showImage(src, alt = "") {
+          mainContainer.innerHTML = "";
+          const img = document.createElement("img");
+          img.src = src;
+          img.alt = alt;
+          img.id = "mainImageContent";
+          mainContainer.appendChild(img);
         }
 
         function showVideo(src) {
-          const mainContainer = document.querySelector('.main-image');
-          mainContainer.innerHTML = `
-            <video src="${src}" muted controls autoplay playsinline></video>
-        `;
+          mainContainer.innerHTML = "";
+          const video = document.createElement("video");
+          video.src = src;
+          video.muted = true;
+          video.controls = true;
+          video.autoplay = true;
+          video.playsInline = true;
+          mainContainer.appendChild(video);
         }
 
+        function showModel() {
+          mainContainer.style.height = mainContainer.offsetHeight + "px";
 
- function showModel() {
-  const mainContainer = document.querySelector('.main-image');
-  mainContainer.style.height = mainContainer.offsetHeight + 'px';
-
-  if (window.innerWidth <= 768) {
-    mainContainer.innerHTML = `
-      <div style="position:relative;width:100%;height:100%;">
-        <div class="model-loading-spinner" id="modelLoadingSpinner">
-          <div class="spinner"></div>
-        </div>
-        <model-viewer 
-            id="main3dModel"
-            src="models/iPhone13.glb"
-            camera-controls
-            interaction-prompt="none"
-            shadow-intensity="1"
-            exposure="1"
-            style="width: 100%; height: 100%;"
-            environment-image="neutral"
-            loading="eager"
-            touch-action="pan-y"
-            interaction-policy="allow-when-focused"
-            camera-orbit="0deg 90deg 1.2m"
-            camera-target="0m 0m 0m"
-            scale="2 2 2"
-            disable-zoom
-            auto-rotate
-            min-camera-orbit="-Infinity 0deg auto"
-            max-camera-orbit="Infinity 360deg auto"
-            tabindex="0">
-            <div class="view-controls" role="toolbar" aria-label="Model rotation controls">
-                <button class="view-control-btn" data-orbit="0deg 90deg 1.2m" aria-label="Front View"><i class="fas fa-mobile-alt"></i></button>
-                <button class="view-control-btn" data-orbit="-90deg 90deg 1.2m" aria-label="Left View"><i class="fas fa-caret-left"></i></button>
-                <button class="view-control-btn" data-orbit="90deg 90deg 1.2m" aria-label="Right View"><i class="fas fa-caret-right"></i></button>
-                <button class="view-control-btn" data-orbit="0deg 0deg 1.2m" aria-label="Top View"><i class="fas fa-caret-up"></i></button>
-                <button class="view-control-btn" data-orbit="0deg 180deg 1.2m" aria-label="Bottom View"><i class="fas fa-caret-down"></i></button>
-            </div>
-        </model-viewer>
-        <div id="activate3dOverlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;z-index:2;cursor:pointer;">
-          <div style="background:rgba(226,0,116,0.9);color:white;padding:12px 20px;border-radius:24px;font-size:1.1rem;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,0.15);">
-            <i class="fas fa-hand-pointer" style=";animation:handwave 1.2s infinite alternate;"></i>
-            <span class="overlay-button-text">Tap to interact</span>
-          </div>
-        </div>
-        <button id="exit3dModeBtn" style="display:none;font-size:12.8px;position:absolute;top:16px;right:16px;z-index:3;background:rgba(226,0,116,0.9);color:white;border:none;border-radius:20px;padding:8px 9px;cursor:pointer;align-items:center;gap:8px;">
-          <i class="fas fa-arrow-left"></i>
-        </button>
-        <div id="aria3dLive" aria-live="polite" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;"></div>
-      </div>
-      <style>@keyframes handwave{0%{transform:rotate(-10deg);}100%{transform:rotate(20deg);}}</style>
-    `;
-
-    const viewer = mainContainer.querySelector('#main3dModel');
-    const spinner = mainContainer.querySelector('#modelLoadingSpinner');
-    if (viewer && spinner) {
-      viewer.addEventListener('load', () => {
-        spinner.style.display = 'none';
-      });
-    }
-    const overlay = mainContainer.querySelector('#activate3dOverlay');
-    const exitBtn = mainContainer.querySelector('#exit3dModeBtn');
-    const ariaLive = mainContainer.querySelector('#aria3dLive');
-    const rotationControls = Array.from(mainContainer.querySelectorAll('.view-control-btn'));
-
-    let interactionMode = false;
-
-    // Set up rotation controls
-    rotationControls.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const orbit = btn.getAttribute('data-orbit');
-            viewer.cameraOrbit = orbit;
-        });
-
-        // Handle keyboard activation
-        btn.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                btn.click();
-            }
-        });
-    });
-
-    function activate3DMode() {
-      interactionMode = true;
-      overlay.style.display = 'none';
-      exitBtn.style.display = 'flex';
-      ariaLive.textContent = '3D interaction mode activated. Drag to rotate. Tap exit or press Escape to return to gallery.';
-    }
-    function deactivate3DMode() {
-      interactionMode = false;
-      overlay.style.display = 'flex';
-      exitBtn.style.display = 'none';
-      // Reset 3D model to initial front view position
-      viewer.cameraOrbit = '0deg 90deg 1.2m';
-      ariaLive.textContent = '3D interaction mode deactivated. Swipe to change gallery.';
-    }
-
-    overlay.addEventListener('click', (e) => {
-      e.stopPropagation();
-      activate3DMode();
-    });
-    exitBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      deactivate3DMode();
-    });
-
-    // Tap outside model to deactivate
-    mainContainer.addEventListener('click', (e) => {
-      if (interactionMode && !viewer.contains(e.target) && e.target !== exitBtn) {
-        deactivate3DMode();
-      }
-    });
-
-    // Escape key to deactivate
-    document.addEventListener('keydown', (e) => {
-      if (interactionMode && e.key === 'Escape') {
-        deactivate3DMode();
-      }
-    });
-
-    // Touch event handling
-    let touchStartX = 0;
-    let touchMoved = false;
-    viewer.addEventListener('touchstart', (e) => {
-      if (!interactionMode) {
-        touchStartX = e.changedTouches[0].clientX;
-        touchMoved = false;
-      }
-    });
-    viewer.addEventListener('touchmove', (e) => {
-      if (!interactionMode) {
-        touchMoved = true;
-      } else {
-        // Prevent gallery swipe in 3D mode
-        e.stopPropagation();
-      }
-    });
-    viewer.addEventListener('touchend', (e) => {
-      if (!interactionMode && touchMoved) {
-        const dx = e.changedTouches[0].clientX - touchStartX;
-        const THRESHOLD = 50;
-        if (Math.abs(dx) > THRESHOLD) {
-          // Simulate gallery swipe
-          if (dx < 0) {
-            const nextBtn = document.querySelector('.thumbnail-nav.next');
-            if (nextBtn) nextBtn.click();
+          if (window.innerWidth <= 768) {
+          // Build DOM structure for mobile 3D model (NO overlay, NO tap-to-interact, NO drag interaction)
+          mainContainer.innerHTML = "";
+          
+          const wrapper = document.createElement("div");
+          wrapper.style.position = "relative";
+          wrapper.style.width = "100%";
+          wrapper.style.height = "100%";
+          
+          // Spinner
+          const spinnerDiv = document.createElement("div");
+          spinnerDiv.className = "model-loading-spinner";
+          spinnerDiv.id = "modelLoadingSpinner";
+          const spinner = document.createElement("div");
+          spinner.className = "spinner";
+          spinnerDiv.appendChild(spinner);
+          wrapper.appendChild(spinnerDiv);
+          
+          // model-viewer (NO camera-controls, NO drag interaction)
+          const viewer = document.createElement("model-viewer");
+          viewer.id = "main3dModel";
+          viewer.setAttribute("src", "models/iPhone13.glb");
+          viewer.setAttribute("interaction-prompt", "none");
+          viewer.setAttribute("shadow-intensity", "1");
+          viewer.setAttribute("exposure", "1");
+          viewer.style.width = "100%";
+          viewer.style.height = "100%";
+          viewer.setAttribute("environment-image", "neutral");
+          viewer.setAttribute("loading", "eager");
+          viewer.setAttribute("touch-action", "none");
+          viewer.setAttribute("interaction-policy", "none");
+          viewer.setAttribute("camera-orbit", "0deg 90deg 1.2m");
+          viewer.setAttribute("camera-target", "0m 0m 0m");
+          viewer.setAttribute("scale", "2 2 2");
+          viewer.setAttribute("disable-zoom", "");
+          viewer.setAttribute("auto-rotate", "");
+          viewer.setAttribute("min-camera-orbit", "-Infinity 0deg auto");
+          viewer.setAttribute("max-camera-orbit", "Infinity 360deg auto");
+          viewer.tabIndex = 0;
+          
+          // View controls
+          const viewControls = document.createElement("div");
+          viewControls.className = "view-controls";
+          viewControls.setAttribute("role", "toolbar");
+          viewControls.setAttribute("aria-label", "Model rotation controls");
+          const controls = [
+          {
+          orbit: "0deg 90deg 1.2m",
+          label: "Front View",
+          icon: "fa-mobile-alt",
+          },
+          {
+          orbit: "-90deg 90deg 1.2m",
+          label: "Left View",
+          icon: "fa-caret-left",
+          },
+          {
+          orbit: "90deg 90deg 1.2m",
+          label: "Right View",
+          icon: "fa-caret-right",
+          },
+          {
+          orbit: "0deg 0deg 1.2m",
+          label: "Top View",
+          icon: "fa-caret-up",
+          },
+          {
+          orbit: "0deg 180deg 1.2m",
+          label: "Bottom View",
+          icon: "fa-caret-down",
+          },
+          ];
+          controls.forEach((ctrl) => {
+          const btn = document.createElement("button");
+          btn.className = "view-control-btn";
+          btn.setAttribute("data-orbit", ctrl.orbit);
+          btn.setAttribute("aria-label", ctrl.label);
+          const icon = document.createElement("i");
+          icon.className = `fas ${ctrl.icon}`;
+          btn.appendChild(icon);
+          viewControls.appendChild(btn);
+          });
+          viewer.appendChild(viewControls);
+          wrapper.appendChild(viewer);
+          
+          mainContainer.appendChild(wrapper);
+          
+          // Spinner hide on load
+          if (viewer && spinnerDiv) {
+          viewer.addEventListener("load", () => {
+          spinnerDiv.style.display = "none";
+          });
+          }
+          const rotationControls = Array.from(
+          wrapper.querySelectorAll(".view-control-btn")
+          );
+          
+          // Set up rotation controls
+          rotationControls.forEach((btn) => {
+          btn.addEventListener("click", () => {
+          const orbit = btn.getAttribute("data-orbit");
+          viewer.cameraOrbit = orbit;
+          });
+          
+          // Handle keyboard activation
+          btn.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          btn.click();
+          }
+          });
+          });
           } else {
-            const prevBtn = document.querySelector('.thumbnail-nav.prev');
-            if (prevBtn) prevBtn.click();
+            // Desktop/tablet: show 3D model with view controls
+            mainContainer.innerHTML = "";
+
+            // Spinner
+            const spinnerDiv = document.createElement("div");
+            spinnerDiv.className = "model-loading-spinner";
+            spinnerDiv.id = "modelLoadingSpinner";
+            const spinner = document.createElement("div");
+            spinner.className = "spinner";
+            spinnerDiv.appendChild(spinner);
+            mainContainer.appendChild(spinnerDiv);
+
+            // model-viewer
+            const viewer = document.createElement("model-viewer");
+            viewer.id = "main3dModel";
+            viewer.setAttribute("src", "models/iPhone13.glb");
+            viewer.setAttribute("camera-controls", "");
+            viewer.setAttribute("interaction-prompt", "none");
+            viewer.setAttribute("shadow-intensity", "1");
+            viewer.setAttribute("exposure", "1");
+            viewer.style.width = "100%";
+            viewer.style.height = "100%";
+            viewer.setAttribute("environment-image", "neutral");
+            viewer.setAttribute("loading", "eager");
+            viewer.setAttribute("touch-action", "pan-y");
+            viewer.setAttribute("interaction-policy", "allow-when-focused");
+            viewer.setAttribute("camera-orbit", "0deg 90deg 1.2m");
+            viewer.setAttribute("camera-target", "0m 0m 0m");
+            viewer.setAttribute("scale", "2 2 2");
+            viewer.setAttribute("disable-zoom", "");
+            viewer.setAttribute("auto-rotate", "");
+            viewer.setAttribute("min-camera-orbit", "-Infinity 0deg auto");
+            viewer.setAttribute("max-camera-orbit", "Infinity 360deg auto");
+            viewer.tabIndex = 0;
+
+            // View controls
+            const viewControls = document.createElement("div");
+            viewControls.className = "view-controls";
+            viewControls.setAttribute("role", "toolbar");
+            viewControls.setAttribute("aria-label", "Model rotation controls");
+            const controls = [
+              {
+                orbit: "0deg 90deg 1.2m",
+                label: "Front View",
+                icon: "fa-mobile-alt",
+              },
+              {
+                orbit: "-90deg 90deg 1.2m",
+                label: "Left View",
+                icon: "fa-caret-left",
+              },
+              {
+                orbit: "90deg 90deg 1.2m",
+                label: "Right View",
+                icon: "fa-caret-right",
+              },
+              {
+                orbit: "0deg 0deg 1.2m",
+                label: "Top View",
+                icon: "fa-caret-up",
+              },
+              {
+                orbit: "0deg 180deg 1.2m",
+                label: "Bottom View",
+                icon: "fa-caret-down",
+              },
+            ];
+            controls.forEach((ctrl) => {
+              const btn = document.createElement("button");
+              btn.className = "view-control-btn";
+              btn.setAttribute("data-orbit", ctrl.orbit);
+              btn.setAttribute("aria-label", ctrl.label);
+              const icon = document.createElement("i");
+              icon.className = `fas ${ctrl.icon}`;
+              btn.appendChild(icon);
+              viewControls.appendChild(btn);
+            });
+            viewer.appendChild(viewControls);
+            mainContainer.appendChild(viewer);
+
+            // Spinner hide on load
+            if (viewer && spinnerDiv) {
+              viewer.addEventListener("load", () => {
+                spinnerDiv.style.display = "none";
+              });
+            }
+            const rotationControls = Array.from(
+              mainContainer.querySelectorAll(".view-control-btn")
+            );
+
+            // Set up rotation controls
+            rotationControls.forEach((btn) => {
+              btn.addEventListener("click", () => {
+                const orbit = btn.getAttribute("data-orbit");
+                viewer.cameraOrbit = orbit;
+              });
+
+              // Handle keyboard activation
+              btn.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  btn.click();
+                }
+              });
+            });
           }
         }
-      } else if (interactionMode) {
-        e.stopPropagation();
-      }
-    });
-
-    // Prevent swipe on overlay
-    overlay.addEventListener('touchmove', (e) => {
-      e.preventDefault();
-    }, {passive:false});
-
-    // Accessibility: focus on overlay when shown
-    overlay.tabIndex = 0;
-    overlay.setAttribute('role', 'button');
-    overlay.setAttribute('aria-label', 'Activate 3D interaction mode');
-
-    // Keyboard activation
-    overlay.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        activate3DMode();
-      }
-    });
-  } else {
-    // Desktop/tablet: show 3D model with view controls
-    mainContainer.innerHTML = `
-      <div class="model-loading-spinner" id="modelLoadingSpinner">
-        <div class="spinner"></div>
-      </div>
-      <model-viewer 
-          id="main3dModel"
-          src="models/iPhone13.glb"
-          camera-controls
-          interaction-prompt="none"
-          shadow-intensity="1"
-          exposure="1"
-          style="width: 100%; height: 100%;"
-          environment-image="neutral"
-          loading="eager"
-          touch-action="pan-y"
-          interaction-policy="allow-when-focused"
-          camera-orbit="0deg 90deg 1.2m"
-          camera-target="0m 0m 0m"
-          scale="2 2 2"
-          disable-zoom
-          auto-rotate
-          min-camera-orbit="-Infinity 0deg auto"
-          max-camera-orbit="Infinity 360deg auto"
-          tabindex="0">
-          <div class="view-controls" role="toolbar" aria-label="Model rotation controls">
-              <button class="view-control-btn" data-orbit="0deg 90deg 1.2m" aria-label="Front View"><i class="fas fa-mobile-alt"></i></button>
-              <button class="view-control-btn" data-orbit="-90deg 90deg 1.2m" aria-label="Left View"><i class="fas fa-caret-left"></i></button>
-              <button class="view-control-btn" data-orbit="90deg 90deg 1.2m" aria-label="Right View"><i class="fas fa-caret-right"></i></button>
-              <button class="view-control-btn" data-orbit="0deg 0deg 1.2m" aria-label="Top View"><i class="fas fa-caret-up"></i></button>
-              <button class="view-control-btn" data-orbit="0deg 180deg 1.2m" aria-label="Bottom View"><i class="fas fa-caret-down"></i></button>
-          </div>
-      </model-viewer>
-    `;
-
-    const viewer = mainContainer.querySelector('#main3dModel');
-    const spinner = mainContainer.querySelector('#modelLoadingSpinner');
-    if (viewer && spinner) {
-      viewer.addEventListener('load', () => {
-        spinner.style.display = 'none';
-      });
-    }
-    const rotationControls = Array.from(mainContainer.querySelectorAll('.view-control-btn'));
-
-    // Set up rotation controls
-    rotationControls.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const orbit = btn.getAttribute('data-orbit');
-            viewer.cameraOrbit = orbit;
-        });
-
-        // Handle keyboard activation
-        btn.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                btn.click();
-            }
-        });
-    });
-  }
-}
- 
 
         // select slide by index
         function select(idx) {
@@ -2462,32 +2492,34 @@
 
           // adjust window if at edges
           const start = firstIndex;
-          const end   = firstIndex + visibleCount - 1;
-          if      (selectedIndex === end   && end < total - 1) firstIndex++;
-          else if (selectedIndex === start && start > 0)       firstIndex--;
+          const end = firstIndex + visibleCount - 1;
+          if (selectedIndex === end && end < total - 1) firstIndex++;
+          else if (selectedIndex === start && start > 0) firstIndex--;
 
           // clamp
           if (selectedIndex < firstIndex) firstIndex = selectedIndex;
-          if (selectedIndex > firstIndex + visibleCount - 1) firstIndex = selectedIndex - visibleCount + 1;
+          if (selectedIndex > firstIndex + visibleCount - 1)
+            firstIndex = selectedIndex - visibleCount + 1;
           if (firstIndex < 0) firstIndex = 0;
-          if (firstIndex + visibleCount > total) firstIndex = total - visibleCount;
+          if (firstIndex + visibleCount > total)
+            firstIndex = total - visibleCount;
 
           renderStrip();
           const slide = allThumbs[selectedIndex];
-          
+
           if (slide.is3D) {
-              showModel();
+            showModel();
           } else if (slide.isVideo) {
-              showVideo(slide.dataSrc);
+            showVideo(slide.dataSrc);
           } else {
-              showImage(slide.dataSrc, slide.alt);
+            showImage(slide.dataSrc, slide.alt);
           }
         }
 
         // move forward/back
         function move(forward) {
           const nextIndex = selectedIndex + (forward ? 1 : -1);
-          
+
           // Handle wrapping around the ends
           if (nextIndex < 0) {
             select(total - 1);
@@ -2498,39 +2530,38 @@
           }
         }
 
-        
         // Track mouse down events to differentiate keyboard vs mouse focus
-        prevBtn.addEventListener('mousedown', () => {
+        prevBtn.addEventListener("mousedown", () => {
           mouseDownTarget = prevBtn;
         });
-      
-        nextBtn.addEventListener('mousedown', () => {
+
+        nextBtn.addEventListener("mousedown", () => {
           mouseDownTarget = nextBtn;
         });
-      
-        strip.addEventListener('mousedown', () => {
+
+        strip.addEventListener("mousedown", () => {
           mouseDownTarget = strip;
         });
-      
+
         // Clear mouse target after a short delay
-        document.addEventListener('mousedown', () => {
+        document.addEventListener("mousedown", () => {
           setTimeout(() => {
             mouseDownTarget = null;
           }, 100);
         });
-      
+
         // Enhanced keyboard navigation for thumbnail container
-        strip.addEventListener('keydown', (e) => {
-          if (e.key === 'ArrowRight') {
+        strip.addEventListener("keydown", (e) => {
+          if (e.key === "ArrowRight") {
             e.preventDefault();
             e.stopPropagation();
             move(true);
-          } else if (e.key === 'ArrowLeft') {
+          } else if (e.key === "ArrowLeft") {
             e.preventDefault();
             e.stopPropagation();
             move(false);
-          } else if (e.key === 'Tab') {
-            const mainContent = mainContainer.querySelector('model-viewer');
+          } else if (e.key === "Tab") {
+            const mainContent = mainContainer.querySelector("model-viewer");
             if (mainContent && allThumbs[selectedIndex].is3D) {
               // If we're showing the 3D model, focus it
               e.preventDefault();
@@ -2542,26 +2573,26 @@
             }
           }
         });
-      
+
         // Enhanced focus management for navigation buttons
-        prevBtn.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
+        prevBtn.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
             move(false);
-          } else if (e.key === 'Tab' && !e.shiftKey) {
+          } else if (e.key === "Tab" && !e.shiftKey) {
             // Tab from prev arrow goes to strip
             e.preventDefault();
             strip.focus();
           }
         });
 
-        nextBtn.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
+        nextBtn.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
             move(true);
-          } else if (e.key === 'Tab' && e.shiftKey) {
+          } else if (e.key === "Tab" && e.shiftKey) {
             // Shift+Tab from next arrow
-            const mainContent = mainContainer.querySelector('model-viewer');
+            const mainContent = mainContainer.querySelector("model-viewer");
             if (mainContent && allThumbs[selectedIndex].is3D) {
               // If we're showing the 3D model, focus it
               e.preventDefault();
@@ -2573,54 +2604,46 @@
             }
           }
         });
-      
+
         // Previous button event handlers
-        prevBtn.addEventListener('click', () => move(false));
-      
+        prevBtn.addEventListener("click", () => move(false));
+
         // Next button event handlers
-        nextBtn.addEventListener('click', () => move(true));
-      
+        nextBtn.addEventListener("click", () => move(true));
+
         // Focus indicators only for keyboard navigation
-        prevBtn.addEventListener('focus', () => {
+        prevBtn.addEventListener("focus", () => {
           if (mouseDownTarget !== prevBtn) {
-            prevBtn.style.outline = '2px solid blue';
-            prevBtn.style.outlineOffset = '2px';
+            prevBtn.classList.add("focus-outline");
           }
         });
-        
-        prevBtn.addEventListener('blur', () => {
-          prevBtn.style.outline = '';
-          prevBtn.style.outlineOffset = '';
+
+        prevBtn.addEventListener("blur", () => {
+          prevBtn.classList.remove("focus-outline");
         });
-      
-        nextBtn.addEventListener('focus', () => {
+
+        nextBtn.addEventListener("focus", () => {
           if (mouseDownTarget !== nextBtn) {
-            nextBtn.style.outline = '2px solid blue';
-            nextBtn.style.outlineOffset = '2px';
+            nextBtn.classList.add("focus-outline");
           }
         });
-        
-        nextBtn.addEventListener('blur', () => {
-          nextBtn.style.outline = '';
-          nextBtn.style.outlineOffset = '';
+
+        nextBtn.addEventListener("blur", () => {
+          nextBtn.classList.remove("focus-outline");
         });
-      
-        strip.addEventListener('focus', () => {
+
+        strip.addEventListener("focus", () => {
           if (mouseDownTarget !== strip) {
-            strip.style.outline = '2px solid blue';
-            strip.style.outlineOffset = '2px';
-            strip.style.borderRadius = '4px';
+            strip.classList.add("focus-outline", "focus-border-radius");
           }
         });
-        
-        strip.addEventListener('blur', () => {
-          strip.style.outline = '';
-          strip.style.outlineOffset = '';
-          strip.style.borderRadius = '';
+
+        strip.addEventListener("blur", () => {
+          strip.classList.remove("focus-outline", "focus-border-radius");
         });
 
         // handle window resize for dynamic visibleCount
-        window.addEventListener('resize', () => {
+        window.addEventListener("resize", () => {
           const newCount = getVisibleCount();
           if (newCount !== visibleCount) {
             visibleCount = newCount;
@@ -2631,12 +2654,12 @@
 
         // ——— SWIPE HANDLING for tablet/mobile ———
         let touchStartX = 0;
-        mainContainer.addEventListener('touchstart', e => {
+        mainContainer.addEventListener("touchstart", (e) => {
           if (window.innerWidth <= TABLET_BP) {
             touchStartX = e.changedTouches[0].clientX;
           }
         });
-        mainContainer.addEventListener('touchend', e => {
+        mainContainer.addEventListener("touchend", (e) => {
           if (window.innerWidth <= TABLET_BP) {
             const dx = e.changedTouches[0].clientX - touchStartX;
             const THRESHOLD = 50;
@@ -2653,8 +2676,5 @@
         setupMainContainerFocus();
       });
     </script>
-
-
-
-    </body>
-    </html>
+  </body>
+</html>

@@ -1532,7 +1532,7 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
   
       <li><a href="#" class="nav-link active">Variant 1</a></li>
       <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
-      <li><a href="gallery-variant-4.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
+      <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
       <li><a href="gallery-variant-3.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
 
   </ul>
@@ -1584,7 +1584,7 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
     <ul class="nav-menu">
         <li><a href="#" class="nav-link active">Variant 1</a></li>
         <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
-        <li><a href="gallery-variant-4.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
+        <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
         <li><a href="gallery-variant-3.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
     </ul>
 </div>
@@ -2160,6 +2160,8 @@ function renderStrip() {
       const scale = isMobile ? '2 2 2' : '2 2 2';
       mainContainer.innerHTML = `
           <div class="model-indicator"><i class="fas fa-arrows-rotate"></i> 3D Model</div>
+          ${isMobile ? '<div class="swipe-zone swipe-zone-left" style="position:absolute;left:0;top:0;width:22%;height:100%;z-index:20;"></div>' : ''}
+          ${isMobile ? '<div class="swipe-zone swipe-zone-right" style="position:absolute;right:0;top:0;width:22%;height:100%;z-index:20;"></div>' : ''}
           <model-viewer 
               src="models/iPhone13.glb"
               camera-controls
@@ -2444,12 +2446,32 @@ function renderStrip() {
 let touchStartX = 0;
 let touchStartY = 0;
 let isSwiping = false;
+let swipeOnModelViewer = false;
+let swipeZoneDirection = null;
 
 mainContainer.addEventListener('touchstart', e => {
-    // Disable swipe if the current item is the 3D model
-    if (allThumbs[selectedIndex].is3D) return;
-
     if (window.innerWidth <= TABLET_BP) {
+        // If 3D model is active, check if touch is on swipe-zones
+        if (allThumbs[selectedIndex].is3D) {
+            const leftZone = mainContainer.querySelector('.swipe-zone-left');
+            const rightZone = mainContainer.querySelector('.swipe-zone-right');
+            if (leftZone && leftZone.contains(e.target)) {
+                swipeZoneDirection = 'left';
+            } else if (rightZone && rightZone.contains(e.target)) {
+                swipeZoneDirection = 'right';
+            } else {
+                swipeZoneDirection = null;
+            }
+            // If not in swipe zone, let model-viewer handle rotation
+            if (!swipeZoneDirection) {
+                swipeOnModelViewer = true;
+                return;
+            }
+            swipeOnModelViewer = false;
+        } else {
+            swipeOnModelViewer = false;
+            swipeZoneDirection = null;
+        }
         touchStartX = e.changedTouches[0].clientX;
         touchStartY = e.changedTouches[0].clientY;
         isSwiping = false; // Reset on new touch
@@ -2457,10 +2479,9 @@ mainContainer.addEventListener('touchstart', e => {
 }, { passive: true });
 
 mainContainer.addEventListener('touchmove', e => {
-    // Disable swipe if the current item is the 3D model
-    if (allThumbs[selectedIndex].is3D) return;
-
     if (window.innerWidth <= TABLET_BP) {
+        // If swipe started on model-viewer, do not handle gallery swipe
+        if (allThumbs[selectedIndex].is3D && swipeOnModelViewer) return;
         // Determine if the user is primarily swiping horizontally
         if (!isSwiping) {
             const dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
@@ -2469,7 +2490,6 @@ mainContainer.addEventListener('touchmove', e => {
                 isSwiping = true;
             }
         }
-
         // If it is a horizontal swipe, prevent the page from scrolling vertically
         if (isSwiping) {
             e.preventDefault();
@@ -2478,13 +2498,11 @@ mainContainer.addEventListener('touchmove', e => {
 }, { passive: false });
 
 mainContainer.addEventListener('touchend', e => {
-    // Disable swipe if the current item is the 3D model
-    if (allThumbs[selectedIndex].is3D) return;
-
     if (window.innerWidth <= TABLET_BP && isSwiping) {
+        // If swipe started on model-viewer, do not handle gallery swipe
+        if (allThumbs[selectedIndex].is3D && swipeOnModelViewer) return;
         const dx = e.changedTouches[0].clientX - touchStartX;
         const THRESHOLD = 50; // Minimum distance for a swipe
-
         if (Math.abs(dx) > THRESHOLD) {
             move(dx < 0); // Navigate to next/previous slide
         }

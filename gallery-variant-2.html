@@ -1557,7 +1557,16 @@
       touch-action: pan-y;
       -ms-touch-action: pan-y;
     }
-    </style>
+  </style>
+  <style>
+    /* Prevent page scroll when in 3D mode */
+    body.no-scroll {
+      overflow: hidden !important;
+      position: fixed !important;
+      width: 100vw !important;
+      overscroll-behavior: contain !important;
+    }
+  </style>
 </head>
 <body>
     <!-- Header -->
@@ -2275,7 +2284,7 @@
             environment-image="neutral"
             loading="eager"
             touch-action="pan-y"
-            interaction-policy="allow-when-focused"
+            interaction-policy="none"
             camera-orbit="${cameraOrbit}"
             camera-target="0m 0m 0m"
             scale="${scale}"
@@ -2340,7 +2349,6 @@
     `;
   }
   transitionContent(container, function() {
-    // All previous setup logic for spinner, overlay, exit, etc. goes here
     const viewer = container.querySelector('#main3dModel');
     const spinner = container.querySelector('#modelLoadingSpinner');
     const overlay = container.querySelector('#activate3dOverlay');
@@ -2351,21 +2359,21 @@
         spinner.style.display = 'none';
       });
     }
-    // Enable 3D interaction mode
     function enter3DMode() {
       overlay.style.display = 'none';
       exitBtn.style.display = 'flex';
-      viewer.setAttribute('interaction-policy', 'allow-when-focused');
+      viewer.setAttribute('interaction-policy', 'always');
       viewer.setAttribute('touch-action', 'pan-y');
+      document.body.classList.add('no-scroll');
       viewer.focus();
       in3DMode = true;
     }
-    // Exit 3D interaction mode
     function exit3DMode() {
       overlay.style.display = 'flex';
       exitBtn.style.display = 'none';
       viewer.setAttribute('interaction-policy', 'none');
       viewer.setAttribute('touch-action', 'none');
+      document.body.classList.remove('no-scroll');
       in3DMode = false;
     }
     if (overlay) {
@@ -2374,7 +2382,6 @@
     if (exitBtn) {
       exitBtn.addEventListener('click', exit3DMode);
     }
-    // Prevent swipe gestures while in 3D mode
     if (viewer) {
       viewer.addEventListener('touchstart', function(e) {
         if (in3DMode) e.stopPropagation();
@@ -2386,7 +2393,6 @@
         if (in3DMode) e.stopPropagation();
       }, { capture: true });
     }
-    // Wire up view control buttons to change camera orbit
     const viewControls = container.querySelectorAll('.view-control-btn');
     if (viewer && viewControls.length) {
       viewControls.forEach(btn => {
@@ -2402,7 +2408,6 @@
         });
       });
     }
-    // ... (rest of overlay/exit/rotation/keyboard logic as before) ...
   });
 }
  

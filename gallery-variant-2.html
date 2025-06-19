@@ -1549,6 +1549,14 @@
       display: flex;
       flex-direction: column;
     }
+
+    /* Prevent page scroll when interacting with 3D model */
+    .main-image,
+    .main-image > div,
+    .main-image model-viewer {
+      touch-action: pan-y;
+      -ms-touch-action: pan-y;
+    }
     </style>
 </head>
 <body>
@@ -1630,7 +1638,6 @@
         <li><a href="gallery-variant-1.0.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
         <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
               <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 4</a></li>
-                    <li><a href="gallery-variant-4.html" class="nav-link variant-link">View Gallery Variant 4</a></li>
 
 
       </ul>
@@ -1949,6 +1956,7 @@
         let firstIndex    = 0;
         let selectedIndex = 0;
         let isAnimating   = false;
+        let pendingIndex = null;
 
         // Track mouse usage to differentiate between keyboard and mouse focus
         let mouseDownTarget = null;
@@ -2248,9 +2256,8 @@
   const isMobile = window.innerWidth <= 768;
   const cameraOrbit = isMobile ? '0deg 90deg 0.55m' : '0deg 90deg 1.2m';
   const btnOrbit = isMobile ? '0.55m' : '1.2m';
-  const scale = isMobile ? '2 2 2' : '2 2 2';
+  const scale = isMobile ? '1.8 1.8 1.8' : '2 2 2';
   const container = document.createElement('div');
-  // Use the same overlay/exit logic as before, but as a DOM element
   if (isMobile) {
     container.innerHTML = `
       <div style="position:relative;width:100%;height:100%;">
@@ -2336,9 +2343,63 @@
     // All previous setup logic for spinner, overlay, exit, etc. goes here
     const viewer = container.querySelector('#main3dModel');
     const spinner = container.querySelector('#modelLoadingSpinner');
+    const overlay = container.querySelector('#activate3dOverlay');
+    const exitBtn = container.querySelector('#exit3dModeBtn');
+    let in3DMode = false;
     if (viewer && spinner) {
       viewer.addEventListener('load', () => {
         spinner.style.display = 'none';
+      });
+    }
+    // Enable 3D interaction mode
+    function enter3DMode() {
+      overlay.style.display = 'none';
+      exitBtn.style.display = 'flex';
+      viewer.setAttribute('interaction-policy', 'allow-when-focused');
+      viewer.setAttribute('touch-action', 'pan-y');
+      viewer.focus();
+      in3DMode = true;
+    }
+    // Exit 3D interaction mode
+    function exit3DMode() {
+      overlay.style.display = 'flex';
+      exitBtn.style.display = 'none';
+      viewer.setAttribute('interaction-policy', 'none');
+      viewer.setAttribute('touch-action', 'none');
+      in3DMode = false;
+    }
+    if (overlay) {
+      overlay.addEventListener('click', enter3DMode);
+    }
+    if (exitBtn) {
+      exitBtn.addEventListener('click', exit3DMode);
+    }
+    // Prevent swipe gestures while in 3D mode
+    if (viewer) {
+      viewer.addEventListener('touchstart', function(e) {
+        if (in3DMode) e.stopPropagation();
+      }, { capture: true });
+      viewer.addEventListener('touchmove', function(e) {
+        if (in3DMode) e.stopPropagation();
+      }, { capture: true });
+      viewer.addEventListener('touchend', function(e) {
+        if (in3DMode) e.stopPropagation();
+      }, { capture: true });
+    }
+    // Wire up view control buttons to change camera orbit
+    const viewControls = container.querySelectorAll('.view-control-btn');
+    if (viewer && viewControls.length) {
+      viewControls.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const orbit = btn.getAttribute('data-orbit');
+          if (orbit) viewer.cameraOrbit = orbit;
+        });
+        btn.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            btn.click();
+          }
+        });
       });
     }
     // ... (rest of overlay/exit/rotation/keyboard logic as before) ...

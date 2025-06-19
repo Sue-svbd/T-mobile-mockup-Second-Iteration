@@ -1024,9 +1024,9 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
 
         .main-image {
             width: 100%;
-            height: auto;
-            max-width: 260px;
+            max-width: none;
             aspect-ratio: 1/1;
+            min-height: 260px; /* Prevent jump on image load */
         }
 
         .main-image img,
@@ -2266,7 +2266,7 @@ function showVideo(src) {
       const isMobile = window.innerWidth <= 768;
       const cameraOrbit = isMobile ? '0deg 90deg 0.55m' : '0deg 90deg 1.2m';
       const btnOrbit = isMobile ? '0.55m' : '1.2m';
-      const scale = isMobile ? '2 2 2' : '2 2 2';
+      const scale = isMobile ? '1.8 1.8 1.8' : '2 2 2';
 
       // Create the model-indicator and spinner
       const indicator = document.createElement('div');

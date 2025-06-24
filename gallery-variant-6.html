@@ -1,0 +1,2942 @@
+<!-- /* Version with swiping only outside 3D model on mobile */ -->
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Apple iPhone 16| Telekom</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+  <style>
+    /* Reset and Base Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'TeleNeo', Arial, sans-serif;
+        color: #262626;
+        background-color: #f5f5f5;
+        line-height: 1.5;
+    }
+
+    /* 3D Model Loading Spinner */
+    .model-loading-spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1001;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255,255,255,0.7);
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .model-loading-spinner .spinner {
+        border: 4px solid #e0e0e0;
+        border-top: 4px solid var(--magenta);
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* --- Thumbnail wrapper --- */
+.thumbnail {
+  flex: 1 1 0;           /* share space equally */
+  aspect-ratio: 1/1;     /* force square */
+  position: relative;    /* for overlay & absolute content */
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.thumbnail.active { opacity: 1; }
+
+/* center img/video inside wrapper */
+.thumbnail img,
+.thumbnail video {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* play-icon overlay */
+.thumbnail.video .play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;                  /* adjust if you like */
+  color: white;
+  pointer-events: none;
+  text-shadow: 0 0 5px rgba(0,0,0,0.7);
+  z-index: 1;
+}
+
+    
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+    
+    ul {
+        list-style: none;
+    }
+    
+    button {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+    
+    /* Telekom Brand Colors */
+    :root {
+        --magenta: #e20074;
+        --white: #ffffff;
+        --black: #262626;
+        --gray-light: #f5f5f5;
+        --gray: #e0e0e0;
+        --gray-dark: #9e9e9e;
+    }
+    
+    /* Header Styles */
+    .header {
+        background-color: var(--white);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    
+    .header-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 0 20px;
+        min-height: 80px;
+        justify-content: flex-start;
+        gap: 24px;;
+    }
+    body > header > div.header-container.mobile {
+        display: none;
+    }
+    
+    /* Logo Section */
+    .logo-section {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    
+    .logo-square {
+        width: 80px;
+        height: 80px;
+        background-color: var(--magenta);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    
+    .logo-t {
+        color: var(--white);
+        font-size: 2.5rem;
+        font-weight: 700;
+        font-family: 'TeleNeo', Arial, sans-serif;
+    }
+    
+    .top-links {
+        display: flex;
+        gap: 25px;
+        padding-top: 15px;
+    }
+    
+    .top-link {
+        font-size: 0.9rem;
+        color: var(--black);
+        transition: color 0.2s ease;
+    }
+    
+    .top-link.active {
+        color: var(--magenta);
+        font-weight: 700;
+    }
+    
+    .top-link:hover {
+        color: var(--magenta);
+    }
+    
+    .header-icons {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        padding-top: 15px;
+    }
+    
+    .icon-btn {
+        color: var(--black);
+        font-size: 1.2rem;
+        padding: 8px;
+        transition: color 0.2s ease;
+        background: none;
+        border: none;
+    }
+    
+    .icon-btn:hover {
+        color: var(--magenta);
+    }
+    
+    /* Main Navigation */
+    .main-navigation {
+        background-color: var(--white);
+        border-top: 1px solid var(--gray);
+        width: 100%;
+    }
+    
+    .nav-container {
+        width:100%;
+        padding: 0 20px;
+        display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    }
+    
+    .nav-menu {
+        display: flex;
+        gap: 40px;
+    }
+    .nav-menu-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .nav-link {
+        display: block;
+        padding: 15px 0;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--black);
+        position: relative;
+        transition: color 0.2s ease;
+    }
+    
+    .nav-link:hover {
+        color: var(--magenta);
+    }
+    
+    .nav-link.active {
+        color: var(--magenta);
+    }
+    
+    .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background-color: var(--magenta);
+    }
+    
+    /* Breadcrumb Styles */
+    .breadcrumb-container {
+        background-color: var(--white);
+        border-bottom: 1px solid var(--gray);
+    }
+    
+    .breadcrumb {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+        color: var(--gray-dark);
+    }
+    
+    .breadcrumb a {
+        color: var(--gray-dark);
+    }
+    
+    .breadcrumb i {
+        margin: 0 10px;
+        font-size: 0.8rem;
+    }
+    
+    /* Main Content Styles */
+    .main-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .main-image {
+    background-color: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-height: 400px;
+    aspect-ratio: 1/1;
+    position: relative;
+}
+
+.main-image img,
+.main-image video {
+max-width: 100%;
+max-height: 100%;
+object-fit: contain;
+transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
+}
+
+.model-indicator {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--gray-light);
+  color: var(--black);
+  padding: 2px 10px;
+  border-radius: 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  z-index: 10;
+  border: 1px solid var(--gray);
+  box-shadow: none;
+  pointer-events: none;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+}
+.model-indicator i {
+  font-size: 1em;
+  color: var(--gray-dark);
+  animation: spin-cube 3.2s linear infinite;
+  display: inline-block;
+}
+@keyframes spin-cube {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Fade animation classes */
+.fade-out {
+    opacity: 0 !important;
+    transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1);
+    z-index: 1;
+}
+
+.fade-in {
+    opacity: 1 !important;
+    transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1);
+    z-index: 2;
+}
+    
+    .product-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr 350px;
+        gap: 40px;
+        margin-bottom: 40px;
+        background-color: var(--white);
+        padding: 30px;
+        border-radius: 8px;
+    }
+
+    .tags{
+    display: flex;
+    gap: 16px;
+    }
+    
+    /* Product Images Styles */
+    .product-images {
+        grid-column: 1;
+    }
+
+    .product-images-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .main-image {
+        background-color: var(--white);
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-height: 400px;
+        aspect-ratio: 1/1;
+        position: relative;
+    }
+    
+    .main-image img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+    
+    .thumbnails {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .thumbnail-container {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    
+    .thumbnail-container::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .thumbnail {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        cursor: pointer;
+        object-fit: cover;
+        border: 2px solid transparent;
+        background-color: white;
+        opacity: 60%;
+    }
+    
+    .thumbnail.active {
+        border-color: var(--magenta);
+        opacity: 100%;
+    }
+    
+    .thumbnail.video::after {
+        content: '\f04b';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: var(--white);
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .thumbnail-nav {
+        background: none;
+        border: none;
+        width: auto;
+        height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--black);
+        padding: 0;
+        font-size: 1.2rem;
+    }
+    
+    .thumbnail-nav:hover {
+        color: var(--magenta);
+    }
+    
+    .thumbnail-nav:focus {
+        outline: none;
+    }
+    
+    /* Product Details Styles */
+    .product-details {
+        grid-column: 2;
+    }
+    
+    .back-link {
+        margin-bottom: 20px;
+        color: var(--magenta);
+        font-size: 0.9rem;
+        text-align: left;
+    }
+    
+    .product-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-align: left;
+    }
+    
+    .ready-to-ship {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 30px;
+        padding: 8px 12px;
+        background-color: #e8f5e8;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        color: #2e7d32;
+    }
+  
+    .ready-to-ship i {
+        color: #2e7d32;
+    }
+    
+    .product-colors, .product-storage {
+        margin-bottom: 30px;
+    }
+    
+    .product-colors h2, .product-storage h2 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    .selected-color {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+        color: var(--gray-dark);
+    }
+    
+    .color-options {
+        display: flex;
+        gap: 15px;
+        justify-content: flex-start;
+    }
+    
+    .color-option {
+        position: relative;
+        cursor: pointer;
+    }
+    
+    .color-option input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+    
+    .color-circle {
+        display: block;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 2px solid var(--white);
+        box-shadow: 0 0 0 1px var(--gray);
+    }
+    
+    .color-option.selected .color-circle {
+        box-shadow: 0 0 0 2px var(--magenta);
+    }
+    
+    .color-circle.black {
+        background-color: #000000;
+    }
+    
+    .color-circle.white {
+        background-color: #f9f9f9;
+    }
+    
+    .color-circle.pink {
+        background-color: #ffc0cb;
+    }
+    
+    .color-circle.blue {
+        background-color: #0066cc;
+    }
+    
+    .color-circle.green {
+        background-color: #4caf50;
+    }
+    
+    .storage-options {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-start;
+    }
+    
+    .storage-option {
+        cursor: pointer;
+        position: relative;
+    }
+    
+    .storage-option input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+    
+    .storage-content {
+        border: 2px solid var(--gray);
+        border-radius: 8px;
+        padding: 15px 20px;
+        text-align: center;
+        transition: all 0.2s ease;
+        min-width: 80px;
+    }
+    
+    .storage-option.selected .storage-content {
+        border-color: var(--magenta);
+        background-color: rgba(226, 0, 116, 0.05);
+    }
+    
+    .storage-size {
+        display: block;
+        font-weight: 700;
+        font-size: 1rem;
+    }
+    
+    /* Product Specs */
+    .product-specs {
+        display: flex;
+        justify-content: space-around;
+        margin: 40px 0;
+        padding: 20px 0;
+        border-top: 1px solid var(--gray);
+        border-bottom: 1px solid var(--gray);
+    }
+    
+    .spec {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 8px;
+    }
+    
+    .spec-icon {
+        width: 40px;
+        height: 40px;
+        background-color: var(--gray-light);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: var(--black);
+    }
+    
+    .spec-details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .spec-title {
+        font-size: 0.8rem;
+        color: var(--black);
+        margin-bottom: 2px;
+    }
+    
+    .spec-value {
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+    
+    /* Total Price Section */
+    .total-price {
+      display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: flex-start;
+    background: rgb(244, 246, 248);
+    padding: 1rem 1.25rem;
+    border-radius: 0.25rem;
+    color: rgb(38, 38, 38);
+    margin-bottom: 2rem;
+    }
+    
+    .total-price h3 {
+        font-size: 1rem;
+        margin-bottom: 10px;
+        color: var(--gray-dark);
+    }
+    
+    .price-discount {
+        color: var(--magenta);
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+    
+    .price-amount {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--black);
+        white-space: nowrap;
+    }
+    
+    .price-note {
+        font-size: 0.8rem;
+        color: var(--gray-dark);
+        margin-top: 5px;
+    }
+    
+    /* Purchase Summary Styles */
+    .purchase-summary {
+        grid-column: 3;
+        background-color: var(--white);
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        height: fit-content;
+    }
+ .purchase-summary-mobile {
+  visibility: hidden;
+ }
+    
+    .tariff-recommendation {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        position: relative;
+    }
+    
+    .recommendation-badge {
+        background-color: var(--magenta);
+        color: var(--white);
+        font-size: 0.7rem;
+        padding: 4px 8px;
+        border-radius: 4px;
+        position: absolute;
+        top: -8px;
+        left: 15px;
+    }
+    
+    .tariff-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
+    
+    .tariff-icon {
+        width: 30px;
+        height: 30px;
+        background-color: var(--magenta);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .tariff-icon i {
+        color: var(--white);
+        font-size: 0.9rem;
+    }
+    
+    .tariff-info h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 2px;
+    }
+    
+    .tariff-info p {
+        font-size: 0.8rem;
+        color: var(--gray-dark);
+    }
+    
+    .tariff-price {
+        text-align: right;
+        font-size: 1.3rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+    
+    .tariff-duration {
+        font-size: 0.8rem;
+        color: var(--gray-dark);
+        text-align: left;
+        margin-bottom: 15px;
+        margin-left: 37px;
+    }
+    
+    .tariff-actions {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .btn-link {
+        color: var(--magenta);
+        font-size: 0.8rem;
+        text-decoration: underline;
+        background: none;
+        border: none;
+        cursor: pointer;
+        flex: 1;
+        text-align: center;
+    }
+    
+    .payment-summary {
+        margin-bottom: 20px;
+    }
+    
+    .payment-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .payment-type {
+        font-size: 0.8rem;
+        color: var(--gray-dark);
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+    
+    .payment-amount {
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+    
+    .btn-primary {
+        background-color: var(--magenta);
+        color: var(--white);
+        border: none;
+        border-radius: 8px;
+        padding: 15px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.2s ease;
+        margin-bottom: 15px;
+    }
+    
+    .btn-primary:hover {
+        background-color: #c20062;
+    }
+    
+    .price-details {
+        text-align: center;
+    }
+    
+    .price-details a {
+        color: var(--magenta);
+        font-size: 0.8rem;
+        text-decoration: none;
+    }
+    
+    .price-details i {
+        margin-right: 5px;
+    }
+    
+    /* Benefits Section */
+    .benefits-section {
+        background-color: var(--white);
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 20px;
+    }
+    
+    .benefits-section h2 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .benefit-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        font-size: 0.9rem;
+    }
+    
+    .benefit-icon {
+        color: var(--magenta);
+        font-size: 1rem;
+        width: 20px;
+    }
+    
+    .benefit-link {
+        color: var(--magenta);
+        text-decoration: none;
+        margin-left: auto;
+    }
+    
+    /* Button Styles */
+    .btn-secondary {
+        background-color: transparent;
+        color: var(--magenta);
+        border: 2px solid var(--magenta);
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-secondary:hover {
+        background-color: var(--magenta);
+        color: var(--white);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .product-container {
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .purchase-summary {
+          display: none;
+        }
+         .purchase-summary-mobile {
+  visibility:visible;
+ }
+   
+    }
+
+        /* tablet */
+
+    
+    @media (max-width: 768px) {
+.purchase-summary{
+  display: none;
+}
+.purchase-summary-mobile{
+  display: block !important;
+}
+
+        .header-container {
+            flex-direction: column;
+            align-items: stretch;
+            min-height: auto;
+            padding: 10px 20px;
+        }
+        
+        .logo-section {
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .logo-square {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .logo-t {
+            font-size: 2rem;
+        }
+        
+        .top-links {
+            padding-top: 0;
+            gap: 15px;
+        }
+        
+        .top-link {
+            font-size: 0.8rem;
+        }
+        
+        .header-icons {
+            padding-top: 0;
+            gap: 10px;
+        }
+        
+        .nav-menu {
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            font-size: 0.9rem;
+            padding: 10px 0;
+        }
+
+        .product-images-container{
+          max-width: 208px;
+          max-height: 280px;
+        }
+        
+        .product-container {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .product-title {
+            font-size: 2rem;
+        }
+        
+   
+        .tariff-actions {
+            flex-direction: column;
+        }
+        .thumbnails{
+          max-width: 208px;
+        }
+        .product-specs{
+        max-width: 100vw;
+        }
+        .spec-value{
+          font-weight: 100;
+          font-size: 14px;
+        }
+    }
+    
+ 
+
+ 
+    @media (max-width: 768px) {
+        .product-images-container {
+            max-width: 260px;
+            margin: 0 auto;
+        }
+
+        .main-image {
+            width: 100%;
+            height: auto;
+            max-width: 260px;
+            aspect-ratio: 1/1;
+        }
+
+        .main-image img,
+        .main-image video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .thumbnails {
+            max-width: 260px;
+            margin: 0 auto;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .product-images-container {
+            max-width: 100%;
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .main-image {
+            width: 100%;
+            max-width: none;
+            aspect-ratio: 1/1;
+        }
+
+        .thumbnail {
+            display: none !important;
+        }
+        .product-details{
+            display: none;
+        }
+
+        /* style the strip container to center the dots */
+        .thumbnail-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            overflow: hidden;
+            flex: 1;  /* arrows still flex:0 0 20px */
+        }
+
+        /* base dot */
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #302f2f;
+            cursor: pointer;
+            position: relative;
+            flex: none;
+        }
+        .dot.active {
+            background: var(--magenta);
+        }
+        body > main > div > div.product-images > div.product-images-container > div.thumbnails > div > div.dot.video.active{
+            border: none;
+            color: var(--magenta);
+        }
+
+        /* video dots: bigger, show play icon */
+        .dot.video {
+            width: 16px;
+            height: 16px;
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .dot.video .play-icon {
+            font-size: 0.75rem;
+            color: #302f2f;
+            pointer-events: none;
+        }
+
+        /* Only the 3D model dot should have no background */
+        .dot.model {
+            background: transparent !important;
+        }
+        .dot.model.active {
+            background: transparent !important;
+        }
+        .dot.model span {
+            color: #302f2f;
+        }
+        .dot.model.active span {
+            color: var(--magenta);
+        }
+
+        /* Explicitly show and style the nav arrows */
+        .thumbnail-nav.prev,
+        .thumbnail-nav.next {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 20px;
+            width: 20px;
+            height: 20px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            color: #302f2f;
+            padding: 0;
+            z-index: 2;
+        }
+
+        .thumbnail-nav:hover {
+            color: var(--magenta);
+        }
+
+        .header-container {
+            display: none;
+        }
+         body > header > div.header-container.mobile {
+       max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 0 20px;
+        min-height: 80px;
+        justify-content: flex-start;
+        gap: 24px;;
+    }
+        .main-content {
+            padding: 15px;
+        }
+        
+        .logo-section {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .top-links {
+            align-self: stretch;
+            justify-content: space-between;
+        }
+        
+        .nav-menu {
+            gap: 15px;
+        }
+        
+        .nav-link {
+            font-size: 0.8rem;
+        }
+        
+        .product-title {
+            font-size: 1.8rem;
+        }
+        
+        .color-options {
+            justify-content: center;
+        }
+        
+        .thumbnails {
+            justify-content: center;
+        }
+    }
+
+    
+    /* Focus States for Accessibility */
+    .icon-btn:focus-visible,
+    .nav-link:focus-visible,
+    .top-link:focus-visible,
+    .benefit-link:focus-visible,
+    .thumbnail-nav.prev:focus-visible,
+    .thumbnail-nav.next:focus-visible,
+    .thumbnail-container:focus-visible,
+    video:focus-visible,
+    model-viewer:focus-visible {
+        outline: 2px solid blue;
+        outline-offset: 2px;
+    }
+
+    .view-control-btn:focus-visible {
+        outline: 2px solid blue;
+        outline-offset: 2px;
+        background-color: var(--magenta);
+        color: white;
+    }
+    
+    .btn-primary:focus-visible,
+    .btn-secondary:focus-visible {
+        outline: 2px solid blue;
+        outline-offset: 2px;
+    }
+    
+    .color-option:focus-within .color-circle {
+        box-shadow: 0 0 0 2px blue, 0 0 0 4px rgba(226, 0, 116, 0.2);
+    }
+    
+    .storage-option:focus-within .storage-content {
+        box-shadow: 0 0 0 2px blue;
+    }
+    
+    /* Loading States */
+    .main-image.loading {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+    }
+    
+    @keyframes loading {
+        0% {
+            background-position: 200% 0;
+        }
+        100% {
+            background-position: -200% 0;
+        }
+    }
+    
+    /* Smooth Transitions */
+    * {
+        transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    /* Print Styles */
+    @media print {
+        .header,
+        .breadcrumb-container,
+        .purchase-summary,
+        .benefits-section {
+            display: none;
+        }
+        
+        .product-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .main-content {
+            max-width: none;
+            padding: 0;
+            background-color: var(--white);
+        }
+    }
+
+    /* Mobile View Styles */
+    @media (max-width: 480px) {
+        .thumbnail-container.mobile-view {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .thumbnail-container.mobile-view .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #302f2f;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .thumbnail-container.mobile-view .dot.active {
+             background: var(--magenta);
+             
+        }
+
+        .thumbnail-container.mobile-view .dot.video {
+            width: 16px;
+            height: 16px;
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .thumbnail-container.mobile-view .dot.video .play-icon {
+            font-size: 0.75rem;
+            color: #302f2f;;
+            pointer-events: none;
+        }
+
+        .thumbnail-nav {
+            display: none;
+        }
+    }
+
+    /* Desktop/Tablet View Styles */
+    .thumbnail-container.desktop-view {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .thumbnail-container.desktop-view::-webkit-scrollbar {
+        display: none;
+    }
+
+    .dot.video.active .play-icon {
+        color: var(--magenta);
+    }
+
+    .thumbnail-container.mobile-view .dot.video.active .play-icon {
+        color: var(--magenta);
+    }
+
+    /* 3D Model Viewer Styles */
+    model-viewer {
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+        --poster-color: transparent;
+    }
+
+    .main-image model-viewer {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+    }
+
+    @media (max-width: 768px) {
+        .main-image model-viewer {
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            transform: scale(0.9);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .main-image model-viewer {
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            transform: scale(0.9);
+        }
+    }
+
+    .thumbnail.model {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f5f5f5;
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        cursor: pointer;
+        opacity: 0.6;
+        transition: opacity 0.2s;
+    }
+
+    .thumbnail.model:hover {
+        opacity: 1;
+    }
+
+    .thumbnail.model.active {
+        opacity: 1;
+        border: 2px solid var(--magenta);
+    }
+
+    .thumbnail.model span {
+        color: #302f2f;
+    }
+
+    .thumbnail.model.active span {
+        color: var(--magenta);
+    }
+
+    .dot.model {
+        width: 16px;
+        height: 16px;
+        background: transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0.6;
+        transition: opacity 0.2s;
+    }
+
+    .dot.model:hover {
+        opacity: 1;
+    }
+
+    .dot.model.active {
+        opacity: 1;
+    }
+
+    .dot.model span {
+        color: #302f2f;
+    }
+
+    .dot.model.active span {
+        color: var(--magenta);
+    }
+
+    #ar-button {
+        background-color: var(--magenta);
+        border-radius: 4px;
+        border: none;
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        color: white;
+        padding: 0.5em 1em;
+        font-family: inherit;
+        cursor: pointer;
+    }
+
+    .view-controls {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        z-index: 100;
+    }
+    @media (max-width: 768px) {
+        .view-controls {
+            display: none !important;
+        }
+    }
+
+    .view-control-btn {
+        background-color: rgba(255, 255, 255, 0.8);
+        border: 1px solid #ddd;
+        border-radius: 50%;
+        padding: 6px;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: #302f2f;
+    }
+
+    .view-control-btn:hover {
+        background-color: var(--magenta);
+        color: white;
+        border-color: var(--magenta);
+    }
+
+    model-viewer {
+        --progress-bar-height: 0;
+        background-color: transparent;
+        --model-scale: 1.5;
+    }
+
+    /* Add these styles to ensure buttons are properly focusable */
+    .view-control-btn {
+        cursor: pointer;
+        padding: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .view-control-btn:hover,
+    .view-control-btn:focus {
+        background-color: var(--magenta);
+        color: white;
+    }
+
+    .view-control-btn:focus-visible {
+        outline: 2px solid blue;
+        outline-offset: 2px;
+    }
+
+    /* Add these styles in the CSS section */
+    .hamburger-menu {
+        display: none;
+        font-size: 1.5rem;
+        color: var(--black);
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 80px;
+        left: 0;
+        right: 0;
+        background-color: var(--white);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        z-index: 1000;
+        padding: 20px;
+    }
+
+    .mobile-menu.active {
+        display: block;
+    }
+
+    .mobile-menu .nav-menu {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .mobile-menu .nav-link {
+        padding: 10px 0;
+        border-bottom: 1px solid var(--gray);
+    }
+
+    .mobile-menu .nav-link:last-child {
+        border-bottom: none;
+    }
+
+    .variant-text{
+      color: var(
+--magenta
+      );
+    }
+
+    @media (max-width: 480px) {
+        .hamburger-menu {
+            display: block;
+        }
+        
+        .nav-menu-container {
+            display: none;
+        }
+    }
+
+    .main-image > div {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0; left: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .main-image model-viewer {
+      width: 100%;
+      height: 100%;
+      min-height: 200px;
+    }
+
+    /* Restore previous 3D indicator styles and remove floating label, dimmed swipe zones, and grab cursor */
+    .model-3d-highlight {
+      position: absolute;
+      top: 0; left: 22%; right: 22%; bottom: 0;
+      background: rgba(226,0,116,0.07); /* very light gray */
+      border-radius: 12px;
+      pointer-events: none;
+      z-index: 10;
+      box-sizing: border-box;
+    }
+    .model-3d-highlight::after {
+      content: '';
+      position: absolute;
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      pointer-events: none;
+      z-index: 11;
+      border-radius: 14px;
+      width: calc(100% + 4px);
+      height: calc(100% + 4px);
+      display: block;
+      background: none;
+      /* SVG border for animation */
+      mask-image: none;
+    }
+    .model-3d-highlight.animated-border::after {
+      content: '';
+      pointer-events: none;
+      z-index: 11;
+      border-radius: 14px;
+      width: calc(100% + 4px);
+      height: calc(100% + 4px);
+      display: block;
+      background: none;
+      mask-image: none;
+      /* SVG border for animation */
+      background: none;
+      /* Use SVG for animated dashed border */
+      background: url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="96" height="96" rx="12" fill="none" stroke="%23e20074" stroke-width="4" stroke-dasharray="12 8" stroke-dashoffset="0"><animate attributeName="stroke-dashoffset" values="0;20" dur="2.5s" repeatCount="indefinite" /></rect></svg>');
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+    }
+    .model-3d-icon {
+      position: absolute;
+      right: 6px;
+      bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size:11px;
+      color: #e20074;
+      background: none;
+      border-radius: 0.8em;
+      padding: 0.18em 0.9em;
+      font-weight: 600;
+      z-index: 20;
+      pointer-events: none;
+      box-shadow: 0 2px 8px rgba(226,0,116,0.08);
+      letter-spacing: 0.04em;
+    }
+    .circular-arrows {
+      position: absolute;
+      left: 0; top: 0; right: 0; bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%; height: 100%;
+      z-index: 1;
+    }
+    .circular-arrows i {
+      font-size: 2.5em;
+      color: #e20074;
+      animation: rotate-arrows 3s linear infinite;
+      opacity: 0.7;
+    }
+    @keyframes rotate-arrows {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+    .icon-3d-text {
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.5em;
+      font-weight: 700;
+      color: #e20074;
+      z-index: 2;
+      letter-spacing: 0.04em;
+      border-radius: 0.5em;
+      padding: 0 0.2em;
+      pointer-events: none;
+    }
+    .swipe-zone {
+      position: absolute;
+      top: 0;
+      width: 22%;
+      height: 100%;
+      z-index: 20;
+      background: none;
+      transition: none;
+    }
+    .swipe-zone-left {
+      left: 0;
+    }
+    .swipe-zone-right {
+      right: 0;
+    }
+    .model-3d-gesture-overlay {
+      position: absolute;
+      left: 0; top: 0; right: 0; bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 30;
+    }
+    .gesture-hand {
+      position: absolute;
+      color: #e20074;
+      font-size: 2.2rem;
+      opacity: 0;
+      display: none;
+      pointer-events: none;
+    }
+    .hand-vertical {
+      left: 50%;
+      bottom: -32px;
+      transform: translateX(-50%);
+    }
+    .hand-horizontal {
+      left: -32px;
+      top: 50%;
+      transform: translateY(-50%) rotate(-90deg);
+    }
+    .animate-vertical {
+      animation: hand-swipe-up-through 1.1s cubic-bezier(0.4,0,0.2,1) forwards;
+      display: inline-flex !important;
+    }
+    .animate-horizontal {
+      animation: hand-swipe-right-through 1.1s cubic-bezier(0.4,0,0.2,1) forwards;
+      display: inline-flex !important;
+    }
+    @keyframes hand-swipe-up-through {
+      0% { opacity: 0; bottom: -32px; }
+      10% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { opacity: 0; bottom: 80%; }
+    }
+    @keyframes hand-swipe-right-through {
+      0% { opacity: 0; left: -32px; }
+      10% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { opacity: 0; left: 80%; }
+    }
+    .model-3d-text {
+      font-size: 1em;
+      letter-spacing: 0.04em;
+      color: #e20074;
+      font-weight: 700;
+    }
+
+    /* Add three-dots button for toggling view controls */
+    .model-viewer-controls-toggle {
+      position: absolute;
+      bottom: 14px;
+      right: 14px;
+      z-index: 120;
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid #e0e0e0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .model-viewer-controls-toggle:focus {
+      outline: 2px solid var(--magenta);
+      outline-offset: 2px;
+      background: #f5e6f0;
+    }
+    .model-viewer-controls-toggle:hover {
+      background: #f5e6f0;
+      border-color: var(--magenta);
+    }
+    .model-viewer-controls-toggle .fa-ellipsis-h {
+      font-size: 1.3em;
+      color: #e20074;
+    }
+
+    /* Hide view-controls by default, show when .show-controls is present */
+    .view-controls { display: none; }
+    .show-controls .view-controls { display: flex !important; }
+    /* Only show the three-dots button and view controls on mobile */
+    @media (max-width: 768px) {
+      .model-viewer-controls-toggle {
+        display: flex;
+      }
+      .view-controls { display: none; }
+      .show-controls .view-controls { display: flex !important; }
+    }
+    @media (min-width: 769px) {
+      .model-viewer-controls-toggle {
+        display: none !important;
+      }
+      .view-controls { display: none !important; }
+    }
+    </style>
+</head>
+<body>
+  <!-- Header -->
+<!-- Header -->
+<header class="header">
+  <div class="header-container">
+      <!-- Logo Section -->
+      <div class="logo-section">
+          <div class="logo-square">
+              <span class="logo-t">T</span>
+          </div>
+          
+
+  
+
+</div>
+<div class="nav-container">
+  <!-- Main Navigation -->
+<nav class="main-navigation">
+<!-- Top Links -->
+<div class="top-links">
+<a href="#" class="top-link active">Osobní</a>
+<a href="#" class="top-link">Podnikatelé a firmy</a>
+<a href="#" class="top-link">Můj T-Mobile</a>
+</div>
+<div class="nav-menu-container">
+  <!-- Nav menu -->
+  <ul class="nav-menu">
+  
+      <li><a href="#" class="nav-link active">6</a></li>
+      <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
+      <li><a href="gallery-variant-1.0.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
+      <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
+      <li><a href="gallery-variant-4.html" class="nav-link variant-link">View Gallery Variant 4</a></li>
+
+  </ul>
+        <!-- Header Icons -->
+<div class="header-icons">
+<button class="icon-btn" aria-label="Vyhledávání">
+    <i class="fas fa-search"></i>
+</button>
+<button class="icon-btn" aria-label="Nákupní košík">
+    <i class="fas fa-shopping-cart"></i>
+</button>
+<button class="icon-btn" aria-label="Uživatelský účet">
+    <i class="fas fa-user"></i>
+</button>
+</div>
+
+</div>
+</div>
+      </div>
+        <div class="header-container mobile">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <div class="logo-square">
+                    <span class="logo-t">T</span>
+                </div>
+            </div>
+            <div class="nav-container">
+                <button class="hamburger-menu" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-icons">
+                    <button class="icon-btn" aria-label="Vyhledávání">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="icon-btn" aria-label="Nákupní košík">
+                        <i class="fas fa-shopping-cart"></i>
+                    </button>
+                    <button class="icon-btn" aria-label="Uživatelský účet">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Add mobile menu -->
+<div class="mobile-menu">
+    <ul class="nav-menu">
+        <li><a href="#" class="nav-link active">Variant 6</a></li>
+        <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
+        <li><a href="gallery-variant-1.0.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
+        <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
+              <li><a href="gallery-variant-4.html" class="nav-link variant-link">View Gallery Variant 4</a></li>
+
+    </ul>
+</div>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb-container">
+    <nav class="breadcrumb">
+      <a href="/"><i class="fas fa-home"></i></a>
+      <i class="fas fa-chevron-right"></i>
+      <span>Apple iPhone 16</span>
+            <i class="fas fa-chevron-right"></i>
+      <span class="variant-text">Variant 2</span>
+
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+<!-- Main Content -->
+<main class="main-content">
+  <div class="product-container">
+
+    <!-- Images -->
+    <div class="product-images">
+      <div class="product-images-container">
+        <div class="main-image">
+          <img src="https://placehold.co/500x500/ffc0cb/000000?text=iPhone+16+Pink" alt="Apple iPhone 16 in Pink" id="mainImageContent"/>
+        </div>
+        <div class="thumbnails">
+          <button class="thumbnail-nav prev" ><i class="fas fa-chevron-left"></i></button>
+          <div class="thumbnail-container">
+            <img src="https://dtdl-static-natco.eshop.yo-digital.com/resize-image?f=czuat2/AJK15lIU0YbiMfNuHQcND0MTJD2xbK.png&q=80&w=55" alt="iPhone 16 #1" class="thumbnail" data-src="https://dtdl-static-natco.eshop.yo-digital.com/resize-image?f=czuat2/AJK15lIU0YbiMfNuHQcND0MTJD2xbK.png&q=80&w=444"/>
+              <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/PmsgUVmNsoi7oglNCewHguCIARm57P.png&q=80&w=444" alt="iPhone 16 #2" class="thumbnail" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/PmsgUVmNsoi7oglNCewHguCIARm57P.png&q=80&w=444"/>
+              <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/nB2lsY5RKDljInWWrSXZllXgQD6XZj.png&q=80&w=444" alt="iPhone 16 #3" class="thumbnail" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/nB2lsY5RKDljInWWrSXZllXgQD6XZj.png&q=80&w=444"/>
+              <video src="https://melodic-dragon-2bebdf.netlify.app/iphone_16_pdp_video_16x9__cz-cs.mp4" alt="iPhone 16 #3" class="thumbnail" data-src="https://melodic-dragon-2bebdf.netlify.app/iphone_16_pdp_video_16x9__cz-cs.mp4">
+              <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/AKn9b18l5cr32n711APV8zYKH9R4S1.png&q=80&w=444" alt="iPhone 16 #4" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/AKn9b18l5cr32n711APV8zYKH9R4S1.png&q=80&w=444"/>
+                    <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/lhSy40dKawrv76vPM4Ov1ycIoCH8yN.png&q=80&w=444" alt="iPhone 16 #5" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/lhSy40dKawrv76vPM4Ov1ycIoCH8yN.png&q=80&w=444"/>
+                    <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/tmQU9WcdHNp34neFpmFCREDuOHvbdG.png&q=80&w=444" alt="iPhone 16 #6" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/tmQU9WcdHNp34neFpmFCREDuOHvbdG.png&q=80&w=444"/>
+                    <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/aRycOzYLPUMR4sWlE4WYMVJnaiSbAJ.png&q=80&w=444" alt="iPhone 16 #7" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/aRycOzYLPUMR4sWlE4WYMVJnaiSbAJ.png&q=80&w=444"/>
+                    <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/gZb2gQZRfoYmnpw20T7DRt1czBFt9m.png&q=80&w=444" alt="iPhone 16 #8" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/gZb2gQZRfoYmnpw20T7DRt1czBFt9m.png&q=80&w=444"/>
+                    <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/11qJbpnu48qFgtKA6E9uawaBGninzi.png&q=80&w=444" alt="iPhone 16 #9" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/11qJbpnu48qFgtKA6E9uawaBGninzi.png&q=80&w=444"/>
+                  </div>
+          <button class="thumbnail-nav next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+    
+      <div class="product-specs">
+        <div class="spec">
+          <div class="spec-icon"><i class="fas fa-mobile-alt"></i></div>
+          <div class="spec-details">
+            <span class="spec-title">Nabíječka</span>
+            <span class="spec-value">není součástí</span>
+          </div>
+        </div>
+        <div class="spec">
+          <div class="spec-icon"><i class="fas fa-calendar"></i></div>
+          <div class="spec-details">
+            <span class="spec-title">Napájení</span>
+            <span class="spec-value">4.5 - 26 W</span>
+          </div>
+        </div>
+        <div class="spec">
+          <div class="spec-icon"><i class="fas fa-camera"></i></div>
+          <div class="spec-details">
+            <span class="spec-title">Fotoaparát</span>
+            <span class="spec-value">48 Mpx</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="product-details">
+      <div class="back-link">
+        <a href="#"><i class="fas fa-arrow-left"></i> Zpět</a>
+      </div>
+      <h1 class="product-title">
+        Apple iPhone 16
+      </h1>
+      <div class="tags">
+        <div class="ready-to-ship">
+          <i class="fas fa-calendar"></i>
+          <span>Připraveno k odeslání</span>
+        </div>
+        <div class="ready-to-ship">
+          <span>Novinka</span>
+        </div>
+      </div>
+
+
+      <div class="product-colors">
+        <h2>Barva</h2>
+        <p class="selected-color">Vybraná varianta: Růžová</p>
+        <div class="color-options">
+          <label class="color-option">
+            <input type="radio" name="color" value="black"/>
+            <span class="color-circle black"></span>
+          </label>
+          <label class="color-option">
+            <input type="radio" name="color" value="white"/>
+            <span class="color-circle white"></span>
+          </label>
+          <label class="color-option selected">
+            <input type="radio" name="color" value="pink" checked/>
+            <span class="color-circle pink"></span>
+          </label>
+          <label class="color-option">
+            <input type="radio" name="color" value="blue"/>
+            <span class="color-circle blue"></span>
+          </label>
+          <label class="color-option">
+            <input type="radio" name="color" value="green"/>
+            <span class="color-circle green"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="product-storage">
+        <h2>Paměť</h2>
+        <p class="selected-color">Uložíte si přibližně 50 000 kvalitních fotek nebo 500 minut 4K videa</p>
+        <div class="storage-options">
+          <label class="storage-option selected">
+            <input type="radio" name="storage" value="128" checked/>
+            <div class="storage-content">
+              <span class="storage-size">128 GB</span>
+            </div>
+          </label>
+          <label class="storage-option">
+            <input type="radio" name="storage" value="256"/>
+            <div class="storage-content">
+              <span class="storage-size">256 GB</span>
+            </div>
+          </label>
+          <label class="storage-option">
+            <input type="radio" name="storage" value="512"/>
+            <div class="storage-content">
+              <span class="storage-size">512 GB</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+
+
+      <div class="total-price">
+        <div>
+
+          <h3>Celková částka</h3>
+          <div class="price-note">T-Mobile posuzuje každou žádost o splátky individuálně a je oprávněn splátky nepovolit nebo je upravit.</div>
+        </div>
+        <div>
+
+          <div class="price-discount">-11%</div>
+          <div class="price-amount">15 019 Kč</div>
+        </div>
+      </div>
+<!-- Mobile purchase summary  -->
+  <!-- Purchase Summary -->
+    <div class="purchase-summary-mobile">
+      <div class="tariff-recommendation">
+        <div class="tariff-header">
+          <div class="tariff-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <div class="tariff-info">
+            <h3>Neomezená data</h3>
+            <p>Next neomezená XL s výhodou</p>
+          </div>
+          <div class="tariff-price">945 Kč</div>
+        </div>
+        <div class="tariff-duration">na 24 měsíců</div>
+        <div class="tariff-actions">
+          <button class="btn-link">Vyberte jiný tarif</button>
+          <button class="btn-link">Žádné tarify</button>
+        </div>
+      </div>
+
+      <div class="payment-summary">
+        <div class="payment-row">
+          <div class="payment-type">Jednorázově</div>
+          <div class="payment-amount">0 Kč</div>
+        </div>
+        <div class="payment-row">
+          <div class="payment-type">Celkově měsíčně
+          </div>
+          <div class="payment-amount">1815 Kč</div>
+        </div>
+      </div>
+
+      <button class="btn-primary">Přidat do košíku</button>
+      
+      <div class="price-details">
+        <a href="#"><i class="fas fa-info-circle"></i> Detaily k platbě</a>
+      </div>
+    </div>
+
+
+
+    </div>
+
+    <!-- Purchase Summary -->
+    <div class="purchase-summary">
+      <div class="tariff-recommendation">
+        <div class="tariff-header">
+          <div class="tariff-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <div class="tariff-info">
+            <h3>Neomezená data</h3>
+            <p>Next neomezená XL s výhodou</p>
+          </div>
+          <div class="tariff-price">945 Kč</div>
+        </div>
+        <div class="tariff-duration">na 24 měsíců</div>
+        <div class="tariff-actions">
+          <button class="btn-link">Vyberte jiný tarif</button>
+          <button class="btn-link">Žádné tarify</button>
+        </div>
+      </div>
+
+      <div class="payment-summary">
+        <div class="payment-row">
+          <div class="payment-type">Jednorázově</div>
+          <div class="payment-amount">0 Kč</div>
+        </div>
+        <div class="payment-row">
+          <div class="payment-type">Celkově měsíčně
+          </div>
+          <div class="payment-amount">1815 Kč</div>
+        </div>
+      </div>
+
+      <button class="btn-primary">Přidat do košíku</button>
+      
+      <div class="price-details">
+        <a href="#"><i class="fas fa-info-circle"></i> Detaily k platbě</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Benefits -->
+  <section class="benefits-section">
+    <h2>Výhody v přehledu</h2>
+    <div class="benefit-item">
+      <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
+      <span>Výkup telefonu</span>
+      <a href="#" class="benefit-link">Prodat telefon <i class="fas fa-chevron-right"></i></a>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
+      <span>MagentaEINS výhoda</span>
+      <a href="#" class="benefit-link">Aktivovat nyní <i class="fas fa-chevron-right"></i></a>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
+      <span>Doprava zdarma</span>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
+      <span>14denní lhůta na vrácení</span>
+    </div>
+  </section>
+</main>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const mainContainer = document.querySelector('.main-image');
+    const prevBtn       = document.querySelector('.thumbnail-nav.prev');
+    const nextBtn       = document.querySelector('.thumbnail-nav.next');
+    const strip         = document.querySelector('.thumbnail-container');
+    const TABLET_BP     = 768;
+
+    // dynamic visibleCount based on viewport
+    function getVisibleCount() {
+      return window.innerWidth <= TABLET_BP ? 3 : 5;
+    }
+    let visibleCount = getVisibleCount();
+
+    let firstIndex    = 0;
+    let selectedIndex = 0;
+    let isAnimating   = false;
+    let pendingIndex  = null;
+
+    // Track mouse usage to differentiate between keyboard and mouse focus
+    let mouseDownTarget = null;
+  
+    // Set up proper tab order: prev -> container -> next
+    prevBtn.tabIndex = 0;
+    strip.tabIndex = 0;
+    nextBtn.tabIndex = 0;
+
+    // build slides array (images & videos)
+    const allThumbs = Array.from(strip.querySelectorAll('.thumbnail')).map(el => ({
+      src:     el.src,
+      dataSrc: el.getAttribute('data-src'),
+      alt:     el.alt || '',
+      isVideo: el.getAttribute('data-src')?.toLowerCase().endsWith('.mp4'),
+      is3D: false
+    }));
+
+    // Add the 3D model thumbnail to the allThumbs array at index 2
+    allThumbs.splice(2, 0, {
+      src: 'models/iPhone13.glb',
+      dataSrc: 'models/iPhone13.glb',
+      alt: '3D Model of iPhone 16',
+      isVideo: false,
+      is3D: true
+    });
+
+    const total = allThumbs.length;
+
+const MOBILE_BP = 480;
+
+function renderStrip() {
+    strip.innerHTML = '';
+
+    if (window.innerWidth <= MOBILE_BP) {
+        strip.classList.add('mobile-view');
+        strip.classList.remove('desktop-view');
+        
+        // Render all dots including 3D model
+        allThumbs.forEach((slide, idx) => {
+            const dot = document.createElement('div');
+            dot.className = 'dot'
+                + (slide.isVideo ? ' video' : '')
+                + (slide.is3D ? ' model' : '')
+                + (idx === selectedIndex ? ' active' : '');
+            dot.dataset.idx = idx;
+
+            if (slide.is3D) {
+                const modelText = document.createElement('span');
+                modelText.textContent = '3D';
+                modelText.style.fontSize = '12px';
+                modelText.style.fontWeight = 'bold';
+                dot.appendChild(modelText);
+            } else if (slide.isVideo) {
+                const icon = document.createElement('i');
+                icon.className = 'fas fa-play play-icon';
+                dot.appendChild(icon);
+            }
+
+            dot.addEventListener('click', () => select(idx));
+            strip.appendChild(dot);
+        });
+        return;
+    }
+
+    // Desktop view
+    strip.classList.remove('mobile-view');
+    strip.classList.add('desktop-view');
+    
+    // Render visible thumbnails
+    for (let i = 0; i < visibleCount; i++) {
+        const idx = (firstIndex + i) % total;
+        const slide = allThumbs[idx];
+
+        const thumbWrapper = document.createElement('div');
+        thumbWrapper.className = 'thumbnail'
+            + (slide.isVideo ? ' video' : '')
+            + (slide.is3D ? ' model' : '')
+            + (idx === selectedIndex ? ' active' : '');
+        thumbWrapper.dataset.idx = idx;
+
+        if (slide.is3D) {
+            const modelText = document.createElement('span');
+            modelText.textContent = '3D';
+            modelText.style.fontSize = '14px';
+            modelText.style.fontWeight = 'bold';
+            thumbWrapper.appendChild(modelText);
+        } else if (slide.isVideo) {
+            const vid = document.createElement('video');
+            vid.muted = true;
+            vid.preload = 'metadata';
+            vid.src = slide.dataSrc;
+            vid.playsInline = true;
+            thumbWrapper.appendChild(vid);
+
+            const icon = document.createElement('i');
+            icon.className = 'fas fa-play play-icon';
+            thumbWrapper.appendChild(icon);
+        } else {
+            const img = document.createElement('img');
+            img.src = slide.src;
+            img.alt = slide.alt;
+            thumbWrapper.appendChild(img);
+        }
+
+        thumbWrapper.addEventListener('click', () => select(idx));
+        strip.appendChild(thumbWrapper);
+    }
+}
+
+    // Show image/video in main container with fade
+    function transitionContent(newEl, afterInsert) {
+      if (isAnimating) return;
+      isAnimating = true;
+      const oldEl = mainContainer.lastElementChild;
+      if (oldEl) {
+        oldEl.classList.add('fade-out');
+        setTimeout(() => {
+          if (mainContainer.contains(oldEl)) mainContainer.removeChild(oldEl);
+          fadeInNew();
+        }, 400);
+      } else {
+        fadeInNew();
+      }
+      function fadeInNew() {
+        newEl.classList.add('fade-in');
+        mainContainer.appendChild(newEl);
+        void newEl.offsetWidth;
+        newEl.classList.add('active');
+        if (afterInsert) afterInsert(newEl);
+        setTimeout(() => {
+          newEl.classList.remove('fade-in', 'active');
+          isAnimating = false;
+          if (pendingIndex !== null) {
+            const idx = pendingIndex;
+            pendingIndex = null;
+            select(idx);
+          }
+        }, 400);
+      }
+    }
+
+    function setupMainContainerFocus() {
+      const mainContent = mainContainer.querySelector('img, video, model-viewer');
+      if (mainContent && mainContent.tagName === 'VIDEO') {
+        // For videos, ensure proper tab order integration
+        mainContent.addEventListener('keydown', (e) => {
+          // Handle tab navigation within video controls
+          if (e.key === 'Tab') {
+            const videoControls = mainContent.shadowRoot?.querySelectorAll('[tabindex]:not([tabindex="-1"])') || [];
+            const focusableControls = Array.from(videoControls).filter(el => 
+              !el.hasAttribute('disabled') && 
+              el.offsetParent !== null
+            );
+            
+            if (focusableControls.length > 0) {
+              const currentIndex = focusableControls.indexOf(document.activeElement);
+              
+              if (!e.shiftKey && currentIndex === focusableControls.length - 1) {
+                // Tab from last video control should go to strip
+                e.preventDefault();
+                strip.focus();
+              } else if (e.shiftKey && currentIndex === 0) {
+                // Shift+Tab from first video control should go to prev arrow
+                e.preventDefault();
+                prevBtn.focus();
+              }
+            }
+          }
+        });
+        
+        mainContent.addEventListener('focus', () => {
+          if (mouseDownTarget !== mainContent) {
+            mainContent.style.outline = '2px solid blue';
+            mainContent.style.outlineOffset = '2px';
+          }
+        });
+        
+        mainContent.addEventListener('blur', () => {
+          mainContent.style.outline = '';
+          mainContent.style.outlineOffset = '';
+        });
+        
+        mainContent.addEventListener('mousedown', () => {
+          mouseDownTarget = mainContent;
+        });
+        
+        mainContent.tabIndex = 0;
+      } else if (mainContent && mainContent.tagName === 'MODEL-VIEWER') {
+        // For 3D model, handle rotation controls tab order
+        const rotationControls = mainContainer.querySelectorAll('.view-control-btn');
+        
+        // Make model viewer focusable
+        mainContent.tabIndex = 0;
+        
+        // Make rotation controls focusable
+        rotationControls.forEach(btn => {
+          btn.tabIndex = 0;
+          
+          // Add focus styles
+          btn.addEventListener('focus', () => {
+            if (mouseDownTarget !== btn) {
+              btn.style.outline = '2px solid blue';
+              btn.style.outlineOffset = '2px';
+            }
+          });
+          
+          btn.addEventListener('blur', () => {
+            btn.style.outline = '';
+            btn.style.outlineOffset = '';
+          });
+          
+          btn.addEventListener('mousedown', () => {
+            mouseDownTarget = btn;
+          });
+          
+          // Handle tab navigation
+          btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+              const lastControl = rotationControls[rotationControls.length - 1];
+              if (!e.shiftKey && btn === lastControl) {
+                // Tab from last rotation control should go to strip
+                e.preventDefault();
+                strip.focus();
+              } else if (e.shiftKey && btn === rotationControls[0]) {
+                // Shift+Tab from first rotation control should go to model viewer
+                e.preventDefault();
+                mainContent.focus();
+              }
+            }
+          });
+        });
+        
+        // Handle model viewer tab navigation
+        mainContent.addEventListener('keydown', (e) => {
+          if (e.key === 'Tab') {
+            if (!e.shiftKey) {
+              // Tab from model viewer to first rotation control
+              e.preventDefault();
+              rotationControls[0].focus();
+            } else {
+              // Shift+Tab from model viewer to prev arrow
+              e.preventDefault();
+              prevBtn.focus();
+            }
+          }
+        });
+        
+        // Add focus styles to model viewer
+        mainContent.addEventListener('focus', () => {
+          if (mouseDownTarget !== mainContent) {
+            mainContent.style.outline = '2px solid blue';
+            mainContent.style.outlineOffset = '2px';
+          }
+        });
+        
+        mainContent.addEventListener('blur', () => {
+          mainContent.style.outline = '';
+          mainContent.style.outlineOffset = '';
+        });
+        
+        mainContent.addEventListener('mousedown', () => {
+          mouseDownTarget = mainContent;
+        });
+      } else if (mainContent) {
+        // For images, remove from tab order
+        mainContent.tabIndex = -1;
+      }
+      
+      // Make individual thumbnails non-focusable since we're using arrow keys
+      const thumbnails = strip.querySelectorAll('.thumbnail');
+      thumbnails.forEach(thumbnail => {
+        thumbnail.tabIndex = -1;
+      });
+    }
+
+    function showImage(src, alt='') {
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = alt;
+      img.id = 'mainImageContent';
+      transitionContent(img);
+    }
+
+    function showVideo(src) {
+      const vid = document.createElement('video');
+      vid.src = src;
+      vid.muted = true;
+      vid.controls = true;
+      vid.autoplay = true;
+      vid.playsInline = true;
+      transitionContent(vid);
+    }
+
+    function showModel() {
+      const isMobile = window.innerWidth <= 768;
+      const cameraOrbit = isMobile ? '0deg 90deg 0.55m' : '0deg 90deg 1.2m';
+      const btnOrbit = isMobile ? '0.55m' : '1.2m';
+      const scale = isMobile ? '1.8 1.8 1.8' : '2 2 2';
+      const container = document.createElement('div');
+      container.innerHTML = `
+        <div class="model-3d-highlight">
+          <span class="model-3d-icon">3D area</span>
+          <div class="model-3d-gesture-overlay" style="display:none;">
+            <span class="gesture-hand hand-vertical"><i class="fas fa-hand-pointer"></i></span>
+            <span class="gesture-hand hand-horizontal"><i class="fas fa-hand-pointer"></i></span>
+          </div>
+        </div>
+        ${isMobile ? `
+          <div class="swipe-zone swipe-zone-left"></div>
+          <div class="swipe-zone swipe-zone-right"></div>
+        ` : ''}
+        <model-viewer 
+            src="models/iPhone13.glb"
+            camera-controls
+            interaction-prompt="none"
+            shadow-intensity="1"
+            auto-rotate
+            exposure="1"
+            style="width: 100%; height: 100%;"
+            environment-image="neutral"
+            loading="eager"
+            touch-action="none"
+            interaction-policy="allow-when-focused"
+            camera-orbit="${cameraOrbit}"
+            camera-target="0m 0m 0m"
+            scale="${scale}"
+            disable-zoom
+            min-camera-orbit="-Infinity 0deg auto"
+            max-camera-orbit="Infinity 360deg auto"
+            tabindex="0"
+            disable-tap>
+            ${isMobile ? `
+              <button class="model-viewer-controls-toggle" aria-label="Show model view controls" tabindex="0">
+                <i class="fas fa-ellipsis-h"></i>
+              </button>
+              <div class="view-controls" role="toolbar" aria-label="Model rotation controls">
+                <button class="view-control-btn" data-orbit="0deg 90deg ${btnOrbit}" aria-label="Front View"><i class="fas fa-mobile-alt"></i></button>
+                <button class="view-control-btn" data-orbit="-90deg 90deg ${btnOrbit}" aria-label="Left View"><i class="fas fa-caret-left"></i></button>
+                <button class="view-control-btn" data-orbit="90deg 90deg ${btnOrbit}" aria-label="Right View"><i class="fas fa-caret-right"></i></button>
+                <button class="view-control-btn" data-orbit="0deg 0deg ${btnOrbit}" aria-label="Top View"><i class="fas fa-caret-up"></i></button>
+                <button class="view-control-btn" data-orbit="0deg 180deg ${btnOrbit}" aria-label="Bottom View"><i class="fas fa-caret-down"></i></button>
+                <button class="view-control-btn zoom-in" aria-label="Zoom In"><i class="fas fa-search-plus"></i></button>
+                <button class="view-control-btn zoom-out" aria-label="Zoom Out"><i class="fas fa-search-minus"></i></button>
+              </div>
+            ` : ''}
+        </model-viewer>
+      `;
+      transitionContent(container, function() {
+        const viewer = container.querySelector('model-viewer');
+        // Only add view controls event listeners if not mobile
+        if (!isMobile) {
+          const rotationControls = Array.from(container.querySelectorAll('.view-control-btn'));
+          const zoomInBtn = container.querySelector('.view-control-btn.zoom-in');
+          const zoomOutBtn = container.querySelector('.view-control-btn.zoom-out');
+          rotationControls.forEach(btn => {
+            btn.addEventListener('click', () => {
+              const orbit = btn.getAttribute('data-orbit');
+              if (orbit) viewer.cameraOrbit = orbit;
+            });
+            btn.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                btn.click();
+              }
+            });
+          });
+          function getCurrentRadius() {
+            const orbit = viewer.cameraOrbit || viewer.getAttribute('camera-orbit');
+            if (!orbit) return 1.2;
+            const parts = orbit.split(' ');
+            let radius = parseFloat(parts[2]);
+            if (isNaN(radius)) radius = 1.2;
+            return radius;
+          }
+          function setRadius(newRadius) {
+            const orbit = viewer.cameraOrbit || viewer.getAttribute('camera-orbit');
+            if (!orbit) return;
+            const parts = orbit.split(' ');
+            if (parts.length !== 3) return;
+            parts[2] = newRadius + 'm';
+            viewer.cameraOrbit = parts.join(' ');
+          }
+          if (zoomInBtn) {
+            zoomInBtn.addEventListener('click', () => {
+              let r = getCurrentRadius();
+              setRadius(Math.max(0.3, r - 0.2));
+            });
+          }
+          if (zoomOutBtn) {
+            zoomOutBtn.addEventListener('click', () => {
+              let r = getCurrentRadius();
+              setRadius(Math.min(3, r + 0.2));
+            });
+          }
+        }
+        viewer.addEventListener('keydown', (e) => {
+          if (e.key === 'Tab' && e.shiftKey) {
+            e.preventDefault();
+            prevBtn.focus();
+          }
+        });
+        viewer.addEventListener('wheel', () => {}, { passive: true });
+        viewer.addEventListener('mouseenter', () => {
+          document.body.style.overflow = 'hidden';
+        });
+        viewer.addEventListener('mouseleave', () => {
+          document.body.style.overflow = '';
+        });
+        if (isMobile) {
+          const icon = container.querySelector('.model-3d-icon');
+          const overlay = container.querySelector('.model-3d-gesture-overlay');
+          if (icon && overlay) {
+            icon.addEventListener('click', () => {
+              overlay.style.display = 'block';
+              // Animate vertical hand
+              const handV = overlay.querySelector('.hand-vertical');
+              const handH = overlay.querySelector('.hand-horizontal');
+              handV.style.display = 'inline-flex';
+              handH.style.display = 'none';
+              handV.classList.add('animate-vertical');
+              setTimeout(() => {
+                handV.style.display = 'none';
+                handH.style.display = 'inline-flex';
+                handH.classList.add('animate-horizontal');
+                setTimeout(() => {
+                  overlay.style.display = 'none';
+                  handV.classList.remove('animate-vertical');
+                  handH.classList.remove('animate-horizontal');
+                  handH.style.display = 'none';
+                }, 1100);
+              }, 1100);
+            });
+          }
+        }
+        if (!isMobile) {
+          const modelViewer = container.querySelector('model-viewer');
+          const toggleBtn = modelViewer.querySelector('.model-viewer-controls-toggle');
+          const controls = modelViewer.querySelector('.view-controls');
+          let controlsVisible = false;
+          if (toggleBtn && controls) {
+            toggleBtn.addEventListener('click', () => {
+              controlsVisible = !controlsVisible;
+              if (controlsVisible) {
+                modelViewer.classList.add('show-controls');
+                toggleBtn.setAttribute('aria-label', 'Hide model view controls');
+              } else {
+                modelViewer.classList.remove('show-controls');
+                toggleBtn.setAttribute('aria-label', 'Show model view controls');
+              }
+            });
+            // Optional: close controls when clicking outside
+            document.addEventListener('mousedown', function handler(e) {
+              if (controlsVisible && !modelViewer.contains(e.target)) {
+                controlsVisible = false;
+                modelViewer.classList.remove('show-controls');
+                toggleBtn.setAttribute('aria-label', 'Show model view controls');
+              }
+            });
+            // Keyboard: ESC to close
+            toggleBtn.addEventListener('keydown', e => {
+              if (e.key === 'Escape' && controlsVisible) {
+                controlsVisible = false;
+                modelViewer.classList.remove('show-controls');
+                toggleBtn.setAttribute('aria-label', 'Show model view controls');
+                toggleBtn.focus();
+              }
+            });
+          }
+        }
+      });
+    }
+
+    // select slide by index
+    function select(idx) {
+      if (isAnimating) {
+        pendingIndex = idx;
+        return;
+      }
+      selectedIndex = ((idx % total) + total) % total;
+
+      // adjust window if at edges
+      const start = firstIndex;
+      const end   = firstIndex + visibleCount - 1;
+      if      (selectedIndex === end   && end < total - 1) firstIndex++;
+      else if (selectedIndex === start && start > 0)       firstIndex--;
+
+      // clamp
+      if (selectedIndex < firstIndex) firstIndex = selectedIndex;
+      if (selectedIndex > firstIndex + visibleCount - 1) firstIndex = selectedIndex - visibleCount + 1;
+      if (firstIndex < 0) firstIndex = 0;
+      if (firstIndex + visibleCount > total) firstIndex = total - visibleCount;
+
+      renderStrip();
+      const slide = allThumbs[selectedIndex];
+      
+      if (slide.is3D) {
+          showModel();
+          // Show hands animation on mobile when 3D is selected
+          if (window.innerWidth <= 768) {
+            setTimeout(() => {
+              const mainContainer = document.querySelector('.main-image');
+              const highlight = mainContainer.querySelector('.model-3d-highlight');
+              if (highlight) {
+                const overlay = highlight.querySelector('.model-3d-gesture-overlay');
+                if (overlay) {
+                  overlay.style.display = 'block';
+                  const handV = overlay.querySelector('.hand-vertical');
+                  const handH = overlay.querySelector('.hand-horizontal');
+                  // Animate vertical hand first
+                  handV.style.display = 'inline-flex';
+                  handH.style.display = 'none';
+                  void handV.offsetWidth;
+                  handV.classList.remove('animate-vertical');
+                  void handV.offsetWidth;
+                  handV.classList.add('animate-vertical');
+                  setTimeout(() => {
+                    handV.classList.remove('animate-vertical');
+                    handV.style.display = 'none';
+                    // Animate horizontal hand after vertical finishes
+                    handH.style.display = 'inline-flex';
+                    void handH.offsetWidth;
+                    handH.classList.remove('animate-horizontal');
+                    void handH.offsetWidth;
+                    handH.classList.add('animate-horizontal');
+                    setTimeout(() => {
+                      overlay.style.display = 'none';
+                      handH.classList.remove('animate-horizontal');
+                      handH.style.display = 'none';
+                    }, 1200);
+                  }, 1200);
+                }
+              }
+            }, 400);
+          }
+      } else if (slide.isVideo) {
+          showVideo(slide.dataSrc);
+      } else {
+          showImage(slide.dataSrc, slide.alt);
+      }
+    }
+
+    // move forward/back
+    function move(forward) {
+      const nextIndex = selectedIndex + (forward ? 1 : -1);
+      
+      // Handle wrapping around the ends
+      if (nextIndex < 0) {
+        select(total - 1);
+      } else if (nextIndex >= total) {
+        select(0);
+      } else {
+        select(nextIndex);
+      }
+    }
+
+    
+    // Track mouse down events to differentiate keyboard vs mouse focus
+    prevBtn.addEventListener('mousedown', () => {
+      mouseDownTarget = prevBtn;
+    });
+  
+    nextBtn.addEventListener('mousedown', () => {
+      mouseDownTarget = nextBtn;
+    });
+  
+    strip.addEventListener('mousedown', () => {
+      mouseDownTarget = strip;
+    });
+  
+    // Clear mouse target after a short delay
+    document.addEventListener('mousedown', () => {
+      setTimeout(() => {
+        mouseDownTarget = null;
+      }, 100);
+    });
+  
+    // Enhanced keyboard navigation for thumbnail container
+    strip.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        e.stopPropagation();
+        move(true);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        e.stopPropagation();
+        move(false);
+      } else if (e.key === 'Tab') {
+        const mainContent = mainContainer.querySelector('video[controls], model-viewer');
+        if (mainContent) {
+          // If there's a video or 3D model, focus it
+          e.preventDefault();
+          mainContent.focus();
+        } else {
+          // If no video or 3D model, go to next arrow
+          e.preventDefault();
+          nextBtn.focus();
+        }
+      }
+    });
+  
+    // Enhanced focus management for navigation buttons
+    prevBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        move(false);
+      } else if (e.key === 'Tab' && !e.shiftKey) {
+        // Tab from prev arrow goes to strip
+        e.preventDefault();
+        strip.focus();
+      }
+    });
+
+    nextBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        move(true);
+      } else if (e.key === 'Tab' && e.shiftKey) {
+        // Shift+Tab from next arrow
+        const mainContent = mainContainer.querySelector('video[controls], model-viewer');
+        if (mainContent) {
+          // If there's a video or 3D model with controls, focus it
+          e.preventDefault();
+          mainContent.focus();
+        } else {
+          // If no video or 3D model, go to strip
+          e.preventDefault();
+          strip.focus();
+        }
+      }
+    });
+  
+    // Previous button event handlers
+    prevBtn.addEventListener('click', () => move(false));
+  
+    // Next button event handlers
+    nextBtn.addEventListener('click', () => move(true));
+  
+    // Focus indicators only for keyboard navigation
+    prevBtn.addEventListener('focus', () => {
+      if (mouseDownTarget !== prevBtn) {
+        prevBtn.style.outline = '2px solid blue';
+        prevBtn.style.outlineOffset = '2px';
+      }
+    });
+    
+    prevBtn.addEventListener('blur', () => {
+      prevBtn.style.outline = '';
+      prevBtn.style.outlineOffset = '';
+    });
+  
+    nextBtn.addEventListener('focus', () => {
+      if (mouseDownTarget !== nextBtn) {
+        nextBtn.style.outline = '2px solid blue';
+        nextBtn.style.outlineOffset = '2px';
+      }
+    });
+    
+    nextBtn.addEventListener('blur', () => {
+      nextBtn.style.outline = '';
+      nextBtn.style.outlineOffset = '';
+    });
+  
+    strip.addEventListener('focus', () => {
+      if (mouseDownTarget !== strip) {
+        strip.style.outline = '2px solid blue';
+        strip.style.outlineOffset = '2px';
+        strip.style.borderRadius = '4px';
+      }
+    });
+    
+    strip.addEventListener('blur', () => {
+      strip.style.outline = '';
+      strip.style.outlineOffset = '';
+      strip.style.borderRadius = '';
+    });
+
+    // handle window resize for dynamic visibleCount
+    window.addEventListener('resize', () => {
+      const newCount = getVisibleCount();
+      if (newCount !== visibleCount) {
+        visibleCount = newCount;
+        firstIndex = Math.min(firstIndex, total - visibleCount);
+      }
+      renderStrip();
+    });
+
+    // ——— SWIPE HANDLING for tablet/mobile ———
+let touchStartX = 0;
+let touchStartY = 0;
+let isSwiping = false;
+let swipeOnModelViewer = false;
+let swipeZoneDirection = null;
+
+mainContainer.addEventListener('touchstart', e => {
+    if (window.innerWidth <= TABLET_BP) {
+        // If 3D model is active, check if touch is on swipe-zones
+        if (allThumbs[selectedIndex].is3D) {
+            const leftZone = mainContainer.querySelector('.swipe-zone-left');
+            const rightZone = mainContainer.querySelector('.swipe-zone-right');
+            if (leftZone && leftZone.contains(e.target)) {
+                swipeZoneDirection = 'left';
+            } else if (rightZone && rightZone.contains(e.target)) {
+                swipeZoneDirection = 'right';
+            } else {
+                swipeZoneDirection = null;
+            }
+            // If not in swipe zone, let model-viewer handle rotation
+            if (!swipeZoneDirection) {
+                swipeOnModelViewer = true;
+                return;
+            }
+            swipeOnModelViewer = false;
+        } else {
+            swipeOnModelViewer = false;
+            swipeZoneDirection = null;
+        }
+        touchStartX = e.changedTouches[0].clientX;
+        touchStartY = e.changedTouches[0].clientY;
+        isSwiping = false; // Reset on new touch
+    }
+}, { passive: true });
+
+mainContainer.addEventListener('touchmove', e => {
+    if (window.innerWidth <= TABLET_BP) {
+        // If swipe started on model-viewer, do not handle gallery swipe
+        if (allThumbs[selectedIndex].is3D && swipeOnModelViewer) return;
+        // Determine if the user is primarily swiping horizontally
+        if (!isSwiping) {
+            const dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
+            const dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
+            if (dx > dy && dx > 10) {
+                isSwiping = true;
+            }
+        }
+        // If it is a horizontal swipe, prevent the page from scrolling vertically
+        if (isSwiping) {
+            e.preventDefault();
+        }
+    }
+}, { passive: false });
+
+mainContainer.addEventListener('touchend', e => {
+    if (window.innerWidth <= TABLET_BP && isSwiping) {
+        // If swipe started on model-viewer, do not handle gallery swipe
+        if (allThumbs[selectedIndex].is3D && swipeOnModelViewer) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const THRESHOLD = 50; // Minimum distance for a swipe
+        if (Math.abs(dx) > THRESHOLD) {
+            move(dx < 0); // Navigate to next/previous slide
+        }
+    }
+});
+    // ——— end swipe ———
+
+    // Initialize gallery
+    renderStrip();
+    select(0);
+    setupMainContainerFocus();
+  });
+</script>
+
+<script>
+    // Add this to your existing script
+    document.addEventListener('DOMContentLoaded', function() {
+        const hamburgerMenu = document.querySelector('.hamburger-menu');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        
+        hamburgerMenu.addEventListener('click', function() {
+            mobileMenu.classList.toggle('active');
+            // Toggle between bars and times icon
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!hamburgerMenu.contains(event.target) && !mobileMenu.contains(event.target)) {
+                mobileMenu.classList.remove('active');
+                const icon = hamburgerMenu.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Close menu when clicking a link
+        const mobileLinks = mobileMenu.querySelectorAll('.nav-link');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenu.classList.remove('active');
+                const icon = hamburgerMenu.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

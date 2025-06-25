@@ -1,4 +1,4 @@
-<!-- /* Version with tapping to interact with 3D model on mobile */ -->
+<!-- /* Version with swiping only outside 3D model on mobile */ -->
 
 <!DOCTYPE html>
 <html lang="de">
@@ -122,7 +122,6 @@
         position: sticky;
         top: 0;
         z-index: 100;
-        width: 100%;
     }
     
     .header-container {
@@ -134,8 +133,7 @@
         padding: 0 20px;
         min-height: 80px;
         justify-content: flex-start;
-        gap: 24px;
-        background-color: var(--white);
+        gap: 24px;;
     }
     body > header > div.header-container.mobile {
         display: none;
@@ -307,10 +305,41 @@
 
 .main-image img,
 .main-image video {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
+max-width: 100%;
+max-height: 100%;
+object-fit: contain;
+transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
+}
+
+.model-indicator {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--gray-light);
+  color: var(--black);
+  padding: 2px 10px;
+  border-radius: 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  z-index: 10;
+  border: 1px solid var(--gray);
+  box-shadow: none;
+  pointer-events: none;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+}
+.model-indicator i {
+  font-size: 1em;
+  color: var(--gray-dark);
+  animation: spin-cube 3.2s linear infinite;
+  display: inline-block;
+}
+@keyframes spin-cube {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Fade animation classes */
@@ -905,8 +934,6 @@
             align-items: stretch;
             min-height: auto;
             padding: 10px 20px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-
         }
         
         .logo-section {
@@ -1020,13 +1047,6 @@
             aspect-ratio: 1/1;
         }
 
-        .main-image img,
-        .main-image video {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
         .thumbnail {
             display: none !important;
         }
@@ -1125,8 +1145,7 @@
         padding: 0 20px;
         min-height: 80px;
         justify-content: flex-start;
-        gap: 24px;
-
+        gap: 24px;;
     }
         .main-content {
             padding: 15px;
@@ -1314,66 +1333,26 @@
     }
 
     .main-image model-viewer {
-        min-height: 400px;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
     }
 
     @media (max-width: 768px) {
         .main-image model-viewer {
-            min-height: 300px;
-        }
-    }
-
-        .hamburger-menu {
-        display: none;
-        font-size: 1.5rem;
-        color: var(--black);
-        padding: 10px;
-        cursor: pointer;
-    }
-
-    .mobile-menu {
-        display: none;
-        position: fixed;
-        top: 80px;
-        left: 0;
-        right: 0;
-        background-color: var(--white);
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        z-index: 1000;
-        padding: 20px;
-    }
-
-    .mobile-menu.active {
-        display: block;
-    }
-
-    .mobile-menu .nav-menu {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .mobile-menu .nav-link {
-        padding: 10px 0;
-        border-bottom: 1px solid var(--gray);
-    }
-
-    .mobile-menu .nav-link:last-child {
-        border-bottom: none;
-    }
-
-    @media (max-width: 480px) {
-        .hamburger-menu {
-            display: block;
-        }
-        
-        .nav-menu-container {
-            display: none;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            transform: scale(0.9);
         }
     }
 
     @media (max-width: 480px) {
         .main-image model-viewer {
-            min-height: 250px;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            transform: scale(0.9);
         }
     }
 
@@ -1452,8 +1431,14 @@
         bottom: 10px;
         right: 10px;
         display: flex;
+        flex-direction: column;
         gap: 5px;
         z-index: 100;
+    }
+    @media (max-width: 768px) {
+        .view-controls {
+            display: none !important;
+        }
     }
 
     .view-control-btn {
@@ -1502,52 +1487,61 @@
         outline-offset: 2px;
     }
 
-    /* Add this to the CSS section */
-    .model-indicator {
-        position: absolute;
-        bottom: 16px;
-        right: 16px;
-        background-color: rgba(255, 255, 255, 0.9);
-        padding: 8px 12px;
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 14px;
-        font-weight: bold;
-        color: #262626;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        position: absolute;
-        bottom: 16px;
-        right: 16px;
-        z-index: 10;
+    /* Add these styles in the CSS section */
+    .hamburger-menu {
+        display: none;
+        font-size: 1.5rem;
+        color: var(--black);
+        padding: 10px;
+        cursor: pointer;
     }
 
-    .model-indicator i {
-        font-size: 12px;
-        color: var(--magenta);
+    .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 80px;
+        left: 0;
+        right: 0;
+        background-color: var(--white);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        z-index: 1000;
+        padding: 20px;
     }
 
-    .model-indicator .rotate-icon {
-        display: inline-flex;
-        align-items: center;
-        animation: rotate 2s infinite linear;
+    .mobile-menu.active {
+        display: block;
     }
 
-      .overlay-button-text{
-      font-size: 12.8px;
+    .mobile-menu .nav-menu {
+        flex-direction: column;
+        gap: 15px;
     }
 
-     .variant-text{
+    .mobile-menu .nav-link {
+        padding: 10px 0;
+        border-bottom: 1px solid var(--gray);
+    }
+
+    .mobile-menu .nav-link:last-child {
+        border-bottom: none;
+    }
+
+    .variant-text{
       color: var(
 --magenta
       );
     }
 
-    @keyframes rotate {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
+    @media (max-width: 480px) {
+        .hamburger-menu {
+            display: block;
+        }
+        
+        .nav-menu-container {
+            display: none;
+        }
     }
+
     .main-image > div {
       width: 100%;
       height: 100%;
@@ -1556,1072 +1550,1316 @@
       display: flex;
       flex-direction: column;
     }
-
-    /* Prevent page scroll when interacting with 3D model */
-    .main-image,
-    .main-image > div,
     .main-image model-viewer {
-      touch-action: pan-y;
-      -ms-touch-action: pan-y;
+      width: 100%;
+      height: 100%;
+      min-height: 200px;
     }
-  </style>
-  <style>
-    /* Prevent page scroll when in 3D mode */
-    body.no-scroll {
-      overflow: hidden !important;
-      position: fixed !important;
-      width: 100vw !important;
-      overscroll-behavior: contain !important;
+
+    /* Mobile view controls toggle button */
+    @media (max-width: 768px) {
+      .mobile-view-controls-toggle {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        z-index: 120;
+        background: var(--magenta);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        cursor: pointer;
+        transition: background 0.2s;
+        padding: 0;
+      }
+      .mobile-view-controls-toggle:focus {
+        outline: 2px solid blue;
+        outline-offset: 2px;
+      }
+      .view-controls.mobile-hidden {
+        display: none !important;
+      }
+      .view-controls.mobile-shown {
+        display: flex !important;
+        flex-direction: column;
+        position: absolute;
+        bottom: 40px;
+        right: 8px;
+        z-index: 121;
+        background: rgba(255,255,255,0.98);
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        padding: 8px 0;
+        gap: 6px;
+      }
     }
-  </style>
+    /* Update the CSS so the button overlays the model at the bottom right of the container */
+    @media (max-width: 768px) {
+      .main-image .mobile-view-controls-toggle {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        z-index: 120;
+        background: var(--magenta);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        cursor: pointer;
+        transition: background 0.2s;
+        padding: 0;
+      }
+      .main-image .mobile-view-controls-toggle:focus {
+        outline: 2px solid blue;
+        outline-offset: 2px;
+      }
+      .view-controls.mobile-hidden {
+        display: none !important;
+      }
+      .view-controls.mobile-shown {
+        display: flex !important;
+        flex-direction: column;
+        position: absolute;
+        bottom: 40px;
+        right: 8px;
+        z-index: 121;
+        background: rgba(255,255,255,0.98);
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        padding: 8px 0;
+        gap: 6px;
+      }
+    }
+    @media (max-width: 768px) {
+      .main-image .mobile-view-controls-toggle {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        z-index: 120;
+        background: var(--magenta);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        cursor: pointer;
+        transition: background 0.2s;
+        padding: 0;
+      }
+      .main-image .mobile-view-controls-toggle:focus {
+        outline: 2px solid blue;
+        outline-offset: 2px;
+      }
+      .view-controls.mobile-hidden {
+        display: none !important;
+      }
+      .view-controls.mobile-shown {
+        display: flex !important;
+        flex-direction: column;
+        position: absolute;
+        bottom: 48px; /* 32px button + 8px gap + 8px margin */
+        right: 8px;
+        z-index: 130;
+        background: rgba(255,255,255,0.98);
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        padding: 6px 4px;
+        gap: 4px;
+        max-width: 90vw;
+        pointer-events: auto;
+        min-width: 40px;
+      }
+      .view-controls .view-control-btn {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        min-height: 28px;
+        font-size: 13px;
+        padding: 0;
+        margin: 0 auto;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .view-controls .view-control-btn i {
+        font-size: 1em;
+        line-height: 1;
+      }
+    }
+    </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-      <div class="header-container">
-          <!-- Logo Section -->
-          <div class="logo-section">
-              <div class="logo-square">
-                  <span class="logo-t">T</span>
-              </div>
-          </div>
-          <div class="nav-container">
-            <!-- Main Navigation -->
-            <nav class="main-navigation">
-              <!-- Top Links -->
-              <div class="top-links">
-                <a href="#" class="top-link active">Osobní</a>
-                <a href="#" class="top-link">Podnikatelé a firmy</a>
-                <a href="#" class="top-link">Můj T-Mobile</a>
-              </div>
-              <div class="nav-menu-container">
-                <!-- Nav menu -->
-                <ul class="nav-menu">
-                  <li><a href="#" class="nav-link active">Variant 3</a></li>
-                  <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
-                  <li><a href="gallery-variant-1.0.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
-                  <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
-                        <li><a href="gallery-variant-4.html" class="nav-link variant-link">View Gallery Variant 4</a></li>
-
-                </ul>
-                <!-- Header Icons -->
-                <div class="header-icons">
-                  <button class="icon-btn" aria-label="Vyhledávání">
-                    <i class="fas fa-search"></i>
-                  </button>
-                  <button class="icon-btn" aria-label="Nákupní košík">
-                    <i class="fas fa-shopping-cart"></i>
-                  </button>
-                  <button class="icon-btn" aria-label="Uživatelský účet">
-                    <i class="fas fa-user"></i>
-                  </button>
-                </div>
-              </div>
-            </nav>
-          </div>
-      </div>
-      <div class="header-container mobile">
-        <!-- Logo Section -->
-        <div class="logo-section">
+  <!-- Header -->
+<!-- Header -->
+<header class="header">
+  <div class="header-container">
+      <!-- Logo Section -->
+      <div class="logo-section">
           <div class="logo-square">
-            <span class="logo-t">T</span>
+              <span class="logo-t">T</span>
           </div>
-        </div>
-        <div class="nav-container">
-          <button class="hamburger-menu" aria-label="Menu">
-            <i class="fas fa-bars"></i>
-          </button>
-          <div class="header-icons">
-            <button class="icon-btn" aria-label="Vyhledávání">
-              <i class="fas fa-search"></i>
-            </button>
-            <button class="icon-btn" aria-label="Nákupní košík">
-              <i class="fas fa-shopping-cart"></i>
-            </button>
-            <button class="icon-btn" aria-label="Uživatelský účet">
-              <i class="fas fa-user"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </header>
+          
 
-    <!-- Add mobile menu -->
-    <div class="mobile-menu">
-      <ul class="nav-menu">
-        <li><a href="#" class="nav-link active">Variant 3</a></li>
+  
+
+</div>
+<div class="nav-container">
+  <!-- Main Navigation -->
+<nav class="main-navigation">
+<!-- Top Links -->
+<div class="top-links">
+<a href="#" class="top-link active">Osobní</a>
+<a href="#" class="top-link">Podnikatelé a firmy</a>
+<a href="#" class="top-link">Můj T-Mobile</a>
+</div>
+<div class="nav-menu-container">
+  <!-- Nav menu -->
+  <ul class="nav-menu">
+  
+      <li><a href="#" class="nav-link active">Variant 2</a></li>
+      <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
+      <li><a href="gallery-variant-1.0.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
+      <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
+      <li><a href="gallery-variant-4.html" class="nav-link variant-link">View Gallery Variant 4</a></li>
+
+  </ul>
+        <!-- Header Icons -->
+<div class="header-icons">
+<button class="icon-btn" aria-label="Vyhledávání">
+    <i class="fas fa-search"></i>
+</button>
+<button class="icon-btn" aria-label="Nákupní košík">
+    <i class="fas fa-shopping-cart"></i>
+</button>
+<button class="icon-btn" aria-label="Uživatelský účet">
+    <i class="fas fa-user"></i>
+</button>
+</div>
+
+</div>
+</div>
+      </div>
+        <div class="header-container mobile">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <div class="logo-square">
+                    <span class="logo-t">T</span>
+                </div>
+            </div>
+            <div class="nav-container">
+                <button class="hamburger-menu" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-icons">
+                    <button class="icon-btn" aria-label="Vyhledávání">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="icon-btn" aria-label="Nákupní košík">
+                        <i class="fas fa-shopping-cart"></i>
+                    </button>
+                    <button class="icon-btn" aria-label="Uživatelský účet">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Add mobile menu -->
+<div class="mobile-menu">
+    <ul class="nav-menu">
+        <li><a href="#" class="nav-link active">Variant 2</a></li>
         <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
         <li><a href="gallery-variant-1.0.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
         <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
               <li><a href="gallery-variant-4.html" class="nav-link variant-link">View Gallery Variant 4</a></li>
 
+    </ul>
+</div>
 
-      </ul>
-    </div>
-
-    <!-- Breadcrumb -->
-    <div class="breadcrumb-container">
-      <nav class="breadcrumb">
-        <a href="/"><i class="fas fa-home"></i></a>
-        <i class="fas fa-chevron-right"></i>
-        <span>Apple iPhone 16</span>
+  <!-- Breadcrumb -->
+  <div class="breadcrumb-container">
+    <nav class="breadcrumb">
+      <a href="/"><i class="fas fa-home"></i></a>
+      <i class="fas fa-chevron-right"></i>
+      <span>Apple iPhone 16</span>
             <i class="fas fa-chevron-right"></i>
-      <span class="variant-text">Variant 3</span>
-      </nav>
-    </div>
+      <span class="variant-text">Variant 2</span>
 
-    <!-- Main Content -->
-    <main class="main-content">
-      <div class="product-container">
+    </nav>
+  </div>
 
-        <!-- Images -->
-        <div class="product-images">
-          <div class="product-images-container">
-            <div class="main-image">
-              <img src="https://placehold.co/500x500/ffc0cb/000000?text=iPhone+16+Pink" alt="Apple iPhone 16 in Pink" id="mainImageContent"/>
-            </div>
-            <div class="thumbnails">
-              <button class="thumbnail-nav prev" ><i class="fas fa-chevron-left"></i></button>
-              <div class="thumbnail-container">
-                <img src="https://dtdl-static-natco.eshop.yo-digital.com/resize-image?f=czuat2/AJK15lIU0YbiMfNuHQcND0MTJD2xbK.png&q=80&w=55" alt="iPhone 16 #1" class="thumbnail" data-src="https://dtdl-static-natco.eshop.yo-digital.com/resize-image?f=czuat2/AJK15lIU0YbiMfNuHQcND0MTJD2xbK.png&q=80&w=444"/>
-                  <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/PmsgUVmNsoi7oglNCewHguCIARm57P.png&q=80&w=444" alt="iPhone 16 #2" class="thumbnail" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/PmsgUVmNsoi7oglNCewHguCIARm57P.png&q=80&w=444"/>
-                  <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/nB2lsY5RKDljInWWrSXZllXgQD6XZj.png&q=80&w=444" alt="iPhone 16 #3" class="thumbnail" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/nB2lsY5RKDljInWWrSXZllXgQD6XZj.png&q=80&w=444"/>
-                  <video src="https://melodic-dragon-2bebdf.netlify.app/iphone_16_pdp_video_16x9__cz-cs.mp4" alt="iPhone 16 #3" class="thumbnail" data-src="https://melodic-dragon-2bebdf.netlify.app/iphone_16_pdp_video_16x9__cz-cs.mp4">
-                  <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/AKn9b18l5cr32n711APV8zYKH9R4S1.png&q=80&w=444" alt="iPhone 16 #4" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/AKn9b18l5cr32n711APV8zYKH9R4S1.png&q=80&w=444"/>
-                        <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/lhSy40dKawrv76vPM4Ov1ycIoCH8yN.png&q=80&w=444" alt="iPhone 16 #5" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/lhSy40dKawrv76vPM4Ov1ycIoCH8yN.png&q=80&w=444"/>
-                        <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/tmQU9WcdHNp34neFpmFCREDuOHvbdG.png&q=80&w=444" alt="iPhone 16 #6" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/tmQU9WcdHNp34neFpmFCREDuOHvbdG.png&q=80&w=444"/>
-                        <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/aRycOzYLPUMR4sWlE4WYMVJnaiSbAJ.png&q=80&w=444" alt="iPhone 16 #7" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/aRycOzYLPUMR4sWlE4WYMVJnaiSbAJ.png&q=80&w=444"/>
-                        <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/gZb2gQZRfoYmnpw20T7DRt1czBFt9m.png&q=80&w=444" alt="iPhone 16 #8" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/gZb2gQZRfoYmnpw20T7DRt1czBFt9m.png&q=80&w=444"/>
-                        <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/11qJbpnu48qFgtKA6E9uawaBGninzi.png&q=80&w=444" alt="iPhone 16 #9" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/11qJbpnu48qFgtKA6E9uawaBGninzi.png&q=80&w=444"/>
-                      </div>
-              <button class="thumbnail-nav next"><i class="fas fa-chevron-right"></i></button>
-            </div>
-          </div>
-        
-          <div class="product-specs">
-            <div class="spec">
-              <div class="spec-icon"><i class="fas fa-mobile-alt"></i></div>
-              <div class="spec-details">
-                <span class="spec-title">Nabíječka</span>
-                <span class="spec-value">není součástí</span>
-              </div>
-            </div>
-            <div class="spec">
-              <div class="spec-icon"><i class="fas fa-calendar"></i></div>
-              <div class="spec-details">
-                <span class="spec-title">Napájení</span>
-                <span class="spec-value">4.5 - 26 W</span>
-              </div>
-            </div>
-            <div class="spec">
-              <div class="spec-icon"><i class="fas fa-camera"></i></div>
-              <div class="spec-details">
-                <span class="spec-title">Fotoaparát</span>
-                <span class="spec-value">48 Mpx</span>
-              </div>
-            </div>
-          </div>
+  <!-- Main Content -->
+<!-- Main Content -->
+<main class="main-content">
+  <div class="product-container">
+
+    <!-- Images -->
+    <div class="product-images">
+      <div class="product-images-container">
+        <div class="main-image">
+          <img src="https://placehold.co/500x500/ffc0cb/000000?text=iPhone+16+Pink" alt="Apple iPhone 16 in Pink" id="mainImageContent"/>
         </div>
-
-        <!-- Details -->
-        <div class="product-details">
-          <div class="back-link">
-            <a href="#"><i class="fas fa-arrow-left"></i> Zpět</a>
-          </div>
-          <h1 class="product-title">
-            Apple iPhone 16
-
-          </h1>
-          <div class="tags">
-            <div class="ready-to-ship">
-              <i class="fas fa-calendar"></i>
-              <span>Připraveno k odeslání</span>
-            </div>
-            <div class="ready-to-ship">
-              <span>Novinka</span>
-            </div>
-          </div>
-
-
-          <div class="product-colors">
-            <h2>Barva</h2>
-            <p class="selected-color">Vybraná varianta: Růžová</p>
-            <div class="color-options">
-              <label class="color-option">
-                <input type="radio" name="color" value="black"/>
-                <span class="color-circle black"></span>
-              </label>
-              <label class="color-option">
-                <input type="radio" name="color" value="white"/>
-                <span class="color-circle white"></span>
-              </label>
-              <label class="color-option selected">
-                <input type="radio" name="color" value="pink" checked/>
-                <span class="color-circle pink"></span>
-              </label>
-              <label class="color-option">
-                <input type="radio" name="color" value="blue"/>
-                <span class="color-circle blue"></span>
-              </label>
-              <label class="color-option">
-                <input type="radio" name="color" value="green"/>
-                <span class="color-circle green"></span>
-              </label>
-            </div>
-          </div>
-
-          <div class="product-storage">
-            <h2>Paměť</h2>
-            <p class="selected-color">Uložíte si přibližně 50 000 kvalitních fotek nebo 500 minut 4K videa</p>
-            <div class="storage-options">
-              <label class="storage-option selected">
-                <input type="radio" name="storage" value="128" checked/>
-                <div class="storage-content">
-                  <span class="storage-size">128 GB</span>
-                </div>
-              </label>
-              <label class="storage-option">
-                <input type="radio" name="storage" value="256"/>
-                <div class="storage-content">
-                  <span class="storage-size">256 GB</span>
-                </div>
-              </label>
-              <label class="storage-option">
-                <input type="radio" name="storage" value="512"/>
-                <div class="storage-content">
-                  <span class="storage-size">512 GB</span>
-                </div>
-              </label>
-            </div>
-          </div>
-
-
-
-          <div class="total-price">
-            <div>
-
-              <h3>Celková částka</h3>
-              <div class="price-note">T-Mobile posuzuje každou žádost o splátky individuálně a je oprávněn splátky nepovolit nebo je upravit.</div>
-            </div>
-            <div>
-
-              <div class="price-discount">-11%</div>
-              <div class="price-amount">15 019 Kč</div>
-            </div>
-          </div>
-    <!-- Mobile purchase summary  -->
-    <!-- Purchase Summary -->
-      <div class="purchase-summary-mobile">
-        <div class="tariff-recommendation">
-          <div class="tariff-header">
-            <div class="tariff-icon">
-              <i class="fas fa-mobile-alt"></i>
-            </div>
-            <div class="tariff-info">
-              <h3>Neomezená data</h3>
-              <p>Next neomezená XL s výhodou</p>
-            </div>
-            <div class="tariff-price">945 Kč</div>
-          </div>
-          <div class="tariff-duration">na 24 měsíců</div>
-          <div class="tariff-actions">
-            <button class="btn-link">Vyberte jiný tarif</button>
-            <button class="btn-link">Žádné tarify</button>
-          </div>
-        </div>
-
-        <div class="payment-summary">
-          <div class="payment-row">
-            <div class="payment-type">Jednorázově</div>
-            <div class="payment-amount">0 Kč</div>
-          </div>
-          <div class="payment-row">
-            <div class="payment-type">Celkově měsíčně
-            </div>
-            <div class="payment-amount">1815 Kč</div>
-          </div>
-        </div>
-
-        <button class="btn-primary">Přidat do košíku</button>
-        
-        <div class="price-details">
-          <a href="#"><i class="fas fa-info-circle"></i> Detaily k platbě</a>
+        <div class="thumbnails">
+          <button class="thumbnail-nav prev" ><i class="fas fa-chevron-left"></i></button>
+          <div class="thumbnail-container">
+            <img src="https://dtdl-static-natco.eshop.yo-digital.com/resize-image?f=czuat2/AJK15lIU0YbiMfNuHQcND0MTJD2xbK.png&q=80&w=55" alt="iPhone 16 #1" class="thumbnail" data-src="https://dtdl-static-natco.eshop.yo-digital.com/resize-image?f=czuat2/AJK15lIU0YbiMfNuHQcND0MTJD2xbK.png&q=80&w=444"/>
+              <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/PmsgUVmNsoi7oglNCewHguCIARm57P.png&q=80&w=444" alt="iPhone 16 #2" class="thumbnail" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/PmsgUVmNsoi7oglNCewHguCIARm57P.png&q=80&w=444"/>
+              <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/nB2lsY5RKDljInWWrSXZllXgQD6XZj.png&q=80&w=444" alt="iPhone 16 #3" class="thumbnail" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/nB2lsY5RKDljInWWrSXZllXgQD6XZj.png&q=80&w=444"/>
+              <video src="https://melodic-dragon-2bebdf.netlify.app/iphone_16_pdp_video_16x9__cz-cs.mp4" alt="iPhone 16 #3" class="thumbnail" data-src="https://melodic-dragon-2bebdf.netlify.app/iphone_16_pdp_video_16x9__cz-cs.mp4">
+              <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/AKn9b18l5cr32n711APV8zYKH9R4S1.png&q=80&w=444" alt="iPhone 16 #4" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/AKn9b18l5cr32n711APV8zYKH9R4S1.png&q=80&w=444"/>
+                    <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/lhSy40dKawrv76vPM4Ov1ycIoCH8yN.png&q=80&w=444" alt="iPhone 16 #5" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/lhSy40dKawrv76vPM4Ov1ycIoCH8yN.png&q=80&w=444"/>
+                    <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/tmQU9WcdHNp34neFpmFCREDuOHvbdG.png&q=80&w=444" alt="iPhone 16 #6" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/tmQU9WcdHNp34neFpmFCREDuOHvbdG.png&q=80&w=444"/>
+                    <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/aRycOzYLPUMR4sWlE4WYMVJnaiSbAJ.png&q=80&w=444" alt="iPhone 16 #7" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/aRycOzYLPUMR4sWlE4WYMVJnaiSbAJ.png&q=80&w=444"/>
+                    <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/gZb2gQZRfoYmnpw20T7DRt1czBFt9m.png&q=80&w=444" alt="iPhone 16 #8" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/gZb2gQZRfoYmnpw20T7DRt1czBFt9m.png&q=80&w=444"/>
+                    <img src="https://static.eshop.t-mobile.cz/resize-image?f=cz/11qJbpnu48qFgtKA6E9uawaBGninzi.png&q=80&w=444" alt="iPhone 16 #9" class="thumbnail video" data-src="https://static.eshop.t-mobile.cz/resize-image?f=cz/11qJbpnu48qFgtKA6E9uawaBGninzi.png&q=80&w=444"/>
+                  </div>
+          <button class="thumbnail-nav next"><i class="fas fa-chevron-right"></i></button>
         </div>
       </div>
-
-
-
-      </div>
-
-      <!-- Purchase Summary -->
-      <div class="purchase-summary">
-        <div class="tariff-recommendation">
-          <div class="tariff-header">
-            <div class="tariff-icon">
-              <i class="fas fa-mobile-alt"></i>
-            </div>
-            <div class="tariff-info">
-              <h3>Neomezená data</h3>
-              <p>Next neomezená XL s výhodou</p>
-            </div>
-            <div class="tariff-price">945 Kč</div>
-          </div>
-          <div class="tariff-duration">na 24 měsíců</div>
-          <div class="tariff-actions">
-            <button class="btn-link">Vyberte jiný tarif</button>
-            <button class="btn-link">Žádné tarify</button>
+    
+      <div class="product-specs">
+        <div class="spec">
+          <div class="spec-icon"><i class="fas fa-mobile-alt"></i></div>
+          <div class="spec-details">
+            <span class="spec-title">Nabíječka</span>
+            <span class="spec-value">není součástí</span>
           </div>
         </div>
-
-        <div class="payment-summary">
-          <div class="payment-row">
-            <div class="payment-type">Jednorázově</div>
-            <div class="payment-amount">0 Kč</div>
-          </div>
-          <div class="payment-row">
-            <div class="payment-type">Celkově měsíčně
-            </div>
-            <div class="payment-amount">1815 Kč</div>
+        <div class="spec">
+          <div class="spec-icon"><i class="fas fa-calendar"></i></div>
+          <div class="spec-details">
+            <span class="spec-title">Napájení</span>
+            <span class="spec-value">4.5 - 26 W</span>
           </div>
         </div>
-
-        <button class="btn-primary">Přidat do košíku</button>
-        
-        <div class="price-details">
-          <a href="#"><i class="fas fa-info-circle"></i> Detaily k platbě</a>
+        <div class="spec">
+          <div class="spec-icon"><i class="fas fa-camera"></i></div>
+          <div class="spec-details">
+            <span class="spec-title">Fotoaparát</span>
+            <span class="spec-value">48 Mpx</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Benefits -->
-    <section class="benefits-section">
-      <h2>Výhody v přehledu</h2>
-      <div class="benefit-item">
-        <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
-        <span>Výkup telefonu</span>
-        <a href="#" class="benefit-link">Prodat telefon <i class="fas fa-chevron-right"></i></a>
+    <!-- Details -->
+    <div class="product-details">
+      <div class="back-link">
+        <a href="#"><i class="fas fa-arrow-left"></i> Zpět</a>
       </div>
-      <div class="benefit-item">
-        <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
-        <span>MagentaEINS výhoda</span>
-        <a href="#" class="benefit-link">Aktivovat nyní <i class="fas fa-chevron-right"></i></a>
+      <h1 class="product-title">
+        Apple iPhone 16
+      </h1>
+      <div class="tags">
+        <div class="ready-to-ship">
+          <i class="fas fa-calendar"></i>
+          <span>Připraveno k odeslání</span>
+        </div>
+        <div class="ready-to-ship">
+          <span>Novinka</span>
+        </div>
       </div>
-      <div class="benefit-item">
-        <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
-        <span>Doprava zdarma</span>
+
+
+      <div class="product-colors">
+        <h2>Barva</h2>
+        <p class="selected-color">Vybraná varianta: Růžová</p>
+        <div class="color-options">
+          <label class="color-option">
+            <input type="radio" name="color" value="black"/>
+            <span class="color-circle black"></span>
+          </label>
+          <label class="color-option">
+            <input type="radio" name="color" value="white"/>
+            <span class="color-circle white"></span>
+          </label>
+          <label class="color-option selected">
+            <input type="radio" name="color" value="pink" checked/>
+            <span class="color-circle pink"></span>
+          </label>
+          <label class="color-option">
+            <input type="radio" name="color" value="blue"/>
+            <span class="color-circle blue"></span>
+          </label>
+          <label class="color-option">
+            <input type="radio" name="color" value="green"/>
+            <span class="color-circle green"></span>
+          </label>
+        </div>
       </div>
-      <div class="benefit-item">
-        <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
-        <span>14denní lhůta na vrácení</span>
+
+      <div class="product-storage">
+        <h2>Paměť</h2>
+        <p class="selected-color">Uložíte si přibližně 50 000 kvalitních fotek nebo 500 minut 4K videa</p>
+        <div class="storage-options">
+          <label class="storage-option selected">
+            <input type="radio" name="storage" value="128" checked/>
+            <div class="storage-content">
+              <span class="storage-size">128 GB</span>
+            </div>
+          </label>
+          <label class="storage-option">
+            <input type="radio" name="storage" value="256"/>
+            <div class="storage-content">
+              <span class="storage-size">256 GB</span>
+            </div>
+          </label>
+          <label class="storage-option">
+            <input type="radio" name="storage" value="512"/>
+            <div class="storage-content">
+              <span class="storage-size">512 GB</span>
+            </div>
+          </label>
+        </div>
       </div>
-    </section>
-    </main>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const mainContainer = document.querySelector('.main-image');
-        const prevBtn       = document.querySelector('.thumbnail-nav.prev');
-        const nextBtn       = document.querySelector('.thumbnail-nav.next');
-        const strip         = document.querySelector('.thumbnail-container');
-        const TABLET_BP     = 768;
 
 
-               const hamburgerMenu = document.querySelector('.hamburger-menu');
-            const mobileMenu = document.querySelector('.mobile-menu');
-            
-            hamburgerMenu.addEventListener('click', function() {
-              console.log('aaaa')
-                mobileMenu.classList.toggle('active');
-                // Toggle between bars and times icon
-                const icon = this.querySelector('i');
-                if (icon.classList.contains('fa-bars')) {
-                    icon.classList.remove('fa-bars');
-                    icon.classList.add('fa-times');
-                } else {
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                }
-            });
 
-            // Close menu when clicking outside
-            document.addEventListener('click', function(event) {
-                if (!hamburgerMenu.contains(event.target) && !mobileMenu.contains(event.target)) {
-                    mobileMenu.classList.remove('active');
-                    const icon = hamburgerMenu.querySelector('i');
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                }
-            });
+      <div class="total-price">
+        <div>
 
-            // Close menu when clicking a link
-            const mobileLinks = mobileMenu.querySelectorAll('.nav-link');
-            mobileLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    mobileMenu.classList.remove('active');
-                    const icon = hamburgerMenu.querySelector('i');
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                });
-            });
-        // dynamic visibleCount based on viewport
-        function getVisibleCount() {
-          return window.innerWidth <= TABLET_BP ? 3 : 5;
-        }
-        let visibleCount = getVisibleCount();
+          <h3>Celková částka</h3>
+          <div class="price-note">T-Mobile posuzuje každou žádost o splátky individuálně a je oprávněn splátky nepovolit nebo je upravit.</div>
+        </div>
+        <div>
 
-        let firstIndex    = 0;
-        let selectedIndex = 0;
-        let isAnimating   = false;
-        let pendingIndex = null;
+          <div class="price-discount">-11%</div>
+          <div class="price-amount">15 019 Kč</div>
+        </div>
+      </div>
+<!-- Mobile purchase summary  -->
+  <!-- Purchase Summary -->
+    <div class="purchase-summary-mobile">
+      <div class="tariff-recommendation">
+        <div class="tariff-header">
+          <div class="tariff-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <div class="tariff-info">
+            <h3>Neomezená data</h3>
+            <p>Next neomezená XL s výhodou</p>
+          </div>
+          <div class="tariff-price">945 Kč</div>
+        </div>
+        <div class="tariff-duration">na 24 měsíců</div>
+        <div class="tariff-actions">
+          <button class="btn-link">Vyberte jiný tarif</button>
+          <button class="btn-link">Žádné tarify</button>
+        </div>
+      </div>
 
-        // Track mouse usage to differentiate between keyboard and mouse focus
-        let mouseDownTarget = null;
+      <div class="payment-summary">
+        <div class="payment-row">
+          <div class="payment-type">Jednorázově</div>
+          <div class="payment-amount">0 Kč</div>
+        </div>
+        <div class="payment-row">
+          <div class="payment-type">Celkově měsíčně
+          </div>
+          <div class="payment-amount">1815 Kč</div>
+        </div>
+      </div>
+
+      <button class="btn-primary">Přidat do košíku</button>
       
-        // Set up proper tab order: prev -> container -> next
-        prevBtn.tabIndex = 0;
-        strip.tabIndex = 0;
-        nextBtn.tabIndex = 0;
+      <div class="price-details">
+        <a href="#"><i class="fas fa-info-circle"></i> Detaily k platbě</a>
+      </div>
+    </div>
 
-        // build slides array (images & videos)
-        const allThumbs = Array.from(strip.querySelectorAll('.thumbnail')).map(el => ({
-          src:     el.src,
-          dataSrc: el.getAttribute('data-src'),
-          alt:     el.alt || '',
-          isVideo: el.getAttribute('data-src')?.toLowerCase().endsWith('.mp4'),
-          is3D: false
-        }));
 
-        // Add the 3D model thumbnail to the allThumbs array at index 2
-        allThumbs.splice(2, 0, {
-          src: 'models/iPhone13.glb',
-          dataSrc: 'models/iPhone13.glb',
-          alt: '3D Model of iPhone 16',
-          isVideo: false,
-          is3D: true
-        });
 
-        const total = allThumbs.length;
+    </div>
 
-    const MOBILE_BP = 480;
+    <!-- Purchase Summary -->
+    <div class="purchase-summary">
+      <div class="tariff-recommendation">
+        <div class="tariff-header">
+          <div class="tariff-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <div class="tariff-info">
+            <h3>Neomezená data</h3>
+            <p>Next neomezená XL s výhodou</p>
+          </div>
+          <div class="tariff-price">945 Kč</div>
+        </div>
+        <div class="tariff-duration">na 24 měsíců</div>
+        <div class="tariff-actions">
+          <button class="btn-link">Vyberte jiný tarif</button>
+          <button class="btn-link">Žádné tarify</button>
+        </div>
+      </div>
 
-    function renderStrip() {
-        strip.innerHTML = '';
+      <div class="payment-summary">
+        <div class="payment-row">
+          <div class="payment-type">Jednorázově</div>
+          <div class="payment-amount">0 Kč</div>
+        </div>
+        <div class="payment-row">
+          <div class="payment-type">Celkově měsíčně
+          </div>
+          <div class="payment-amount">1815 Kč</div>
+        </div>
+      </div>
 
-        if (window.innerWidth <= MOBILE_BP) {
-            strip.classList.add('mobile-view');
-            strip.classList.remove('desktop-view');
-            
-            // Render all dots including 3D model
-            allThumbs.forEach((slide, idx) => {
-                const dot = document.createElement('div');
-                dot.className = 'dot'
-                    + (slide.isVideo ? ' video' : '')
-                    + (slide.is3D ? ' model' : '')
-                    + (idx === selectedIndex ? ' active' : '');
-                dot.dataset.idx = idx;
+      <button class="btn-primary">Přidat do košíku</button>
+      
+      <div class="price-details">
+        <a href="#"><i class="fas fa-info-circle"></i> Detaily k platbě</a>
+      </div>
+    </div>
+  </div>
 
-                if (slide.is3D) {
-                    const modelText = document.createElement('span');
-                    modelText.textContent = '3D';
-                    modelText.style.fontSize = '12px';
-                    modelText.style.fontWeight = 'bold';
-                    dot.appendChild(modelText);
-                } else if (slide.isVideo) {
-                    const icon = document.createElement('i');
-                    icon.className = 'fas fa-play play-icon';
-                    dot.appendChild(icon);
-                }
+  <!-- Benefits -->
+  <section class="benefits-section">
+    <h2>Výhody v přehledu</h2>
+    <div class="benefit-item">
+      <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
+      <span>Výkup telefonu</span>
+      <a href="#" class="benefit-link">Prodat telefon <i class="fas fa-chevron-right"></i></a>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
+      <span>MagentaEINS výhoda</span>
+      <a href="#" class="benefit-link">Aktivovat nyní <i class="fas fa-chevron-right"></i></a>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
+      <span>Doprava zdarma</span>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon"><i class="fas fa-check-circle"></i></div>
+      <span>14denní lhůta na vrácení</span>
+    </div>
+  </section>
+</main>
 
-                dot.addEventListener('click', () => select(idx));
-                strip.appendChild(dot);
-            });
-            return;
-        }
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const mainContainer = document.querySelector('.main-image');
+    const prevBtn       = document.querySelector('.thumbnail-nav.prev');
+    const nextBtn       = document.querySelector('.thumbnail-nav.next');
+    const strip         = document.querySelector('.thumbnail-container');
+    const TABLET_BP     = 768;
 
-        // Desktop view
-        strip.classList.remove('mobile-view');
-        strip.classList.add('desktop-view');
+    // dynamic visibleCount based on viewport
+    function getVisibleCount() {
+      return window.innerWidth <= TABLET_BP ? 3 : 5;
+    }
+    let visibleCount = getVisibleCount();
+
+    let firstIndex    = 0;
+    let selectedIndex = 0;
+    let isAnimating   = false;
+
+    // Track mouse usage to differentiate between keyboard and mouse focus
+    let mouseDownTarget = null;
+  
+    // Set up proper tab order: prev -> container -> next
+    prevBtn.tabIndex = 0;
+    strip.tabIndex = 0;
+    nextBtn.tabIndex = 0;
+
+    // build slides array (images & videos)
+    const allThumbs = Array.from(strip.querySelectorAll('.thumbnail')).map(el => ({
+      src:     el.src,
+      dataSrc: el.getAttribute('data-src'),
+      alt:     el.alt || '',
+      isVideo: el.getAttribute('data-src')?.toLowerCase().endsWith('.mp4'),
+      is3D: false
+    }));
+
+    // Add the 3D model thumbnail to the allThumbs array at index 2
+    allThumbs.splice(2, 0, {
+      src: 'models/iPhone13.glb',
+      dataSrc: 'models/iPhone13.glb',
+      alt: '3D Model of iPhone 16',
+      isVideo: false,
+      is3D: true
+    });
+
+    const total = allThumbs.length;
+
+const MOBILE_BP = 480;
+
+function renderStrip() {
+    strip.innerHTML = '';
+
+    if (window.innerWidth <= MOBILE_BP) {
+        strip.classList.add('mobile-view');
+        strip.classList.remove('desktop-view');
         
-        // Render visible thumbnails
-        for (let i = 0; i < visibleCount; i++) {
-            const idx = (firstIndex + i) % total;
-            const slide = allThumbs[idx];
-
-            const thumbWrapper = document.createElement('div');
-            thumbWrapper.className = 'thumbnail'
+        // Render all dots including 3D model
+        allThumbs.forEach((slide, idx) => {
+            const dot = document.createElement('div');
+            dot.className = 'dot'
                 + (slide.isVideo ? ' video' : '')
                 + (slide.is3D ? ' model' : '')
                 + (idx === selectedIndex ? ' active' : '');
-            thumbWrapper.dataset.idx = idx;
+            dot.dataset.idx = idx;
 
             if (slide.is3D) {
                 const modelText = document.createElement('span');
                 modelText.textContent = '3D';
-                modelText.style.fontSize = '14px';
+                modelText.style.fontSize = '12px';
                 modelText.style.fontWeight = 'bold';
-                thumbWrapper.appendChild(modelText);
+                dot.appendChild(modelText);
             } else if (slide.isVideo) {
-                const vid = document.createElement('video');
-                vid.muted = true;
-                vid.preload = 'metadata';
-                vid.src = slide.dataSrc;
-                vid.playsInline = true;
-                thumbWrapper.appendChild(vid);
-
                 const icon = document.createElement('i');
                 icon.className = 'fas fa-play play-icon';
-                thumbWrapper.appendChild(icon);
-            } else {
-                const img = document.createElement('img');
-                img.src = slide.src;
-                img.alt = slide.alt;
-                thumbWrapper.appendChild(img);
+                dot.appendChild(icon);
             }
 
-            thumbWrapper.addEventListener('click', () => select(idx));
-            strip.appendChild(thumbWrapper);
-        }
+            dot.addEventListener('click', () => select(idx));
+            strip.appendChild(dot);
+        });
+        return;
     }
 
-        // Show image/video in main container with fade
-        function transitionContent(newEl, afterInsert) {
-          if (isAnimating) return;
-          isAnimating = true;
-          const oldEl = mainContainer.lastElementChild;
-          if (oldEl) {
-            oldEl.classList.add('fade-out');
-            setTimeout(() => {
-              if (mainContainer.contains(oldEl)) mainContainer.removeChild(oldEl);
-              fadeInNew();
-            }, 400);
-          } else {
-            fadeInNew();
-          }
-          function fadeInNew() {
-            newEl.classList.add('fade-in');
-            mainContainer.appendChild(newEl);
-            void newEl.offsetWidth;
-            newEl.classList.add('active');
-            if (afterInsert) afterInsert(newEl);
-            setTimeout(() => {
-              newEl.classList.remove('fade-in', 'active');
-              isAnimating = false;
-              if (pendingIndex !== null) {
-                const idx = pendingIndex;
-                pendingIndex = null;
-                select(idx);
-              }
-            }, 400);
-          }
+    // Desktop view
+    strip.classList.remove('mobile-view');
+    strip.classList.add('desktop-view');
+    
+    // Render visible thumbnails
+    for (let i = 0; i < visibleCount; i++) {
+        const idx = (firstIndex + i) % total;
+        const slide = allThumbs[idx];
+
+        const thumbWrapper = document.createElement('div');
+        thumbWrapper.className = 'thumbnail'
+            + (slide.isVideo ? ' video' : '')
+            + (slide.is3D ? ' model' : '')
+            + (idx === selectedIndex ? ' active' : '');
+        thumbWrapper.dataset.idx = idx;
+
+        if (slide.is3D) {
+            const modelText = document.createElement('span');
+            modelText.textContent = '3D';
+            modelText.style.fontSize = '14px';
+            modelText.style.fontWeight = 'bold';
+            thumbWrapper.appendChild(modelText);
+        } else if (slide.isVideo) {
+            const vid = document.createElement('video');
+            vid.muted = true;
+            vid.preload = 'metadata';
+            vid.src = slide.dataSrc;
+            vid.playsInline = true;
+            thumbWrapper.appendChild(vid);
+
+            const icon = document.createElement('i');
+            icon.className = 'fas fa-play play-icon';
+            thumbWrapper.appendChild(icon);
+        } else {
+            const img = document.createElement('img');
+            img.src = slide.src;
+            img.alt = slide.alt;
+            thumbWrapper.appendChild(img);
         }
 
-        function setupMainContainerFocus() {
-          const mainContent = mainContainer.querySelector('img, video, model-viewer');
-          if (mainContent && mainContent.tagName === 'VIDEO') {
-            // For videos, ensure proper tab order integration
-            mainContent.addEventListener('keydown', (e) => {
-              // Handle tab navigation within video controls
-              if (e.key === 'Tab') {
-                const videoControls = mainContent.shadowRoot?.querySelectorAll('[tabindex]:not([tabindex="-1"])') || [];
-                const focusableControls = Array.from(videoControls).filter(el => 
-                  !el.hasAttribute('disabled') && 
-                  el.offsetParent !== null
-                );
-                
-                if (focusableControls.length > 0) {
-                  const currentIndex = focusableControls.indexOf(document.activeElement);
-                  
-                  if (!e.shiftKey && currentIndex === focusableControls.length - 1) {
-                    // Tab from last video control should go to strip
-                    e.preventDefault();
-                    strip.focus();
-                  } else if (e.shiftKey && currentIndex === 0) {
-                    // Shift+Tab from first video control should go to prev arrow
-                    e.preventDefault();
-                    prevBtn.focus();
-                  }
-                }
-              }
-            });
-            
-            mainContent.addEventListener('focus', () => {
-              if (mouseDownTarget !== mainContent) {
-                mainContent.style.outline = '2px solid blue';
-                mainContent.style.outlineOffset = '2px';
-              }
-            });
-            
-            mainContent.addEventListener('blur', () => {
-              mainContent.style.outline = '';
-              mainContent.style.outlineOffset = '';
-            });
-            
-            mainContent.addEventListener('mousedown', () => {
-              mouseDownTarget = mainContent;
-            });
-            
-            mainContent.tabIndex = 0;
-          } else if (mainContent && mainContent.tagName === 'MODEL-VIEWER') {
-            // For 3D model, handle rotation controls tab order
-            const rotationControls = mainContainer.querySelectorAll('.view-control-btn');
-            
-            // Make model viewer focusable
-            mainContent.tabIndex = 0;
-            
-            // Make rotation controls focusable
-            rotationControls.forEach(btn => {
-              btn.tabIndex = 0;
-              
-              // Add focus styles
-              btn.addEventListener('focus', () => {
-                if (mouseDownTarget !== btn) {
-                  btn.style.outline = '2px solid blue';
-                  btn.style.outlineOffset = '2px';
-                }
-              });
-              
-              btn.addEventListener('blur', () => {
-                btn.style.outline = '';
-                btn.style.outlineOffset = '';
-              });
-              
-              btn.addEventListener('mousedown', () => {
-                mouseDownTarget = btn;
-              });
-              
-              // Handle tab navigation
-              btn.addEventListener('keydown', (e) => {
-                if (e.key === 'Tab') {
-                  const lastControl = rotationControls[rotationControls.length - 1];
-                  if (!e.shiftKey && btn === lastControl) {
-                    // Tab from last rotation control should go to strip
-                    e.preventDefault();
-                    strip.focus();
-                  } else if (e.shiftKey && btn === rotationControls[0]) {
-                    // Shift+Tab from first rotation control should go to model viewer
-                    e.preventDefault();
-                    mainContent.focus();
-                  }
-                }
-              });
-            });
-            
-            // Handle model viewer tab navigation
-            mainContent.addEventListener('keydown', (e) => {
-              if (e.key === 'Tab') {
-                if (!e.shiftKey) {
-                  // Tab from model viewer to first rotation control
-                  e.preventDefault();
-                  rotationControls[0].focus();
-                } else {
-                  // Shift+Tab from model viewer to prev arrow
-                  e.preventDefault();
-                  prevBtn.focus();
-                }
-              }
-            });
-            
-            // Add focus styles to model viewer
-            mainContent.addEventListener('focus', () => {
-              if (mouseDownTarget !== mainContent) {
-                mainContent.style.outline = '2px solid blue';
-                mainContent.style.outlineOffset = '2px';
-              }
-            });
-            
-            mainContent.addEventListener('blur', () => {
-              mainContent.style.outline = '';
-              mainContent.style.outlineOffset = '';
-            });
-            
-            mainContent.addEventListener('mousedown', () => {
-              mouseDownTarget = mainContent;
-            });
-          } else if (mainContent) {
-            // For images, remove from tab order
-            mainContent.tabIndex = -1;
+        thumbWrapper.addEventListener('click', () => select(idx));
+        strip.appendChild(thumbWrapper);
+    }
+}
+
+    // Show image/video in main container with fade
+    function transitionContent(newEl, afterInsert) {
+      if (isAnimating) return;
+      isAnimating = true;
+      const oldEl = mainContainer.lastElementChild;
+      if (oldEl) {
+        oldEl.classList.add('fade-out');
+        setTimeout(() => {
+          if (mainContainer.contains(oldEl)) mainContainer.removeChild(oldEl);
+          fadeInNew();
+        }, 400);
+      } else {
+        fadeInNew();
+      }
+      function fadeInNew() {
+        newEl.classList.add('fade-in');
+        mainContainer.appendChild(newEl);
+        void newEl.offsetWidth;
+        newEl.classList.add('active');
+        if (afterInsert) afterInsert(newEl);
+        setTimeout(() => {
+          newEl.classList.remove('fade-in', 'active');
+          isAnimating = false;
+          if (pendingIndex !== null) {
+            const idx = pendingIndex;
+            pendingIndex = null;
+            select(idx);
           }
+        }, 400);
+      }
+    }
+
+    function setupMainContainerFocus() {
+      const mainContent = mainContainer.querySelector('img, video, model-viewer');
+      if (mainContent && mainContent.tagName === 'VIDEO') {
+        // For videos, ensure proper tab order integration
+        mainContent.addEventListener('keydown', (e) => {
+          // Handle tab navigation within video controls
+          if (e.key === 'Tab') {
+            const videoControls = mainContent.shadowRoot?.querySelectorAll('[tabindex]:not([tabindex="-1"])') || [];
+            const focusableControls = Array.from(videoControls).filter(el => 
+              !el.hasAttribute('disabled') && 
+              el.offsetParent !== null
+            );
+            
+            if (focusableControls.length > 0) {
+              const currentIndex = focusableControls.indexOf(document.activeElement);
+              
+              if (!e.shiftKey && currentIndex === focusableControls.length - 1) {
+                // Tab from last video control should go to strip
+                e.preventDefault();
+                strip.focus();
+              } else if (e.shiftKey && currentIndex === 0) {
+                // Shift+Tab from first video control should go to prev arrow
+                e.preventDefault();
+                prevBtn.focus();
+              }
+            }
+          }
+        });
+        
+        mainContent.addEventListener('focus', () => {
+          if (mouseDownTarget !== mainContent) {
+            mainContent.style.outline = '2px solid blue';
+            mainContent.style.outlineOffset = '2px';
+          }
+        });
+        
+        mainContent.addEventListener('blur', () => {
+          mainContent.style.outline = '';
+          mainContent.style.outlineOffset = '';
+        });
+        
+        mainContent.addEventListener('mousedown', () => {
+          mouseDownTarget = mainContent;
+        });
+        
+        mainContent.tabIndex = 0;
+      } else if (mainContent && mainContent.tagName === 'MODEL-VIEWER') {
+        // For 3D model, handle rotation controls tab order
+        const rotationControls = mainContainer.querySelectorAll('.view-control-btn');
+        
+        // Make model viewer focusable
+        mainContent.tabIndex = 0;
+        
+        // Make rotation controls focusable
+        rotationControls.forEach(btn => {
+          btn.tabIndex = 0;
           
-          // Make individual thumbnails non-focusable since we're using arrow keys
-          const thumbnails = strip.querySelectorAll('.thumbnail');
-          thumbnails.forEach(thumbnail => {
-            thumbnail.tabIndex = -1;
+          // Add focus styles
+          btn.addEventListener('focus', () => {
+            if (mouseDownTarget !== btn) {
+              btn.style.outline = '2px solid blue';
+              btn.style.outlineOffset = '2px';
+            }
           });
-        }
+          
+          btn.addEventListener('blur', () => {
+            btn.style.outline = '';
+            btn.style.outlineOffset = '';
+          });
+          
+          btn.addEventListener('mousedown', () => {
+            mouseDownTarget = btn;
+          });
+          
+          // Handle tab navigation
+          btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+              const lastControl = rotationControls[rotationControls.length - 1];
+              if (!e.shiftKey && btn === lastControl) {
+                // Tab from last rotation control should go to strip
+                e.preventDefault();
+                strip.focus();
+              } else if (e.shiftKey && btn === rotationControls[0]) {
+                // Shift+Tab from first rotation control should go to model viewer
+                e.preventDefault();
+                mainContent.focus();
+              }
+            }
+          });
+        });
+        
+        // Handle model viewer tab navigation
+        mainContent.addEventListener('keydown', (e) => {
+          if (e.key === 'Tab') {
+            if (!e.shiftKey) {
+              // Tab from model viewer to first rotation control
+              e.preventDefault();
+              rotationControls[0].focus();
+            } else {
+              // Shift+Tab from model viewer to prev arrow
+              e.preventDefault();
+              prevBtn.focus();
+            }
+          }
+        });
+        
+        // Add focus styles to model viewer
+        mainContent.addEventListener('focus', () => {
+          if (mouseDownTarget !== mainContent) {
+            mainContent.style.outline = '2px solid blue';
+            mainContent.style.outlineOffset = '2px';
+          }
+        });
+        
+        mainContent.addEventListener('blur', () => {
+          mainContent.style.outline = '';
+          mainContent.style.outlineOffset = '';
+        });
+        
+        mainContent.addEventListener('mousedown', () => {
+          mouseDownTarget = mainContent;
+        });
+      } else if (mainContent) {
+        // For images, remove from tab order
+        mainContent.tabIndex = -1;
+      }
+      
+      // Make individual thumbnails non-focusable since we're using arrow keys
+      const thumbnails = strip.querySelectorAll('.thumbnail');
+      thumbnails.forEach(thumbnail => {
+        thumbnail.tabIndex = -1;
+      });
+    }
 
-        function showImage(src, alt='') {
-          const img = document.createElement('img');
-          img.src = src;
-          img.alt = alt;
-          img.id = 'mainImageContent';
-          transitionContent(img);
-        }
+    function showImage(src, alt='') {
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = alt;
+      img.id = 'mainImageContent';
+      transitionContent(img);
+    }
 
-        function showVideo(src) {
-          const vid = document.createElement('video');
-          vid.src = src;
-          vid.muted = true;
-          vid.controls = true;
-          vid.autoplay = true;
-          vid.playsInline = true;
-          transitionContent(vid);
-        }
+    function showVideo(src) {
+      const vid = document.createElement('video');
+      vid.src = src;
+      vid.muted = true;
+      vid.controls = true;
+      vid.autoplay = true;
+      vid.playsInline = true;
+      transitionContent(vid);
+    }
 
-
- function showModel() {
-  const isMobile = window.innerWidth <= 768;
-  const cameraOrbit = isMobile ? '0deg 90deg 0.55m' : '0deg 90deg 1.2m';
-  const btnOrbit = isMobile ? '0.55m' : '1.2m';
-  const scale = isMobile ? '1.8 1.8 1.8' : '2 2 2';
-  const container = document.createElement('div');
-  if (isMobile) {
-    container.innerHTML = `
-      <div style="position:relative;width:100%;height:100%;">
+    function showModel() {
+      const isMobile = window.innerWidth <= 768;
+      const cameraOrbit = isMobile ? '0deg 90deg 0.55m' : '0deg 90deg 1.2m';
+      const btnOrbit = isMobile ? '0.55m' : '1.2m';
+      const scale = isMobile ? '1.8 1.8 1.8' : '2 2 2';
+      const container = document.createElement('div');
+      container.innerHTML = `
+        <div class="model-indicator"><i class="fas fa-arrows-rotate"></i> 3D Model</div>
         <div class="model-loading-spinner" id="modelLoadingSpinner">
           <div class="spinner"></div>
         </div>
+        ${isMobile ? '<div class="swipe-zone swipe-zone-left" style="position:absolute;left:0;top:0;width:22%;height:100%;z-index:20;"></div>' : ''}
+        ${isMobile ? '<div class="swipe-zone swipe-zone-right" style="position:absolute;right:0;top:0;width:22%;height:100%;z-index:20;"></div>' : ''}
         <model-viewer 
-            id="main3dModel"
             src="models/iPhone13.glb"
             camera-controls
+            auto-rotate
             interaction-prompt="none"
             shadow-intensity="1"
             exposure="1"
             style="width: 100%; height: 100%;"
             environment-image="neutral"
             loading="eager"
-            touch-action="pan-y"
-            interaction-policy="none"
+            touch-action="none"
+            interaction-policy="allow-when-focused"
             camera-orbit="${cameraOrbit}"
             camera-target="0m 0m 0m"
             scale="${scale}"
             disable-zoom
             min-camera-orbit="-Infinity 0deg auto"
             max-camera-orbit="Infinity 360deg auto"
-            tabindex="0">
-            <div class="view-controls" role="toolbar" aria-label="Model rotation controls">
+            tabindex="0"
+            disable-tap>
+            <div class="view-controls${isMobile ? ' mobile-hidden' : ''}" role="toolbar" aria-label="Model rotation controls">
                 <button class="view-control-btn" data-orbit="0deg 90deg ${btnOrbit}" aria-label="Front View"><i class="fas fa-mobile-alt"></i></button>
                 <button class="view-control-btn" data-orbit="-90deg 90deg ${btnOrbit}" aria-label="Left View"><i class="fas fa-caret-left"></i></button>
                 <button class="view-control-btn" data-orbit="90deg 90deg ${btnOrbit}" aria-label="Right View"><i class="fas fa-caret-right"></i></button>
                 <button class="view-control-btn" data-orbit="0deg 0deg ${btnOrbit}" aria-label="Top View"><i class="fas fa-caret-up"></i></button>
                 <button class="view-control-btn" data-orbit="0deg 180deg ${btnOrbit}" aria-label="Bottom View"><i class="fas fa-caret-down"></i></button>
+                <button class="view-control-btn zoom-in" aria-label="Zoom In"><i class="fas fa-search-plus"></i></button>
+                <button class="view-control-btn zoom-out" aria-label="Zoom Out"><i class="fas fa-search-minus"></i></button>
             </div>
         </model-viewer>
-        <div id="activate3dOverlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;z-index:2;cursor:pointer;">
-          <div style="background:rgba(226,0,116,0.9);color:white;padding:12px 20px;border-radius:24px;font-size:1.1rem;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,0.15);">
-            <i class="fas fa-hand-pointer" style=";animation:handwave 1.2s infinite alternate;"></i>
-            <span class="overlay-button-text">Tap to interact</span>
-          </div>
-        </div>
-        <button id="exit3dModeBtn" style="display:none;font-size:12.8px;position:absolute;top:16px;right:16px;z-index:3;background:rgba(226,0,116,0.9);color:white;border:none;border-radius:20px;padding:8px 9px;cursor:pointer;align-items:center;gap:8px;">
-          <i class="fas fa-arrow-left"></i>
-        </button>
-        <div id="aria3dLive" aria-live="polite" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;"></div>
-      </div>
-      <style>@keyframes handwave{0%{transform:rotate(-10deg);}100%{transform:rotate(20deg);}}</style>
-    `;
-  } else {
-    container.innerHTML = `
-      <div class="model-loading-spinner" id="modelLoadingSpinner">
-        <div class="spinner"></div>
-      </div>
-      <model-viewer 
-          id="main3dModel"
-          src="models/iPhone13.glb"
-          camera-controls
-          interaction-prompt="none"
-          shadow-intensity="1"
-          exposure="1"
-          style="width: 100%; height: 100%;"
-          environment-image="neutral"
-          loading="eager"
-          touch-action="pan-y"
-          interaction-policy="allow-when-focused"
-          camera-orbit="${cameraOrbit}"
-          camera-target="0m 0m 0m"
-          scale="${scale}"
-          disable-zoom
-          auto-rotate
-          min-camera-orbit="-Infinity 0deg auto"
-          max-camera-orbit="Infinity 360deg auto"
-          tabindex="0">
-          <div class="view-controls" role="toolbar" aria-label="Model rotation controls">
-              <button class="view-control-btn" data-orbit="0deg 90deg ${btnOrbit}" aria-label="Front View"><i class="fas fa-mobile-alt"></i></button>
-              <button class="view-control-btn" data-orbit="-90deg 90deg ${btnOrbit}" aria-label="Left View"><i class="fas fa-caret-left"></i></button>
-              <button class="view-control-btn" data-orbit="90deg 90deg ${btnOrbit}" aria-label="Right View"><i class="fas fa-caret-right"></i></button>
-              <button class="view-control-btn" data-orbit="0deg 0deg ${btnOrbit}" aria-label="Top View"><i class="fas fa-caret-up"></i></button>
-              <button class="view-control-btn" data-orbit="0deg 180deg ${btnOrbit}" aria-label="Bottom View"><i class="fas fa-caret-down"></i></button>
-          </div>
-      </model-viewer>
-    `;
-  }
-  transitionContent(container, function() {
-    const viewer = container.querySelector('#main3dModel');
-    const spinner = container.querySelector('#modelLoadingSpinner');
-    const overlay = container.querySelector('#activate3dOverlay');
-    const exitBtn = container.querySelector('#exit3dModeBtn');
-    let in3DMode = false;
-    if (viewer && spinner) {
-      viewer.addEventListener('load', () => {
-        spinner.style.display = 'none';
+      `;
+      transitionContent(container, function() {
+        const viewer = container.querySelector('model-viewer');
+        const spinner = container.querySelector('#modelLoadingSpinner');
+        if (viewer && spinner) {
+          viewer.addEventListener('load', () => {
+            spinner.style.display = 'none';
+          });
+        }
+        // --- Animation logic start ---
+        function animateModelEntrance() {
+          viewer.setAttribute('camera-controls', 'false');
+          viewer.setAttribute('auto-rotate', 'false');
+          let startY = 0, startX = 90, radius = isMobile ? 0.55 : 1.2;
+          let duration1 = 1200;
+          let duration2 = 1200;
+          let duration3 = 600;
+          let startTime = null;
+          let phase = 1;
+          let lastY = startY, lastX = startX;
+          function setOrbit(y, x) {
+            viewer.cameraOrbit = `${y}deg ${x}deg ${radius}m`;
+          }
+          function animate(ts) {
+            if (!startTime) startTime = ts;
+            let elapsed = ts - startTime;
+            if (phase === 1) {
+              let t = Math.min(elapsed / duration1, 1);
+              let y = startY + 360 * t;
+              setOrbit(y, startX);
+              lastY = y;
+              if (t < 1) {
+                requestAnimationFrame(animate);
+              } else {
+                phase = 2;
+                startTime = performance.now();
+                requestAnimationFrame(animate);
+              }
+            } else if (phase === 2) {
+              let t = Math.min(elapsed / duration2, 1);
+              let x = startX + 360 * t;
+              setOrbit(lastY, x);
+              lastX = x;
+              if (t < 1) {
+                requestAnimationFrame(animate);
+              } else {
+                phase = 3;
+                startTime = performance.now();
+                requestAnimationFrame(animate);
+              }
+            } else if (phase === 3) {
+              let t = Math.min(elapsed / duration3, 1);
+              let y = lastY + (startY - lastY) * t;
+              let x = lastX + (startX - lastX) * t;
+              setOrbit(y, x);
+              if (t < 1) {
+                requestAnimationFrame(animate);
+              } else {
+                viewer.setAttribute('camera-controls', 'true');
+                viewer.setAttribute('auto-rotate', 'true');
+                setOrbit(startY, startX);
+                // --- Show mobile view controls button after animation ---
+                if (isMobile) {
+                  const controls = viewer.querySelector('.view-controls');
+                  // Remove any existing toggle button in the container
+                  let oldBtn = container.querySelector('.mobile-view-controls-toggle');
+                  if (oldBtn) oldBtn.remove();
+                  // Create a fresh button
+                  const toggleBtn = document.createElement('button');
+                  toggleBtn.className = 'mobile-view-controls-toggle';
+                  toggleBtn.setAttribute('aria-label', 'Show view controls');
+                  toggleBtn.innerHTML = '<i class="fas fa-ellipsis-h"></i>';
+                  // Append as sibling to <model-viewer>
+                  container.appendChild(toggleBtn);
+                  if (controls) {
+                    // Always start hidden
+                    controls.classList.remove('mobile-shown');
+                    controls.classList.add('mobile-hidden');
+                    toggleBtn.setAttribute('aria-label', 'Show view controls');
+                    toggleBtn.addEventListener('click', function() {
+                      const isShown = controls.classList.toggle('mobile-shown');
+                      controls.classList.toggle('mobile-hidden', !isShown);
+                      if (isShown) {
+                        toggleBtn.setAttribute('aria-label', 'Hide view controls');
+                      } else {
+                        toggleBtn.setAttribute('aria-label', 'Show view controls');
+                      }
+                    });
+                  } else {
+                  }
+                }
+              }
+            }
+          }
+          setOrbit(startY, startX);
+          requestAnimationFrame(animate);
+        }
+        viewer.addEventListener('load', animateModelEntrance);
+        // --- Animation logic end ---
+        const rotationControls = Array.from(container.querySelectorAll('.view-control-btn'));
+        const zoomInBtn = container.querySelector('.view-control-btn.zoom-in');
+        const zoomOutBtn = container.querySelector('.view-control-btn.zoom-out');
+        rotationControls.forEach(btn => {
+          btn.addEventListener('click', () => {
+            const orbit = btn.getAttribute('data-orbit');
+            if (orbit) viewer.cameraOrbit = orbit;
+          });
+          btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              btn.click();
+            }
+          });
+        });
+        function getCurrentRadius() {
+          const orbit = viewer.cameraOrbit || viewer.getAttribute('camera-orbit');
+          if (!orbit) return 1.2;
+          const parts = orbit.split(' ');
+          let radius = parseFloat(parts[2]);
+          if (isNaN(radius)) radius = 1.2;
+          return radius;
+        }
+        function setRadius(newRadius) {
+          const orbit = viewer.cameraOrbit || viewer.getAttribute('camera-orbit');
+          if (!orbit) return;
+          const parts = orbit.split(' ');
+          if (parts.length !== 3) return;
+          parts[2] = newRadius + 'm';
+          viewer.cameraOrbit = parts.join(' ');
+        }
+        if (zoomInBtn) {
+          zoomInBtn.addEventListener('click', () => {
+            let r = getCurrentRadius();
+            setRadius(Math.max(0.3, r - 0.2));
+          });
+        }
+        if (zoomOutBtn) {
+          zoomOutBtn.addEventListener('click', () => {
+            let r = getCurrentRadius();
+            setRadius(Math.min(3, r + 0.2));
+          });
+        }
+        viewer.addEventListener('keydown', (e) => {
+          if (e.key === 'Tab' && e.shiftKey) {
+            e.preventDefault();
+            prevBtn.focus();
+          }
+        });
+        viewer.addEventListener('wheel', () => {}, { passive: true });
+        viewer.addEventListener('mouseenter', () => {
+          document.body.style.overflow = 'hidden';
+        });
+        viewer.addEventListener('mouseleave', () => {
+          document.body.style.overflow = '';
+        });
       });
     }
-    function enter3DMode() {
-      overlay.style.display = 'none';
-      exitBtn.style.display = 'flex';
-      viewer.setAttribute('interaction-policy', 'always');
-      viewer.setAttribute('touch-action', 'pan-y');
-      document.body.classList.add('no-scroll');
-      viewer.focus();
-      in3DMode = true;
+
+    // select slide by index
+    function select(idx) {
+      if (isAnimating) {
+        pendingIndex = idx;
+        return;
+      }
+      selectedIndex = ((idx % total) + total) % total;
+
+      // adjust window if at edges
+      const start = firstIndex;
+      const end   = firstIndex + visibleCount - 1;
+      if      (selectedIndex === end   && end < total - 1) firstIndex++;
+      else if (selectedIndex === start && start > 0)       firstIndex--;
+
+      // clamp
+      if (selectedIndex < firstIndex) firstIndex = selectedIndex;
+      if (selectedIndex > firstIndex + visibleCount - 1) firstIndex = selectedIndex - visibleCount + 1;
+      if (firstIndex < 0) firstIndex = 0;
+      if (firstIndex + visibleCount > total) firstIndex = total - visibleCount;
+
+      renderStrip();
+      const slide = allThumbs[selectedIndex];
+      
+      if (slide.is3D) {
+          showModel();
+      } else if (slide.isVideo) {
+          showVideo(slide.dataSrc);
+      } else {
+          showImage(slide.dataSrc, slide.alt);
+      }
     }
-    function exit3DMode() {
-      overlay.style.display = 'flex';
-      exitBtn.style.display = 'none';
-      viewer.setAttribute('interaction-policy', 'none');
-      viewer.setAttribute('touch-action', 'none');
-      document.body.classList.remove('no-scroll');
-      in3DMode = false;
-    }
-    if (overlay) {
-      overlay.addEventListener('click', enter3DMode);
-    }
-    if (exitBtn) {
-      exitBtn.addEventListener('click', exit3DMode);
-    }
-    if (viewer) {
-      viewer.addEventListener('touchstart', function(e) {
-        if (in3DMode) e.stopPropagation();
-      }, { capture: true });
-      viewer.addEventListener('touchmove', function(e) {
-        if (in3DMode) e.stopPropagation();
-      }, { capture: true });
-      viewer.addEventListener('touchend', function(e) {
-        if (in3DMode) e.stopPropagation();
-      }, { capture: true });
-    }
-    const viewControls = container.querySelectorAll('.view-control-btn');
-    if (viewer && viewControls.length) {
-      viewControls.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const orbit = btn.getAttribute('data-orbit');
-          if (orbit) viewer.cameraOrbit = orbit;
-        });
-        btn.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            btn.click();
-          }
-        });
-      });
-    }
-  });
-}
- 
 
-        // select slide by index
-        function select(idx) {
-          if (isAnimating) {
-            pendingIndex = idx;
-            return;
-          }
-          selectedIndex = ((idx % total) + total) % total;
-
-          // adjust window if at edges
-          const start = firstIndex;
-          const end   = firstIndex + visibleCount - 1;
-          if      (selectedIndex === end   && end < total - 1) firstIndex++;
-          else if (selectedIndex === start && start > 0)       firstIndex--;
-
-          // clamp
-          if (selectedIndex < firstIndex) firstIndex = selectedIndex;
-          if (selectedIndex > firstIndex + visibleCount - 1) firstIndex = selectedIndex - visibleCount + 1;
-          if (firstIndex < 0) firstIndex = 0;
-          if (firstIndex + visibleCount > total) firstIndex = total - visibleCount;
-
-          renderStrip();
-          const slide = allThumbs[selectedIndex];
-          
-          if (slide.is3D) {
-              showModel();
-          } else if (slide.isVideo) {
-              showVideo(slide.dataSrc);
-          } else {
-              showImage(slide.dataSrc, slide.alt);
-          }
-        }
-
-        // move forward/back
-        function move(forward) {
-          const nextIndex = selectedIndex + (forward ? 1 : -1);
-          
-          // Handle wrapping around the ends
-          if (nextIndex < 0) {
-            select(total - 1);
-          } else if (nextIndex >= total) {
-            select(0);
-          } else {
-            select(nextIndex);
-          }
-        }
-
-        
-        // Track mouse down events to differentiate keyboard vs mouse focus
-        prevBtn.addEventListener('mousedown', () => {
-          mouseDownTarget = prevBtn;
-        });
+    // move forward/back
+    function move(forward) {
+      const nextIndex = selectedIndex + (forward ? 1 : -1);
       
-        nextBtn.addEventListener('mousedown', () => {
-          mouseDownTarget = nextBtn;
-        });
-      
-        strip.addEventListener('mousedown', () => {
-          mouseDownTarget = strip;
-        });
-      
-        // Clear mouse target after a short delay
-        document.addEventListener('mousedown', () => {
-          setTimeout(() => {
-            mouseDownTarget = null;
-          }, 100);
-        });
-      
-        // Enhanced keyboard navigation for thumbnail container
-        strip.addEventListener('keydown', (e) => {
-          if (e.key === 'ArrowRight') {
-            e.preventDefault();
-            e.stopPropagation();
-            move(true);
-          } else if (e.key === 'ArrowLeft') {
-            e.preventDefault();
-            e.stopPropagation();
-            move(false);
-          } else if (e.key === 'Tab') {
-            const mainContent = mainContainer.querySelector('model-viewer');
-            if (mainContent && allThumbs[selectedIndex].is3D) {
-              // If we're showing the 3D model, focus it
-              e.preventDefault();
-              mainContent.focus();
-            } else {
-              // Otherwise go to next arrow
-              e.preventDefault();
-              nextBtn.focus();
-            }
-          }
-        });
-      
-        // Enhanced focus management for navigation buttons
-        prevBtn.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            move(false);
-          } else if (e.key === 'Tab' && !e.shiftKey) {
-            // Tab from prev arrow goes to strip
-            e.preventDefault();
-            strip.focus();
-          }
-        });
-
-        nextBtn.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            move(true);
-          } else if (e.key === 'Tab' && e.shiftKey) {
-            // Shift+Tab from next arrow
-            const mainContent = mainContainer.querySelector('model-viewer');
-            if (mainContent && allThumbs[selectedIndex].is3D) {
-              // If we're showing the 3D model, focus it
-              e.preventDefault();
-              mainContent.focus();
-            } else {
-              // Otherwise go to strip
-              e.preventDefault();
-              strip.focus();
-            }
-          }
-        });
-      
-        // Previous button event handlers
-        prevBtn.addEventListener('click', () => move(false));
-      
-        // Next button event handlers
-        nextBtn.addEventListener('click', () => move(true));
-      
-        // Focus indicators only for keyboard navigation
-        prevBtn.addEventListener('focus', () => {
-          if (mouseDownTarget !== prevBtn) {
-            prevBtn.style.outline = '2px solid blue';
-            prevBtn.style.outlineOffset = '2px';
-          }
-        });
-        
-        prevBtn.addEventListener('blur', () => {
-          prevBtn.style.outline = '';
-          prevBtn.style.outlineOffset = '';
-        });
-      
-        nextBtn.addEventListener('focus', () => {
-          if (mouseDownTarget !== nextBtn) {
-            nextBtn.style.outline = '2px solid blue';
-            nextBtn.style.outlineOffset = '2px';
-          }
-        });
-        
-        nextBtn.addEventListener('blur', () => {
-          nextBtn.style.outline = '';
-          nextBtn.style.outlineOffset = '';
-        });
-      
-        strip.addEventListener('focus', () => {
-          if (mouseDownTarget !== strip) {
-            strip.style.outline = '2px solid blue';
-            strip.style.outlineOffset = '2px';
-            strip.style.borderRadius = '4px';
-          }
-        });
-        
-        strip.addEventListener('blur', () => {
-          strip.style.outline = '';
-          strip.style.outlineOffset = '';
-          strip.style.borderRadius = '';
-        });
-
-        // handle window resize for dynamic visibleCount
-        window.addEventListener('resize', () => {
-          const newCount = getVisibleCount();
-          if (newCount !== visibleCount) {
-            visibleCount = newCount;
-            firstIndex = Math.min(firstIndex, total - visibleCount);
-          }
-          renderStrip();
-        });
-
-        // ——— SWIPE HANDLING for tablet/mobile ———
-        let touchStartX = 0;
-        mainContainer.addEventListener('touchstart', e => {
-          if (window.innerWidth <= TABLET_BP) {
-            touchStartX = e.changedTouches[0].clientX;
-          }
-        });
-        mainContainer.addEventListener('touchend', e => {
-          if (window.innerWidth <= TABLET_BP) {
-            const dx = e.changedTouches[0].clientX - touchStartX;
-            const THRESHOLD = 50;
-            if (Math.abs(dx) > THRESHOLD) {
-              move(dx < 0);
-            }
-          }
-        });
-        // ——— end swipe ———
-
-        // Initialize gallery
-        renderStrip();
+      // Handle wrapping around the ends
+      if (nextIndex < 0) {
+        select(total - 1);
+      } else if (nextIndex >= total) {
         select(0);
-        setupMainContainerFocus();
-      });
-    </script>
+      } else {
+        select(nextIndex);
+      }
+    }
 
+    
+    // Track mouse down events to differentiate keyboard vs mouse focus
+    prevBtn.addEventListener('mousedown', () => {
+      mouseDownTarget = prevBtn;
+    });
+  
+    nextBtn.addEventListener('mousedown', () => {
+      mouseDownTarget = nextBtn;
+    });
+  
+    strip.addEventListener('mousedown', () => {
+      mouseDownTarget = strip;
+    });
+  
+    // Clear mouse target after a short delay
+    document.addEventListener('mousedown', () => {
+      setTimeout(() => {
+        mouseDownTarget = null;
+      }, 100);
+    });
+  
+    // Enhanced keyboard navigation for thumbnail container
+    strip.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        e.stopPropagation();
+        move(true);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        e.stopPropagation();
+        move(false);
+      } else if (e.key === 'Tab') {
+        const mainContent = mainContainer.querySelector('video[controls], model-viewer');
+        if (mainContent) {
+          // If there's a video or 3D model, focus it
+          e.preventDefault();
+          mainContent.focus();
+        } else {
+          // If no video or 3D model, go to next arrow
+          e.preventDefault();
+          nextBtn.focus();
+        }
+      }
+    });
+  
+    // Enhanced focus management for navigation buttons
+    prevBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        move(false);
+      } else if (e.key === 'Tab' && !e.shiftKey) {
+        // Tab from prev arrow goes to strip
+        e.preventDefault();
+        strip.focus();
+      }
+    });
 
+    nextBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        move(true);
+      } else if (e.key === 'Tab' && e.shiftKey) {
+        // Shift+Tab from next arrow
+        const mainContent = mainContainer.querySelector('video[controls], model-viewer');
+        if (mainContent) {
+          // If there's a video or 3D model with controls, focus it
+          e.preventDefault();
+          mainContent.focus();
+        } else {
+          // If no video or 3D model, go to strip
+          e.preventDefault();
+          strip.focus();
+        }
+      }
+    });
+  
+    // Previous button event handlers
+    prevBtn.addEventListener('click', () => move(false));
+  
+    // Next button event handlers
+    nextBtn.addEventListener('click', () => move(true));
+  
+    // Focus indicators only for keyboard navigation
+    prevBtn.addEventListener('focus', () => {
+      if (mouseDownTarget !== prevBtn) {
+        prevBtn.style.outline = '2px solid blue';
+        prevBtn.style.outlineOffset = '2px';
+      }
+    });
+    
+    prevBtn.addEventListener('blur', () => {
+      prevBtn.style.outline = '';
+      prevBtn.style.outlineOffset = '';
+    });
+  
+    nextBtn.addEventListener('focus', () => {
+      if (mouseDownTarget !== nextBtn) {
+        nextBtn.style.outline = '2px solid blue';
+        nextBtn.style.outlineOffset = '2px';
+      }
+    });
+    
+    nextBtn.addEventListener('blur', () => {
+      nextBtn.style.outline = '';
+      nextBtn.style.outlineOffset = '';
+    });
+  
+    strip.addEventListener('focus', () => {
+      if (mouseDownTarget !== strip) {
+        strip.style.outline = '2px solid blue';
+        strip.style.outlineOffset = '2px';
+        strip.style.borderRadius = '4px';
+      }
+    });
+    
+    strip.addEventListener('blur', () => {
+      strip.style.outline = '';
+      strip.style.outlineOffset = '';
+      strip.style.borderRadius = '';
+    });
 
-    </body>
-    </html>
+    // handle window resize for dynamic visibleCount
+    window.addEventListener('resize', () => {
+      const newCount = getVisibleCount();
+      if (newCount !== visibleCount) {
+        visibleCount = newCount;
+        firstIndex = Math.min(firstIndex, total - visibleCount);
+      }
+      renderStrip();
+    });
+
+    // ——— SWIPE HANDLING for tablet/mobile ———
+let touchStartX = 0;
+let touchStartY = 0;
+let isSwiping = false;
+let swipeOnModelViewer = false;
+let swipeZoneDirection = null;
+
+mainContainer.addEventListener('touchstart', e => {
+    if (window.innerWidth <= TABLET_BP) {
+        // If 3D model is active, check if touch is on swipe-zones
+        if (allThumbs[selectedIndex].is3D) {
+            const leftZone = mainContainer.querySelector('.swipe-zone-left');
+            const rightZone = mainContainer.querySelector('.swipe-zone-right');
+            if (leftZone && leftZone.contains(e.target)) {
+                swipeZoneDirection = 'left';
+            } else if (rightZone && rightZone.contains(e.target)) {
+                swipeZoneDirection = 'right';
+            } else {
+                swipeZoneDirection = null;
+            }
+            // If not in swipe zone, let model-viewer handle rotation
+            if (!swipeZoneDirection) {
+                swipeOnModelViewer = true;
+                return;
+            }
+            swipeOnModelViewer = false;
+        } else {
+            swipeOnModelViewer = false;
+            swipeZoneDirection = null;
+        }
+        touchStartX = e.changedTouches[0].clientX;
+        touchStartY = e.changedTouches[0].clientY;
+        isSwiping = false; // Reset on new touch
+    }
+}, { passive: true });
+
+mainContainer.addEventListener('touchmove', e => {
+    if (window.innerWidth <= TABLET_BP) {
+        // If swipe started on model-viewer, do not handle gallery swipe
+        if (allThumbs[selectedIndex].is3D && swipeOnModelViewer) return;
+        // Determine if the user is primarily swiping horizontally
+        if (!isSwiping) {
+            const dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
+            const dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
+            if (dx > dy && dx > 10) {
+                isSwiping = true;
+            }
+        }
+        // If it is a horizontal swipe, prevent the page from scrolling vertically
+        if (isSwiping) {
+            e.preventDefault();
+        }
+    }
+}, { passive: false });
+
+mainContainer.addEventListener('touchend', e => {
+    if (window.innerWidth <= TABLET_BP && isSwiping) {
+        // If swipe started on model-viewer, do not handle gallery swipe
+        if (allThumbs[selectedIndex].is3D && swipeOnModelViewer) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const THRESHOLD = 50; // Minimum distance for a swipe
+        if (Math.abs(dx) > THRESHOLD) {
+            move(dx < 0); // Navigate to next/previous slide
+        }
+    }
+});
+    // ——— end swipe ———
+
+    // Initialize gallery
+    renderStrip();
+    select(0);
+    setupMainContainerFocus();
+  });
+</script>
+
+<script>
+    // Add this to your existing script
+    document.addEventListener('DOMContentLoaded', function() {
+        const hamburgerMenu = document.querySelector('.hamburger-menu');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        
+        hamburgerMenu.addEventListener('click', function() {
+            mobileMenu.classList.toggle('active');
+            // Toggle between bars and times icon
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!hamburgerMenu.contains(event.target) && !mobileMenu.contains(event.target)) {
+                mobileMenu.classList.remove('active');
+                const icon = hamburgerMenu.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Close menu when clicking a link
+        const mobileLinks = mobileMenu.querySelectorAll('.nav-link');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenu.classList.remove('active');
+                const icon = hamburgerMenu.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

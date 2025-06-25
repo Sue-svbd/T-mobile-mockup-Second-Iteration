@@ -1,4 +1,4 @@
-    <!-- /* Version with no swiping on 3D model on mobile */ -->
+<!-- /* Version with swiping only outside 3D model on mobile */ -->
 
 <!DOCTYPE html>
 <html lang="de">
@@ -290,24 +290,17 @@
         padding: 20px;
     }
     .main-image {
-  background-color: var(--white);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  max-height: 400px;
-  aspect-ratio: 1/1;
-  position: relative;
-  opacity: 1;
-  transform: scale(1);
-  transition: opacity 0.35s cubic-bezier(0.4,0,0.2,1), transform 0.35s cubic-bezier(0.4,0,0.2,1);
-}
-.main-image.gallery-animate {
-  opacity: 0;
-  transform: scale(0.96);
+    background-color: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-height: 400px;
+    aspect-ratio: 1/1;
+    position: relative;
 }
 
 .main-image img,
@@ -351,16 +344,15 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
 
 /* Fade animation classes */
 .fade-out {
-    opacity: 0;
+    opacity: 0 !important;
+    transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1);
+    z-index: 1;
 }
 
 .fade-in {
     opacity: 1 !important;
-    transition: opacity 0.3s ease-in-out !important;
-}
-.pre-fade {
-    opacity: 0 !important;
-    transition: none !important;
+    transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1);
+    z-index: 2;
 }
     
     .product-container {
@@ -1024,9 +1016,9 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
 
         .main-image {
             width: 100%;
-            max-width: none;
+            height: auto;
+            max-width: 260px;
             aspect-ratio: 1/1;
-            min-height: 260px; /* Prevent jump on image load */
         }
 
         .main-image img,
@@ -1447,6 +1439,48 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         .view-controls {
             display: none !important;
         }
+        .view-controls.mobile-shown,
+        .view-controls.fade-in-tour,
+        .view-controls.fade-out-tour {
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            position: absolute;
+            bottom: 56px; /* 32px button + 8px gap + 16px margin */
+            right: 16px;
+            left: auto;
+            z-index: 130;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            padding: 8px 0;
+            gap: 6px;
+            min-width: 40px;
+            pointer-events: auto;
+        }
+        .main-image .mobile-view-controls-toggle {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            left: auto;
+            z-index: 131;
+            background: var(--magenta);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            cursor: pointer;
+            transition: background 0.2s;
+            padding: 0;
+        }
+        .main-image .mobile-view-controls-toggle:focus {
+            outline: 2px solid blue;
+            outline-offset: 2px;
+        }
     }
 
     .view-control-btn {
@@ -1534,7 +1568,7 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         border-bottom: none;
     }
 
-       .variant-text{
+    .variant-text{
       color: var(
 --magenta
       );
@@ -1550,48 +1584,6 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         }
     }
 
-    /* Remove old fade-in/fade-out/pre-fade classes */
-    /* Add new zoom-in-appear animation */
-    .zoom-in-appear {
-      opacity: 0;
-      transform: scale(0.96);
-      transition: opacity 0.35s cubic-bezier(0.4,0,0.2,1), transform 0.35s cubic-bezier(0.4,0,0.2,1);
-    }
-    .zoom-in-appear.zoom-in-active {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    /* Only keep minimal working overlay fade-in */
-    .gallery-fade-in {
-      position: absolute;
-      left: 0; top: 0; width: 100%; height: 100%;
-      opacity: 0;
-      z-index: 2;
-      transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1);
-    }
-    .gallery-fade-in.active {
-      opacity: 1;
-    }
-    .main-image {
-      position: relative;
-      background-color: var(--white);
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 15px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      max-height: 400px;
-      aspect-ratio: 1/1;
-    }
-    .gallery-fade-out {
-      opacity: 0 !important;
-      transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1);
-      z-index: 1;
-    }
-
     .main-image > div {
       width: 100%;
       height: 100%;
@@ -1599,6 +1591,213 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
       top: 0; left: 0;
       display: flex;
       flex-direction: column;
+    }
+    .main-image model-viewer {
+      width: 100%;
+      height: 100%;
+      min-height: 200px;
+    }
+
+    /* Mobile view controls toggle button */
+    @media (max-width: 768px) {
+      .mobile-view-controls-toggle {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        z-index: 120;
+        background: var(--magenta);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        cursor: pointer;
+        transition: background 0.2s;
+        padding: 0;
+      }
+      .mobile-view-controls-toggle:focus {
+        outline: 2px solid blue;
+        outline-offset: 2px;
+      }
+      .view-controls.mobile-hidden {
+        display: none !important;
+      }
+      .view-controls.mobile-shown {
+        display: flex !important;
+        flex-direction: column;
+        position: absolute;
+        bottom: 40px;
+        right: 8px;
+        z-index: 121;
+        border-radius: 12px;
+        padding: 8px 0;
+        gap: 6px;
+      }
+    }
+    /* Update the CSS so the button overlays the model at the bottom right of the container */
+    @media (max-width: 768px) {
+      .main-image .mobile-view-controls-toggle {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        z-index: 120;
+        background: var(--magenta);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        cursor: pointer;
+        transition: background 0.2s;
+        padding: 0;
+      }
+      .main-image .mobile-view-controls-toggle:focus {
+        outline: 2px solid blue;
+        outline-offset: 2px;
+      }
+      .view-controls.mobile-hidden {
+        display: none !important;
+      }
+      .view-controls.mobile-shown {
+        display: flex !important;
+        flex-direction: column;
+        position: absolute;
+        bottom: 40px;
+        right: 8px;
+        z-index: 121;
+        border-radius: 12px;
+        padding: 8px 0;
+        gap: 6px;
+      }
+    }
+    @media (max-width: 768px) {
+      .main-image .mobile-view-controls-toggle {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        z-index: 120;
+        background: var(--magenta);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        cursor: pointer;
+        transition: background 0.2s;
+        padding: 0;
+      }
+      .main-image .mobile-view-controls-toggle:focus {
+        outline: 2px solid blue;
+        outline-offset: 2px;
+      }
+      .view-controls.mobile-hidden {
+        display: none !important;
+      }
+      .view-controls.mobile-shown {
+        display: flex !important;
+        flex-direction: column;
+        position: absolute;
+        bottom: 48px; /* 32px button + 8px gap + 8px margin */
+        right: 8px;
+        z-index: 130;
+        border-radius: 10px;
+        padding: 6px 4px;
+        gap: 4px;
+        max-width: 90vw;
+        pointer-events: auto;
+        min-width: 40px;
+      }
+      .view-controls .view-control-btn {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        min-height: 28px;
+        font-size: 13px;
+        padding: 0;
+        margin: 0 auto;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .view-controls .view-control-btn i {
+        font-size: 1em;
+        line-height: 1;
+      }
+    }
+
+    /* Add fade and highlight styles */
+    .fade-in-tour { opacity: 1 !important; transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1); }
+    .fade-out-tour { opacity: 0 !important; transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1); pointer-events: none; }
+    .tour-highlight { box-shadow: 0 0 0 3px var(--magenta), 0 0 8px 2px var(--magenta); background: var(--magenta); color: #fff !important; }
+
+    @media (max-width: 768px) {
+        .mobile-controls-wrapper {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            z-index: 130;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            pointer-events: none;
+        }
+        .mobile-controls-wrapper .view-controls {
+            display: none !important;
+        }
+        .mobile-controls-wrapper .view-controls.mobile-shown,
+        .mobile-controls-wrapper .view-controls.fade-in-tour,
+        .mobile-controls-wrapper .view-controls.fade-out-tour {
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255,255,255,0.98);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            padding: 8px 0;
+            gap: 6px;
+            margin-right: -4px;
+
+            pointer-events: auto;
+        }
+        .mobile-controls-wrapper .mobile-view-controls-toggle {
+            background: var(--magenta);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            cursor: pointer;
+            transition: background 0.2s;
+            padding: 0;
+            pointer-events: auto;
+        }
+        .mobile-controls-wrapper .mobile-view-controls-toggle:focus {
+            outline: 2px solid blue;
+            outline-offset: 2px;
+        }
     }
     </style>
 </head>
@@ -1630,7 +1829,7 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
   <!-- Nav menu -->
   <ul class="nav-menu">
   
-      <li><a href="#" class="nav-link active">Variant 1</a></li>
+      <li><a href="#" class="nav-link active">Variant 2</a></li>
       <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
       <li><a href="gallery-variant-1.0.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
       <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
@@ -1683,11 +1882,11 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
 <!-- Add mobile menu -->
 <div class="mobile-menu">
     <ul class="nav-menu">
-        <li><a href="#" class="nav-link active">Variant 1</a></li>
+        <li><a href="#" class="nav-link active">Variant 2</a></li>
         <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
         <li><a href="gallery-variant-1.0.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
         <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
-                <li><a href="gallery-variant-4.html" class="nav-link variant-link">View Gallery Variant 4</a></li>
+              <li><a href="gallery-variant-4.html" class="nav-link variant-link">View Gallery Variant 4</a></li>
 
     </ul>
 </div>
@@ -1699,7 +1898,7 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
       <i class="fas fa-chevron-right"></i>
       <span>Apple iPhone 16</span>
             <i class="fas fa-chevron-right"></i>
-      <span class="variant-text">Variant 1</span>
+      <span class="variant-text">Variant 2</span>
 
     </nav>
   </div>
@@ -2084,7 +2283,7 @@ function renderStrip() {
       isAnimating = true;
       const oldEl = mainContainer.lastElementChild;
       if (oldEl) {
-        oldEl.classList.add('gallery-fade-out');
+        oldEl.classList.add('fade-out');
         setTimeout(() => {
           if (mainContainer.contains(oldEl)) mainContainer.removeChild(oldEl);
           fadeInNew();
@@ -2093,13 +2292,13 @@ function renderStrip() {
         fadeInNew();
       }
       function fadeInNew() {
-        newEl.classList.add('gallery-fade-in');
+        newEl.classList.add('fade-in');
         mainContainer.appendChild(newEl);
         void newEl.offsetWidth;
         newEl.classList.add('active');
         if (afterInsert) afterInsert(newEl);
         setTimeout(() => {
-          newEl.classList.remove('gallery-fade-in', 'active');
+          newEl.classList.remove('fade-in', 'active');
           isAnimating = false;
           if (pendingIndex !== null) {
             const idx = pendingIndex;
@@ -2245,151 +2444,158 @@ function renderStrip() {
     }
 
     function showImage(src, alt='') {
-  const img = document.createElement('img');
-  img.src = src;
-  img.alt = alt;
-  img.id = 'mainImageContent';
-  transitionContent(img);
-}
-
-function showVideo(src) {
-  const video = document.createElement('video');
-  video.src = src;
-  video.muted = true;
-  video.controls = true;
-  video.autoplay = true;
-  video.playsInline = true;
-  transitionContent(video);
-}
-
-    function showModel() {
-      const isMobile = window.innerWidth <= 768;
-      const cameraOrbit = isMobile ? '0deg 90deg 0.55m' : '0deg 90deg 1.2m';
-      const btnOrbit = isMobile ? '0.55m' : '1.2m';
-      const scale = isMobile ? '1.8 1.8 1.8' : '2 2 2';
-
-      // Create the model-indicator and spinner
-      const indicator = document.createElement('div');
-      indicator.className = 'model-indicator';
-      indicator.innerHTML = '<i class="fas fa-arrows-rotate"></i> 3D Model';
-
-      const spinner = document.createElement('div');
-      spinner.className = 'model-loading-spinner';
-      spinner.id = 'modelLoadingSpinner';
-      spinner.innerHTML = '<div class="spinner"></div>';
-
-      // Create the model-viewer
-      const viewer = document.createElement('model-viewer');
-      viewer.setAttribute('src', 'models/iPhone13.glb');
-      viewer.setAttribute('camera-controls', '');
-      viewer.setAttribute('interaction-prompt', 'none');
-      viewer.setAttribute('shadow-intensity', '1');
-      viewer.setAttribute('exposure', '1');
-      viewer.setAttribute('style', 'width: 100%; height: 100%;');
-      viewer.setAttribute('environment-image', 'neutral');
-      viewer.setAttribute('loading', 'eager');
-      viewer.setAttribute('touch-action', 'none');
-      viewer.setAttribute('interaction-policy', 'allow-when-focused');
-      viewer.setAttribute('camera-orbit', cameraOrbit);
-      viewer.setAttribute('camera-target', '0m 0m 0m');
-      viewer.setAttribute('scale', scale);
-      viewer.setAttribute('disable-zoom', '');
-      viewer.setAttribute('min-camera-orbit', '-Infinity 0deg auto');
-      viewer.setAttribute('max-camera-orbit', 'Infinity 360deg auto');
-      viewer.setAttribute('tabindex', '0');
-      viewer.setAttribute('disable-tap', '');
-
-      // Create the controls
-      const controls = document.createElement('div');
-      controls.className = 'view-controls';
-      controls.setAttribute('role', 'toolbar');
-      controls.setAttribute('aria-label', 'Model rotation controls');
-      controls.innerHTML = `
-        <button class="view-control-btn" data-orbit="0deg 90deg ${btnOrbit}" aria-label="Front View"><i class="fas fa-mobile-alt"></i></button>
-        <button class="view-control-btn" data-orbit="-90deg 90deg ${btnOrbit}" aria-label="Left View"><i class="fas fa-caret-left"></i></button>
-        <button class="view-control-btn" data-orbit="90deg 90deg ${btnOrbit}" aria-label="Right View"><i class="fas fa-caret-right"></i></button>
-        <button class="view-control-btn" data-orbit="0deg 0deg ${btnOrbit}" aria-label="Top View"><i class="fas fa-caret-up"></i></button>
-        <button class="view-control-btn" data-orbit="0deg 180deg ${btnOrbit}" aria-label="Bottom View"><i class="fas fa-caret-down"></i></button>
-        <button class="view-control-btn zoom-in" aria-label="Zoom In"><i class="fas fa-search-plus"></i></button>
-        <button class="view-control-btn zoom-out" aria-label="Zoom Out"><i class="fas fa-search-minus"></i></button>
-      `;
-
-      // Compose the container
-      const container = document.createElement('div');
-      container.appendChild(indicator);
-      container.appendChild(spinner);
-      container.appendChild(viewer);
-      container.appendChild(controls);
-
-      // Fade in the container
-      transitionContent(container, function(container) {
-        // Spinner logic
-        viewer.addEventListener('load', () => {
-          spinner.style.display = 'none';
-        });
-
-        // Controls logic
-        const rotationControls = Array.from(container.querySelectorAll('.view-control-btn'));
-        const zoomInBtn = container.querySelector('.view-control-btn.zoom-in');
-        const zoomOutBtn = container.querySelector('.view-control-btn.zoom-out');
-        rotationControls.forEach(btn => {
-          btn.addEventListener('click', () => {
-            const orbit = btn.getAttribute('data-orbit');
-            if (orbit) {
-              viewer.cameraOrbit = orbit;
-            }
-          });
-          btn.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              btn.click();
-            }
-          });
-        });
-        function getCurrentRadius() {
-          const orbit = viewer.cameraOrbit || viewer.getAttribute('camera-orbit');
-          if (!orbit) return 1.2;
-          const parts = orbit.split(' ');
-          let radius = parseFloat(parts[2]);
-          if (isNaN(radius)) radius = 1.2;
-          return radius;
-        }
-        function setRadius(newRadius) {
-          const orbit = viewer.cameraOrbit || viewer.getAttribute('camera-orbit');
-          if (!orbit) return;
-          const parts = orbit.split(' ');
-          if (parts.length !== 3) return;
-          parts[2] = newRadius + 'm';
-          viewer.cameraOrbit = parts.join(' ');
-        }
-        if (zoomInBtn) {
-          zoomInBtn.addEventListener('click', () => {
-            let r = getCurrentRadius();
-            setRadius(Math.max(0.3, r - 0.2));
-          });
-        }
-        if (zoomOutBtn) {
-          zoomOutBtn.addEventListener('click', () => {
-            let r = getCurrentRadius();
-            setRadius(Math.min(3, r + 0.2));
-          });
-        }
-        viewer.addEventListener('keydown', (e) => {
-          if (e.key === 'Tab' && e.shiftKey) {
-            e.preventDefault();
-            prevBtn.focus();
-          }
-        });
-        viewer.addEventListener('wheel', () => {}, { passive: true });
-        viewer.addEventListener('mouseenter', () => {
-          document.body.style.overflow = 'hidden';
-        });
-        viewer.addEventListener('mouseleave', () => {
-          document.body.style.overflow = '';
-        });
-      });
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = alt;
+      img.id = 'mainImageContent';
+      transitionContent(img);
     }
 
+    function showVideo(src) {
+      const vid = document.createElement('video');
+      vid.src = src;
+      vid.muted = true;
+      vid.controls = true;
+      vid.autoplay = true;
+      vid.playsInline = true;
+      transitionContent(vid);
+    }
+
+    function showModel() {
+  const isMobile = window.innerWidth <= 768;
+  const cameraOrbit = isMobile ? '0deg 90deg 0.55m' : '0deg 90deg 1.2m';
+  const btnOrbit = isMobile ? '0.55m' : '1.2m';
+  const scale = isMobile ? '1.8 1.8 1.8' : '2 2 2';
+  const container = document.createElement('div');
+  container.style.position = 'relative';
+  container.innerHTML = `
+    <div class="model-indicator"><i class="fas fa-arrows-rotate"></i> 3D Model</div>
+    <div class="model-loading-spinner" id="modelLoadingSpinner" style="display: flex;">
+      <div class="spinner"></div>
+    </div>
+    <model-viewer 
+        src="models/iPhone13.glb"
+        camera-controls
+        interaction-prompt="none"
+        shadow-intensity="1"
+        exposure="1"
+        style="width: 100%; height: 100%; opacity:0;"
+        environment-image="neutral"
+        loading="eager"
+        touch-action="none"
+        interaction-policy="allow-when-focused"
+        camera-orbit="${cameraOrbit}"
+        camera-target="0m 0m 0m"
+        scale="${scale}"
+        disable-zoom
+        min-camera-orbit="-Infinity 0deg auto"
+        max-camera-orbit="Infinity 360deg auto"
+        tabindex="0"
+        disable-tap>
+        <div class="mobile-controls-wrapper">
+          <div class="view-controls mobile-hidden" role="toolbar" aria-label="Model rotation controls">
+              <button class="view-control-btn" data-orbit="0deg 90deg ${btnOrbit}" aria-label="Front View"><i class="fas fa-mobile-alt"></i></button>
+              <button class="view-control-btn" data-orbit="-90deg 90deg ${btnOrbit}" aria-label="Left View"><i class="fas fa-caret-left"></i></button>
+              <button class="view-control-btn" data-orbit="90deg 90deg ${btnOrbit}" aria-label="Right View"><i class="fas fa-caret-right"></i></button>
+              <button class="view-control-btn" data-orbit="0deg 0deg ${btnOrbit}" aria-label="Top View"><i class="fas fa-caret-up"></i></button>
+              <button class="view-control-btn" data-orbit="0deg 180deg ${btnOrbit}" aria-label="Bottom View"><i class="fas fa-caret-down"></i></button>
+              ${!isMobile ? `<button class="view-control-btn zoom-in" aria-label="Zoom In"><i class="fas fa-search-plus"></i></button>
+              <button class="view-control-btn zoom-out" aria-label="Zoom Out"><i class="fas fa-search-minus"></i></button>` : ''}
+          </div>
+          <button class="mobile-view-controls-toggle" aria-label="Show view controls"><i class="fas fa-ellipsis-h"></i></button>
+        </div>
+    </model-viewer>
+  `;
+  transitionContent(container, function() {
+    const viewer = container.querySelector('model-viewer');
+    const spinner = container.querySelector('#modelLoadingSpinner');
+    const controls = viewer.querySelector('.view-controls');
+    let toggleBtn = container.querySelector('.mobile-view-controls-toggle');
+    if (!toggleBtn) {
+      toggleBtn = document.createElement('button');
+      toggleBtn.className = 'mobile-view-controls-toggle fade-out-tour';
+      toggleBtn.setAttribute('aria-label', 'Show view controls');
+      toggleBtn.innerHTML = '<i class="fas fa-ellipsis-h"></i>';
+      container.appendChild(toggleBtn);
+    }
+    viewer.addEventListener('load', function() {
+      if (spinner) spinner.style.display = 'none';
+      // Fade in all
+      viewer.classList.add('fade-in-tour');
+      controls.classList.remove('mobile-hidden');
+      controls.classList.add('fade-in-tour');
+      toggleBtn.style.display = 'flex';
+
+      // --- Move setOrbit to be available everywhere in this scope ---
+      function setOrbit(orbit) { viewer.cameraOrbit = orbit; }
+
+      // Start tour after 1s
+      setTimeout(() => {
+        const btns = Array.from(controls.querySelectorAll('.view-control-btn'));
+        let idx = 0;
+        function highlight(btn) { btn.classList.add('tour-highlight'); }
+        function unhighlight(btn) { btn.classList.remove('tour-highlight'); }
+        function resetModel() {
+          setOrbit(`0deg 90deg ${isMobile ? '0.55m' : '1.2m'}`);
+          // viewer.setAttribute('auto-rotate', 'true'); // Do not enable auto-rotate
+        }
+        function tapNext() {
+          if (idx > 0) unhighlight(btns[idx-1]);
+          if (idx < btns.length) {
+            highlight(btns[idx]);
+            const orbit = btns[idx].getAttribute('data-orbit');
+            if (orbit) setOrbit(orbit);
+            setTimeout(() => { idx++; tapNext(); }, 900);
+          } else {
+            unhighlight(btns[btns.length-1]);
+            controls.classList.remove('fade-in-tour');
+            controls.classList.add('fade-out-tour');
+            setTimeout(() => {
+              controls.classList.add('mobile-hidden');
+              controls.classList.remove('fade-out-tour');
+              resetModel();
+              toggleBtn.style.display = 'flex';
+              attachToggleLogic();
+            }, 600);
+          }
+        }
+        tapNext();
+      }, 1000);
+      // Attach toggle logic for after the tour
+      function attachToggleLogic() {
+        toggleBtn.onclick = null;
+        toggleBtn.addEventListener('click', function() {
+          if (controls.classList.contains('mobile-hidden')) {
+            controls.classList.remove('mobile-hidden');
+            controls.classList.add('mobile-shown');
+            controls.classList.add('fade-in-tour');
+            controls.classList.remove('fade-out-tour');
+          } else {
+            controls.classList.remove('fade-in-tour');
+            controls.classList.remove('mobile-shown');
+            controls.classList.add('fade-out-tour');
+            setTimeout(() => {
+              controls.classList.add('mobile-hidden');
+              controls.classList.remove('fade-out-tour');
+            }, 600);
+          }
+        });
+        // Controls: clicking a view control rotates the model
+        controls.querySelectorAll('.view-control-btn').forEach(btn => {
+          btn.onclick = function() {
+            const orbit = btn.getAttribute('data-orbit');
+            if (orbit) {
+              // Snap to absolute view: stop auto-rotate, set orbit
+              viewer.setAttribute('auto-rotate', 'false');
+              setOrbit(orbit);
+              // Do not resume auto-rotate
+            }
+          };
+        });
+      }
+    }, { once: true });
+  });
+}
     // select slide by index
     function select(idx) {
       if (isAnimating) {
@@ -2571,12 +2777,32 @@ function showVideo(src) {
 let touchStartX = 0;
 let touchStartY = 0;
 let isSwiping = false;
+let swipeOnModelViewer = false;
+let swipeZoneDirection = null;
 
 mainContainer.addEventListener('touchstart', e => {
-    // Disable swipe if the current item is the 3D model
-    if (allThumbs[selectedIndex].is3D) return;
-
     if (window.innerWidth <= TABLET_BP) {
+        // If 3D model is active, check if touch is on swipe-zones
+        if (allThumbs[selectedIndex].is3D) {
+            const leftZone = mainContainer.querySelector('.swipe-zone-left');
+            const rightZone = mainContainer.querySelector('.swipe-zone-right');
+            if (leftZone && leftZone.contains(e.target)) {
+                swipeZoneDirection = 'left';
+            } else if (rightZone && rightZone.contains(e.target)) {
+                swipeZoneDirection = 'right';
+            } else {
+                swipeZoneDirection = null;
+            }
+            // If not in swipe zone, let model-viewer handle rotation
+            if (!swipeZoneDirection) {
+                swipeOnModelViewer = true;
+                return;
+            }
+            swipeOnModelViewer = false;
+        } else {
+            swipeOnModelViewer = false;
+            swipeZoneDirection = null;
+        }
         touchStartX = e.changedTouches[0].clientX;
         touchStartY = e.changedTouches[0].clientY;
         isSwiping = false; // Reset on new touch
@@ -2584,10 +2810,9 @@ mainContainer.addEventListener('touchstart', e => {
 }, { passive: true });
 
 mainContainer.addEventListener('touchmove', e => {
-    // Disable swipe if the current item is the 3D model
-    if (allThumbs[selectedIndex].is3D) return;
-
     if (window.innerWidth <= TABLET_BP) {
+        // If swipe started on model-viewer, do not handle gallery swipe
+        if (allThumbs[selectedIndex].is3D && swipeOnModelViewer) return;
         // Determine if the user is primarily swiping horizontally
         if (!isSwiping) {
             const dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
@@ -2596,7 +2821,6 @@ mainContainer.addEventListener('touchmove', e => {
                 isSwiping = true;
             }
         }
-
         // If it is a horizontal swipe, prevent the page from scrolling vertically
         if (isSwiping) {
             e.preventDefault();
@@ -2605,13 +2829,11 @@ mainContainer.addEventListener('touchmove', e => {
 }, { passive: false });
 
 mainContainer.addEventListener('touchend', e => {
-    // Disable swipe if the current item is the 3D model
-    if (allThumbs[selectedIndex].is3D) return;
-
     if (window.innerWidth <= TABLET_BP && isSwiping) {
+        // If swipe started on model-viewer, do not handle gallery swipe
+        if (allThumbs[selectedIndex].is3D && swipeOnModelViewer) return;
         const dx = e.changedTouches[0].clientX - touchStartX;
         const THRESHOLD = 50; // Minimum distance for a swipe
-
         if (Math.abs(dx) > THRESHOLD) {
             move(dx < 0); // Navigate to next/previous slide
         }
@@ -2623,6 +2845,23 @@ mainContainer.addEventListener('touchend', e => {
     renderStrip();
     select(0);
     setupMainContainerFocus();
+    // --- Onboarding Tour Trigger ---
+(function() {
+  const MOBILE_BP = 768;
+  const TOUR_KEY = 'model3d_onboarding_tour_v1';
+  if (window.innerWidth <= MOBILE_BP && !localStorage.getItem(TOUR_KEY)) {
+    // Find the 3D model index in allThumbs
+    const modelIdx = allThumbs.findIndex(slide => slide.is3D);
+    if (modelIdx !== -1) {
+      // Set flag so it only runs once
+      localStorage.setItem(TOUR_KEY, '1');
+      // Select the 3D model, which will call showModel() and start the tour
+      select(modelIdx);
+      // Optionally, scroll to the gallery if needed
+      // document.querySelector('.main-image').scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+})();
   });
 </script>
 

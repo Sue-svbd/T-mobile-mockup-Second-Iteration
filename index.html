@@ -1437,52 +1437,73 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
     }
     @media (max-width: 768px) {
         .view-controls {
-            display: none !important;
-        }
-        .view-controls.mobile-shown,
-        .view-controls.fade-in-tour,
-        .view-controls.fade-out-tour {
+            /* Always keep the same position and box model, only opacity changes */
             display: flex !important;
             flex-direction: column;
             align-items: center;
             position: absolute;
-            bottom: 56px; /* 32px button + 8px gap + 16px margin */
-            right: 16px;
-            left: auto;
+            bottom: 48px; /* or your preferred value */
+            right: 8px;
             z-index: 130;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-            padding: 8px 0;
-            gap: 6px;
+            border-radius: 10px;
+            padding: 6px 4px;
+            gap: 4px;
+            max-width: 90vw;
+            pointer-events: auto;
             min-width: 40px;
+            background: rgba(255,255,255,0.98);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            opacity: 1;
+            transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+        .view-controls.mobile-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .view-controls.mobile-shown,
+        .view-controls.fade-in-tour {
+            opacity: 1;
             pointer-events: auto;
         }
-        .main-image .mobile-view-controls-toggle {
-            position: absolute;
-            bottom: 16px;
-            right: 16px;
-            left: auto;
-            z-index: 131;
-            background: var(--magenta);
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-            cursor: pointer;
-            transition: background 0.2s;
-            padding: 0;
+        .view-controls.fade-out-tour {
+            opacity: 0;
+            pointer-events: none;
         }
-        .main-image .mobile-view-controls-toggle:focus {
-            outline: 2px solid blue;
-            outline-offset: 2px;
-        }
+        /* Remove display:none from .mobile-hidden, .mobile-shown, .fade-in-tour, .fade-out-tour */
     }
-
+    /* Only show blue outline for toggle on :focus-visible */
+    .mobile-view-controls-toggle:focus {
+        outline: none;
+    }
+    .mobile-view-controls-toggle:focus-visible {
+        outline: 2px solid blue;
+        outline-offset: 2px;
+    }
+    .main-image .mobile-view-controls-toggle {
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        left: auto;
+        z-index: 131;
+        background: var(--magenta);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        cursor: pointer;
+        transition: background 0.2s;
+        padding: 0;
+    }
+    .main-image .mobile-view-controls-toggle:focus {
+        outline: 2px solid blue;
+        outline-offset: 2px;
+    }
     .view-control-btn {
         background-color: rgba(255, 255, 255, 0.8);
         border: 1px solid #ddd;

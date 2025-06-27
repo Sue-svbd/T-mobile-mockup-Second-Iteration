@@ -1437,10 +1437,70 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
     }
     @media (max-width: 768px) {
         .view-controls {
-            display: none !important;
+            /* Always keep the same position and box model, only opacity changes */
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            position: absolute;
+            bottom: 48px; /* or your preferred value */
+            right: 8px;
+            z-index: 130;
+            padding: 6px 4px;
+            gap: 4px;
+            max-width: 90vw;
+            pointer-events: auto;
+            min-width: 40px;
+            opacity: 1;
+            transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1);
         }
+        .view-controls.mobile-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .view-controls.mobile-shown,
+        .view-controls.fade-in-tour {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .view-controls.fade-out-tour {
+            opacity: 0;
+            pointer-events: none;
+        }
+        /* Remove display:none from .mobile-hidden, .mobile-shown, .fade-in-tour, .fade-out-tour */
     }
-
+    /* Only show blue outline for toggle on :focus-visible */
+    .mobile-view-controls-toggle:focus-visible {
+        outline: none;
+    }
+    .mobile-view-controls-toggle:focus-visible-visible {
+        outline: 2px solid blue;
+        outline-offset: 2px;
+    }
+    .main-image .mobile-view-controls-toggle {
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        left: auto;
+        z-index: 131;
+        background: var(--magenta);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        cursor: pointer;
+        transition: background 0.2s;
+        padding: 0;
+    }
+    .main-image .mobile-view-controls-toggle:focus-visible {
+        outline: 2px solid blue;
+        outline-offset: 2px;
+    }
     .view-control-btn {
         background-color: rgba(255, 255, 255, 0.8);
         border: 1px solid #ddd;
@@ -1567,8 +1627,8 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         color: #fff;
         border: none;
         border-radius: 50%;
-        width: 32px;
-        height: 32px;
+        width: 24px;
+        height: 24px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1592,9 +1652,7 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         bottom: 40px;
         right: 8px;
         z-index: 121;
-        background: rgba(255,255,255,0.98);
         border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.10);
         padding: 8px 0;
         gap: 6px;
       }
@@ -1610,8 +1668,8 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         color: #fff;
         border: none;
         border-radius: 50%;
-        width: 32px;
-        height: 32px;
+        width: 24px;
+        height: 24px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1635,9 +1693,7 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         bottom: 40px;
         right: 8px;
         z-index: 121;
-        background: rgba(255,255,255,0.98);
         border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.10);
         padding: 8px 0;
         gap: 6px;
       }
@@ -1677,9 +1733,7 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         bottom: 48px; /* 32px button + 8px gap + 8px margin */
         right: 8px;
         z-index: 130;
-        background: rgba(255,255,255,0.98);
         border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.10);
         padding: 6px 4px;
         gap: 4px;
         max-width: 90vw;
@@ -1703,6 +1757,160 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         font-size: 1em;
         line-height: 1;
       }
+    }
+
+    /* Add fade and highlight styles */
+    .fade-in-tour { opacity: 1 !important; transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1); }
+    .fade-out-tour { opacity: 0 !important; transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1); pointer-events: none; }
+    .tour-highlight { box-shadow: 0 0 0 3px var(--magenta), 0 0 8px 2px var(--magenta); background: var(--magenta); color: #fff !important; }
+
+    @media (max-width: 768px) {
+        .mobile-controls-wrapper {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            z-index: 130;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            pointer-events: none;
+        }
+        .mobile-controls-wrapper .view-controls {
+            display: none !important;
+        }
+        .mobile-controls-wrapper .view-controls.mobile-shown,
+        .mobile-controls-wrapper .view-controls.fade-in-tour,
+        .mobile-controls-wrapper .view-controls.fade-out-tour {
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 0;
+            gap: 6px;
+            margin-right: -8px;
+
+            pointer-events: auto;
+        }
+        .mobile-controls-wrapper .mobile-view-controls-toggle {
+            background: var(--magenta);
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            padding: 0;
+            pointer-events: auto;
+        }
+        .mobile-controls-wrapper .mobile-view-controls-toggle:focus-visible {
+            outline: 2px solid blue;
+            outline-offset: 2px;
+        }
+    }
+
+    /* Base style for the mobile view controls toggle button */
+    .mobile-view-controls-toggle {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        z-index: 120;
+        background: var(--magenta);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: background 0.2s;
+        padding: 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        pointer-events: auto;
+    }
+    .mobile-view-controls-toggle:focus-visible {
+        outline: 2px solid blue;
+        outline-offset: 2px;
+    }
+    /* Contextual override for inside .main-image if needed */
+    .main-image .mobile-view-controls-toggle {
+        z-index: 131;
+        /* If you want to override position or other properties, do so here */
+    }
+    /* Contextual override for inside .mobile-controls-wrapper if needed */
+    .mobile-controls-wrapper .mobile-view-controls-toggle {
+        z-index: 131;
+        /* If you want to override position or other properties, do so here */
+    }
+
+    /* 3D Model Lock/Pointer Controls */
+    .model-controls-container {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      z-index: 140;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.92);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      padding: 8px 8px 8px 8px;
+    }
+    .model-controls-container .lock-btn {
+      background: none;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: var(--magenta);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .model-controls-container .lock-btn:focus-visible {
+      outline: 2px solid blue;
+      outline-offset: 2px;
+    }
+    .model-controls-container .lock-btn.locked {
+      color: var(--magenta);
+    }
+    .model-controls-container .pointer-indicator {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: var(--magenta);
+      background: none;
+      border-radius: 50%;
+      position: relative;
+    }
+    .model-controls-container .pointer-indicator.locked {
+      color: #aaa;
+    }
+    .model-controls-container .pointer-indicator .ban-sign {
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: 1.1rem;
+      color: #e20074;
+      background: #fff;
+      border-radius: 50%;
+      padding: 1px;
+      pointer-events: none;
     }
     </style>
 </head>
@@ -1736,7 +1944,7 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
   
       <li><a href="#" class="nav-link active">Variant 2</a></li>
       <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
-      <li><a href="gallery-variant-1.0.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
+      <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
 
 
   </ul>
@@ -1788,7 +1996,8 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
     <ul class="nav-menu">
         <li><a href="#" class="nav-link active">Variant 2</a></li>
         <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
-        <li><a href="gallery-variant-1.0.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
+        <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
+
 
     </ul>
 </div>
@@ -2069,6 +2278,7 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
     let firstIndex    = 0;
     let selectedIndex = 0;
     let isAnimating   = false;
+    let pendingIndex  = null;
 
     // Track mouse usage to differentiate between keyboard and mouse focus
     let mouseDownTarget = null;
@@ -2366,24 +2576,21 @@ function renderStrip() {
     function showModel() {
       const isMobile = window.innerWidth <= 768;
       const cameraOrbit = isMobile ? '0deg 90deg 0.55m' : '0deg 90deg 1.2m';
-      const btnOrbit = isMobile ? '0.55m' : '1.2m';
       const scale = isMobile ? '1.8 1.8 1.8' : '2 2 2';
       const container = document.createElement('div');
+      container.style.position = 'relative';
       container.innerHTML = `
         <div class="model-indicator"><i class="fas fa-arrows-rotate"></i> 3D Model</div>
-        <div class="model-loading-spinner" id="modelLoadingSpinner">
+        <div class="model-loading-spinner" id="modelLoadingSpinner" style="display: flex;">
           <div class="spinner"></div>
         </div>
-        ${isMobile ? '<div class="swipe-zone swipe-zone-left" style="position:absolute;left:0;top:0;width:22%;height:100%;z-index:20;"></div>' : ''}
-        ${isMobile ? '<div class="swipe-zone swipe-zone-right" style="position:absolute;right:0;top:0;width:22%;height:100%;z-index:20;"></div>' : ''}
         <model-viewer 
             src="models/iPhone13.glb"
             camera-controls
-            auto-rotate
             interaction-prompt="none"
             shadow-intensity="1"
             exposure="1"
-            style="width: 100%; height: 100%;"
+            style="width: 100%; height: 100%; opacity:0;"
             environment-image="neutral"
             loading="eager"
             touch-action="none"
@@ -2396,174 +2603,56 @@ function renderStrip() {
             max-camera-orbit="Infinity 360deg auto"
             tabindex="0"
             disable-tap>
-            <div class="view-controls${isMobile ? ' mobile-hidden' : ''}" role="toolbar" aria-label="Model rotation controls">
-                <button class="view-control-btn" data-orbit="0deg 90deg ${btnOrbit}" aria-label="Front View"><i class="fas fa-mobile-alt"></i></button>
-                <button class="view-control-btn" data-orbit="-90deg 90deg ${btnOrbit}" aria-label="Left View"><i class="fas fa-caret-left"></i></button>
-                <button class="view-control-btn" data-orbit="90deg 90deg ${btnOrbit}" aria-label="Right View"><i class="fas fa-caret-right"></i></button>
-                <button class="view-control-btn" data-orbit="0deg 0deg ${btnOrbit}" aria-label="Top View"><i class="fas fa-caret-up"></i></button>
-                <button class="view-control-btn" data-orbit="0deg 180deg ${btnOrbit}" aria-label="Bottom View"><i class="fas fa-caret-down"></i></button>
-                <button class="view-control-btn zoom-in" aria-label="Zoom In"><i class="fas fa-search-plus"></i></button>
-                <button class="view-control-btn zoom-out" aria-label="Zoom Out"><i class="fas fa-search-minus"></i></button>
-            </div>
         </model-viewer>
+        <div class="model-controls-container">
+          <button class="lock-btn" aria-label="Lock interaction"><i class="fas fa-lock-open"></i></button>
+          <div class="pointer-indicator" title="You can interact"><i class="fas fa-hand-pointer"></i></div>
+        </div>
       `;
       transitionContent(container, function() {
         const viewer = container.querySelector('model-viewer');
         const spinner = container.querySelector('#modelLoadingSpinner');
-        if (viewer && spinner) {
-          viewer.addEventListener('load', () => {
-            spinner.style.display = 'none';
-          });
-        }
-        // --- Animation logic start ---
-        function animateModelEntrance() {
-          viewer.setAttribute('camera-controls', 'false');
-          viewer.setAttribute('auto-rotate', 'false');
-          let startY = 0, startX = 90, radius = isMobile ? 0.55 : 1.2;
-          let duration1 = 1200;
-          let duration2 = 1200;
-          let duration3 = 600;
-          let startTime = null;
-          let phase = 1;
-          let lastY = startY, lastX = startX;
-          function setOrbit(y, x) {
-            viewer.cameraOrbit = `${y}deg ${x}deg ${radius}m`;
+        const lockBtn = container.querySelector('.lock-btn');
+        const pointer = container.querySelector('.pointer-indicator');
+        let interactionLocked = false;
+        viewer.addEventListener('load', function() {
+          if (spinner) spinner.style.display = 'none';
+          viewer.classList.add('fade-in');
+          // Remove auto-rotate if present
+          viewer.removeAttribute('auto-rotate');
+        });
+        function updateControls() {
+          if (interactionLocked) {
+            lockBtn.innerHTML = '<i class="fas fa-lock"></i>';
+            lockBtn.classList.add('locked');
+            pointer.classList.add('locked');
+            pointer.innerHTML = '<i class="fas fa-hand-pointer"></i>';
+            viewer.removeAttribute('camera-controls');
+            viewer.setAttribute('interaction-policy', 'none');
+            window._modelInteractionLocked = function() { return true; };
+            // Ensure auto-rotate is always removed
+            viewer.removeAttribute('auto-rotate');
+          } else {
+            lockBtn.innerHTML = '<i class="fas fa-lock-open"></i>';
+            lockBtn.classList.remove('locked');
+            pointer.classList.remove('locked');
+            pointer.innerHTML = '<i class="fas fa-hand-pointer"></i>';
+            viewer.setAttribute('camera-controls', '');
+            viewer.setAttribute('interaction-policy', 'allow-when-focused');
+            window._modelInteractionLocked = function() { return false; };
+            // Ensure auto-rotate is always removed
+            viewer.removeAttribute('auto-rotate');
           }
-          function animate(ts) {
-            if (!startTime) startTime = ts;
-            let elapsed = ts - startTime;
-            if (phase === 1) {
-              let t = Math.min(elapsed / duration1, 1);
-              let y = startY + 360 * t;
-              setOrbit(y, startX);
-              lastY = y;
-              if (t < 1) {
-                requestAnimationFrame(animate);
-              } else {
-                phase = 2;
-                startTime = performance.now();
-                requestAnimationFrame(animate);
-              }
-            } else if (phase === 2) {
-              let t = Math.min(elapsed / duration2, 1);
-              let x = startX + 360 * t;
-              setOrbit(lastY, x);
-              lastX = x;
-              if (t < 1) {
-                requestAnimationFrame(animate);
-              } else {
-                phase = 3;
-                startTime = performance.now();
-                requestAnimationFrame(animate);
-              }
-            } else if (phase === 3) {
-              let t = Math.min(elapsed / duration3, 1);
-              let y = lastY + (startY - lastY) * t;
-              let x = lastX + (startX - lastX) * t;
-              setOrbit(y, x);
-              if (t < 1) {
-                requestAnimationFrame(animate);
-              } else {
-                viewer.setAttribute('camera-controls', 'true');
-                viewer.setAttribute('auto-rotate', 'true');
-                setOrbit(startY, startX);
-                // --- Show mobile view controls button after animation ---
-                if (isMobile) {
-                  const controls = viewer.querySelector('.view-controls');
-                  // Remove any existing toggle button in the container
-                  let oldBtn = container.querySelector('.mobile-view-controls-toggle');
-                  if (oldBtn) oldBtn.remove();
-                  // Create a fresh button
-                  const toggleBtn = document.createElement('button');
-                  toggleBtn.className = 'mobile-view-controls-toggle';
-                  toggleBtn.setAttribute('aria-label', 'Show view controls');
-                  toggleBtn.innerHTML = '<i class="fas fa-ellipsis-h"></i>';
-                  // Append as sibling to <model-viewer>
-                  container.appendChild(toggleBtn);
-                  if (controls) {
-                    // Always start hidden
-                    controls.classList.remove('mobile-shown');
-                    controls.classList.add('mobile-hidden');
-                    toggleBtn.setAttribute('aria-label', 'Show view controls');
-                    toggleBtn.addEventListener('click', function() {
-                      const isShown = controls.classList.toggle('mobile-shown');
-                      controls.classList.toggle('mobile-hidden', !isShown);
-                      if (isShown) {
-                        toggleBtn.setAttribute('aria-label', 'Hide view controls');
-                      } else {
-                        toggleBtn.setAttribute('aria-label', 'Show view controls');
-                      }
-                    });
-                  } else {
-                  }
-                }
-              }
-            }
-          }
-          setOrbit(startY, startX);
-          requestAnimationFrame(animate);
         }
-        viewer.addEventListener('load', animateModelEntrance);
-        // --- Animation logic end ---
-        const rotationControls = Array.from(container.querySelectorAll('.view-control-btn'));
-        const zoomInBtn = container.querySelector('.view-control-btn.zoom-in');
-        const zoomOutBtn = container.querySelector('.view-control-btn.zoom-out');
-        rotationControls.forEach(btn => {
-          btn.addEventListener('click', () => {
-            const orbit = btn.getAttribute('data-orbit');
-            if (orbit) viewer.cameraOrbit = orbit;
-          });
-          btn.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              btn.click();
-            }
-          });
+        lockBtn.addEventListener('click', function() {
+          interactionLocked = !interactionLocked;
+          updateControls();
         });
-        function getCurrentRadius() {
-          const orbit = viewer.cameraOrbit || viewer.getAttribute('camera-orbit');
-          if (!orbit) return 1.2;
-          const parts = orbit.split(' ');
-          let radius = parseFloat(parts[2]);
-          if (isNaN(radius)) radius = 1.2;
-          return radius;
-        }
-        function setRadius(newRadius) {
-          const orbit = viewer.cameraOrbit || viewer.getAttribute('camera-orbit');
-          if (!orbit) return;
-          const parts = orbit.split(' ');
-          if (parts.length !== 3) return;
-          parts[2] = newRadius + 'm';
-          viewer.cameraOrbit = parts.join(' ');
-        }
-        if (zoomInBtn) {
-          zoomInBtn.addEventListener('click', () => {
-            let r = getCurrentRadius();
-            setRadius(Math.max(0.3, r - 0.2));
-          });
-        }
-        if (zoomOutBtn) {
-          zoomOutBtn.addEventListener('click', () => {
-            let r = getCurrentRadius();
-            setRadius(Math.min(3, r + 0.2));
-          });
-        }
-        viewer.addEventListener('keydown', (e) => {
-          if (e.key === 'Tab' && e.shiftKey) {
-            e.preventDefault();
-            prevBtn.focus();
-          }
-        });
-        viewer.addEventListener('wheel', () => {}, { passive: true });
-        viewer.addEventListener('mouseenter', () => {
-          document.body.style.overflow = 'hidden';
-        });
-        viewer.addEventListener('mouseleave', () => {
-          document.body.style.overflow = '';
-        });
+        // Start unlocked (interaction enabled)
+        interactionLocked = false;
+        updateControls();
       });
     }
-
     // select slide by index
     function select(idx) {
       if (isAnimating) {
@@ -2750,8 +2839,13 @@ let swipeZoneDirection = null;
 
 mainContainer.addEventListener('touchstart', e => {
     if (window.innerWidth <= TABLET_BP) {
+        // If 3D model is active and swipe is not allowed, do nothing
+        if (allThumbs[selectedIndex].is3D && window._modelInteractionLocked && !window._modelInteractionLocked()) {
+            // Swiping is disabled when unlocked
+            return;
+        }
         // If 3D model is active, check if touch is on swipe-zones
-        if (allThumbs[selectedIndex].is3D) {
+        if (allThumbs[selectedIndex].is3D && (!window._modelInteractionLocked || window._modelInteractionLocked())) {
             const leftZone = mainContainer.querySelector('.swipe-zone-left');
             const rightZone = mainContainer.querySelector('.swipe-zone-right');
             if (leftZone && leftZone.contains(e.target)) {
@@ -2779,8 +2873,12 @@ mainContainer.addEventListener('touchstart', e => {
 
 mainContainer.addEventListener('touchmove', e => {
     if (window.innerWidth <= TABLET_BP) {
+        // If 3D model is active and swipe is not allowed, do nothing
+        if (allThumbs[selectedIndex].is3D && window._modelInteractionLocked && !window._modelInteractionLocked()) {
+            return;
+        }
         // If swipe started on model-viewer, do not handle gallery swipe
-        if (allThumbs[selectedIndex].is3D && swipeOnModelViewer) return;
+        if (allThumbs[selectedIndex].is3D && swipeOnModelViewer && (!window._modelInteractionLocked || !window._modelInteractionLocked())) return;
         // Determine if the user is primarily swiping horizontally
         if (!isSwiping) {
             const dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
@@ -2798,8 +2896,12 @@ mainContainer.addEventListener('touchmove', e => {
 
 mainContainer.addEventListener('touchend', e => {
     if (window.innerWidth <= TABLET_BP && isSwiping) {
+        // If 3D model is active and swipe is not allowed, do nothing
+        if (allThumbs[selectedIndex].is3D && window._modelInteractionLocked && !window._modelInteractionLocked()) {
+            return;
+        }
         // If swipe started on model-viewer, do not handle gallery swipe
-        if (allThumbs[selectedIndex].is3D && swipeOnModelViewer) return;
+        if (allThumbs[selectedIndex].is3D && swipeOnModelViewer && (!window._modelInteractionLocked || !window._modelInteractionLocked())) return;
         const dx = e.changedTouches[0].clientX - touchStartX;
         const THRESHOLD = 50; // Minimum distance for a swipe
         if (Math.abs(dx) > THRESHOLD) {
@@ -2813,6 +2915,23 @@ mainContainer.addEventListener('touchend', e => {
     renderStrip();
     select(0);
     setupMainContainerFocus();
+    // --- Onboarding Tour Trigger ---
+(function() {
+  const MOBILE_BP = 768;
+  const TOUR_KEY = 'model3d_onboarding_tour_v1';
+  if (window.innerWidth <= MOBILE_BP && !localStorage.getItem(TOUR_KEY)) {
+    // Find the 3D model index in allThumbs
+    const modelIdx = allThumbs.findIndex(slide => slide.is3D);
+    if (modelIdx !== -1) {
+      // Set flag so it only runs once
+      localStorage.setItem(TOUR_KEY, '1');
+      // Select the 3D model, which will call showModel() and start the tour
+      select(modelIdx);
+      // Optionally, scroll to the gallery if needed
+      // document.querySelector('.main-image').scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+})();
   });
 </script>
 

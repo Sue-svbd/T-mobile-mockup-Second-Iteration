@@ -1849,6 +1849,36 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         z-index: 131;
         /* If you want to override position or other properties, do so here */
     }
+    /* Add swipe zone styles at the end of the <style> block */
+    .swipe-zone-left, .swipe-zone-right {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      .main-image .swipe-zone-left,
+      .main-image .swipe-zone-right {
+        display: block;
+        position: absolute;
+        top: 0;
+        width: 22px;
+        height: calc(100% - 48px); /* leave space at bottom for controls */
+        z-index: 120;
+        /* background: rgba(226,0,116,0.04); subtle magenta tint for debug, can be transparent */
+        pointer-events: auto;
+      }
+      .main-image .swipe-zone-left {
+        left: 0;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+      }
+      .main-image .swipe-zone-right {
+        right: 0;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+        /* Avoid overlap with controls: reduce height and add margin-bottom */
+        height: calc(100% - 56px);
+        margin-bottom: 40px;
+      }
+    }
     </style>
 </head>
 <body>
@@ -2516,7 +2546,16 @@ function renderStrip() {
   const scale = isMobile ? '1.8 1.8 1.8' : '2 2 2';
   const container = document.createElement('div');
   container.style.position = 'relative';
+  // --- Swipe zones for mobile ---
+  let swipeZones = '';
+  if (isMobile) {
+    swipeZones = `
+      <div class="swipe-zone-left" aria-label="Swipe left for previous image" tabindex="-1"></div>
+      <div class="swipe-zone-right" aria-label="Swipe right for next image" tabindex="-1"></div>
+    `;
+  }
   container.innerHTML = `
+    ${swipeZones}
     <div class="model-indicator"><i class="fas fa-arrows-rotate"></i> 3D Model</div>
     <div class="model-loading-spinner" id="modelLoadingSpinner" style="display: flex;">
       <div class="spinner"></div>

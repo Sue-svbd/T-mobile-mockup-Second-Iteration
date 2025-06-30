@@ -213,7 +213,6 @@
     
     .nav-container {
         width:100%;
-        padding: 0 20px;
         display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -1912,6 +1911,67 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
       padding: 1px;
       pointer-events: none;
     }
+
+    /* Highlight pulse animation for controls and instructional overlay (MOBILE ONLY) */
+    @media (max-width: 768px) {
+      .model-controls-container {
+        padding: 4px;
+        gap: 4px;
+        border-radius: 8px;
+        min-width: unset;
+        max-width: 90vw;
+      }
+      .model-controls-container.pulse-highlight {
+        box-shadow: 0 0 0 4px rgba(226,0,116,0.25), 0 0 16px 4px rgba(226,0,116,0.18);
+        animation: pulse-highlight 1.2s cubic-bezier(0.4,0,0.2,1) 2;
+      }
+      @keyframes pulse-highlight {
+        0% { box-shadow: 0 0 0 0 rgba(226,0,116,0.25), 0 0 0 0 rgba(226,0,116,0.18); }
+        50% { box-shadow: 0 0 0 12px rgba(226,0,116,0.25), 0 0 32px 12px rgba(226,0,116,0.18); }
+        100% { box-shadow: 0 0 0 0 rgba(226,0,116,0.25), 0 0 0 0 rgba(226,0,116,0.18); }
+      }
+      .model-instructional-overlay {
+        position: absolute;
+        left: 50%;
+        bottom: 56px;
+        transform: translateX(-50%);
+        background: #fffbe6;
+        color: #e20074;
+        border: 1px solid #e20074;
+        border-radius: 6px;
+        padding: 4px 10px;
+        font-size: 0.95rem;
+        z-index: 200;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        opacity: 0.98;
+        animation: fadeIn 0.5s;
+        pointer-events: none;
+        white-space: nowrap;
+        display: none;
+      }
+      .model-instructional-overlay.active {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 0.98; }
+      }
+    }
+    @keyframes pulse-highlight {
+        0% {
+          box-shadow: 0 0 0 0 rgba(226,0,116,0.10), 0 0 0 0 rgba(226,0,116,0.08);
+        }
+        50% {
+          box-shadow: 0 0 0 18px rgba(226,0,116,0.08), 0 0 32px 18px rgba(226,0,116,0.06);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(226,0,116,0.10), 0 0 0 0 rgba(226,0,116,0.08);
+        }
+      }
+      .model-controls-container.pulse-highlight {
+        box-shadow: 0 0 0 8px rgba(226,0,116,0.08), 0 0 32px 8px rgba(226,0,116,0.06);
+        animation: pulse-highlight 1.2s cubic-bezier(0.4,0,0.2,1) 2;
+      }
     </style>
 </head>
 <body>
@@ -2608,19 +2668,39 @@ function renderStrip() {
           <button class="lock-btn" aria-label="Lock interaction"><i class="fas fa-lock-open"></i></button>
           <div class="pointer-indicator" title="You can interact"><i class="fas fa-hand-pointer"></i></div>
         </div>
+        <div class="model-instructional-overlay" style="display:none;">Tap the lock to enable/disable 3D interaction.</div>
       `;
       transitionContent(container, function() {
         const viewer = container.querySelector('model-viewer');
         const spinner = container.querySelector('#modelLoadingSpinner');
         const lockBtn = container.querySelector('.lock-btn');
         const pointer = container.querySelector('.pointer-indicator');
+        const controlsContainer = container.querySelector('.model-controls-container');
+        const instruction = container.querySelector('.model-instructional-overlay');
         let interactionLocked = false;
         viewer.addEventListener('load', function() {
           if (spinner) spinner.style.display = 'none';
           viewer.classList.add('fade-in');
-          // Remove auto-rotate if present
           viewer.removeAttribute('auto-rotate');
+          // --- Visual Cues: Pulse and Instructional Overlay (Always) ---
+          controlsContainer.classList.add('pulse-highlight');
+          instruction.textContent = 'Tap the lock to lock or unlock 3D interaction.';
+          instruction.style.display = 'block';
+          setTimeout(() => {
+            controlsContainer.classList.remove('pulse-highlight');
+            instruction.style.display = 'none';
+          }, 2500);
+          // --- End Visual Cues ---
         });
+        // --- Visual Cues: Pulse and Instructional Overlay (Always) ---
+        controlsContainer.classList.add('pulse-highlight');
+        instruction.textContent = 'Tap the lock to lock or unlock 3D interaction.';
+        instruction.style.display = 'block';
+        setTimeout(() => {
+          controlsContainer.classList.remove('pulse-highlight');
+          instruction.style.display = 'none';
+        }, 2500);
+        // --- End Visual Cues ---
         function updateControls() {
           if (interactionLocked) {
             lockBtn.innerHTML = '<i class="fas fa-lock"></i>';
@@ -2630,7 +2710,6 @@ function renderStrip() {
             viewer.removeAttribute('camera-controls');
             viewer.setAttribute('interaction-policy', 'none');
             window._modelInteractionLocked = function() { return true; };
-            // Ensure auto-rotate is always removed
             viewer.removeAttribute('auto-rotate');
           } else {
             lockBtn.innerHTML = '<i class="fas fa-lock-open"></i>';
@@ -2640,7 +2719,6 @@ function renderStrip() {
             viewer.setAttribute('camera-controls', '');
             viewer.setAttribute('interaction-policy', 'allow-when-focused');
             window._modelInteractionLocked = function() { return false; };
-            // Ensure auto-rotate is always removed
             viewer.removeAttribute('auto-rotate');
           }
         }

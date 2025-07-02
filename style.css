@@ -1,0 +1,421 @@
+/* Telekom Shared Styles - deduplicated */
+
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: "TeleNeo", Arial, sans-serif;
+  color: #262626;
+  background-color: #f5f5f5;
+  line-height: 1.5;
+}
+
+/* Brand Colors */
+:root {
+  --magenta: #e20074;
+  --white: #ffffff;
+  --black: #262626;
+  --gray-light: #f5f5f5;
+  --gray: #e0e0e0;
+  --gray-dark: #9e9e9e;
+}
+
+/* Header Styles */
+.header {
+  background-color: var(--white);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 24px;
+  padding: 0 20px;
+  min-height: 80px;
+}
+body > header > div.header-container.mobile {
+  display: none;
+}
+.logo-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+.logo-square {
+  width: 80px;
+  height: 80px;
+  background-color: var(--magenta);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.logo-t {
+  color: var(--white);
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-family: "TeleNeo", Arial, sans-serif;
+}
+.top-links {
+  display: flex;
+  gap: 25px;
+  padding-top: 15px;
+}
+.top-link {
+  font-size: 0.9rem;
+  color: var(--black);
+  transition: color 0.2s ease;
+}
+.top-link.active,
+.top-link:hover {
+  color: var(--magenta);
+  font-weight: 700;
+}
+.header-icons {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  padding-top: 15px;
+}
+.icon-btn {
+  color: var(--black);
+  font-size: 1.2rem;
+  padding: 8px;
+  transition: color 0.2s ease;
+  background: none;
+  border: none;
+}
+.icon-btn:hover {
+  color: var(--magenta);
+}
+
+/* Main Navigation */
+.main-navigation {
+  background-color: var(--white);
+  border-top: 1px solid var(--gray);
+  width: 100%;
+}
+.nav-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.nav-menu {
+  display: flex;
+  gap: 40px;
+}
+.nav-menu-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-link {
+  display: block;
+  padding: 15px 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--black);
+  position: relative;
+  transition: color 0.2s ease;
+}
+.nav-link.active,
+.nav-link:hover {
+  color: var(--magenta);
+}
+
+/* 3D Model Loading Spinner */
+.model-loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.model-loading-spinner .spinner {
+  border: 4px solid #e0e0e0;
+  border-top: 4px solid var(--magenta);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- Thumbnail wrapper --- */
+.thumbnail {
+  flex: 1 1 0;
+  aspect-ratio: 1/1;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.thumbnail.active {
+  opacity: 1;
+}
+.thumbnail img,
+.thumbnail video {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.thumbnail.video .play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  color: white;
+  pointer-events: none;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+  z-index: 1;
+}
+
+/* Dots and strip */
+.thumbnail-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+  flex: 1;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #302f2f;
+  cursor: pointer;
+  position: relative;
+  flex: none;
+}
+.dot.active {
+  background: var(--magenta);
+}
+.dot.video.active .play-icon {
+  color: var(--magenta);
+}
+
+/* Model viewer base */
+model-viewer {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  --poster-color: transparent;
+}
+.main-image model-viewer {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+/* Mobile view controls toggle button */
+.mobile-view-controls-toggle {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  z-index: 120;
+  background: var(--magenta);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  pointer-events: auto;
+}
+.mobile-view-controls-toggle:focus-visible {
+  outline: 2px solid blue;
+  outline-offset: 2px;
+}
+
+/* Swipe zones */
+.swipe-zone-left,
+.swipe-zone-right {
+  display: none;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .product-images-container {
+    max-width: 260px;
+    margin: 0 auto;
+  }
+  .main-image {
+    width: 100%;
+    height: auto;
+    max-width: 260px;
+    aspect-ratio: 1/1;
+  }
+  .main-image img,
+  .main-image video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .thumbnails {
+    max-width: 260px;
+    margin: 0 auto;
+  }
+  .main-image model-viewer {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    transform: scale(0.9);
+  }
+  .mobile-view-controls-toggle {
+    width: 32px;
+    height: 32px;
+  }
+  .main-image .swipe-zone-left,
+  .main-image .swipe-zone-right {
+    display: block;
+    position: absolute;
+    top: 0;
+    width: 22px;
+    height: 100%;
+    z-index: 120;
+    pointer-events: auto;
+  }
+  .main-image .swipe-zone-left {
+    left: 0;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+  .main-image .swipe-zone-right {
+    right: 0;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+  .mobile-controls-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    z-index: 130;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    pointer-events: none;
+  }
+  .mobile-controls-wrapper .view-controls {
+    display: none !important;
+  }
+  .mobile-controls-wrapper .view-controls.mobile-shown,
+  .mobile-controls-wrapper .view-controls.fade-in-tour,
+  .mobile-controls-wrapper .view-controls.fade-out-tour {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 0;
+    gap: 6px;
+    margin-right: -8px;
+    pointer-events: auto;
+  }
+  .mobile-controls-wrapper .mobile-view-controls-toggle {
+    background: var(--magenta);
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    padding: 0;
+    pointer-events: auto;
+  }
+  .mobile-controls-wrapper .mobile-view-controls-toggle:focus-visible {
+    outline: 2px solid blue;
+    outline-offset: 2px;
+  }
+}
+@media (max-width: 480px) {
+  .product-images-container {
+    max-width: 100%;
+    width: 100%;
+    padding: 0 10px;
+  }
+  .main-image {
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 1/1;
+  }
+  .thumbnail {
+    display: none !important;
+  }
+  .product-details {
+    display: none;
+  }
+  .thumbnail-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    overflow: hidden;
+    flex: 1;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #302f2f;
+    cursor: pointer;
+    position: relative;
+    flex: none;
+  }
+  .dot.active {
+    background: var(--magenta);
+  }
+  body
+    > main
+    > div
+    > div.product-images
+    > div.product-images-container
+    > div.thumbnails
+    > div
+    > div.dot.video.active {
+    border: none;
+    color: var(--magenta);
+  }
+}

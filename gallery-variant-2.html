@@ -8,6 +8,7 @@
   <title>Apple iPhone 16| Telekom</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+  <link rel="stylesheet" href="style.css">
   <style>
     /* Reset and Base Styles */
     * {
@@ -1852,28 +1853,28 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
     /* 3D Model Lock/Pointer Controls */
     .model-controls-container {
       position: absolute;
-      bottom: 16px;
-      right: 16px;
+      bottom: 12px;
+      right: 12px;
       z-index: 140;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 4px;
       background: rgba(255,255,255,0.92);
-      border-radius: 12px;
+      border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-      padding: 8px 8px 8px 8px;
+      padding: 4px 4px 4px 4px;
     }
     .model-controls-container .lock-btn {
       background: none;
       border: none;
       border-radius: 50%;
-      width: 36px;
-      height: 36px;
+      width: 28px;
+      height: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       color: var(--magenta);
       cursor: pointer;
       transition: background 0.2s;
@@ -1886,12 +1887,12 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
       color: var(--magenta);
     }
     .model-controls-container .pointer-indicator {
-      width: 36px;
-      height: 36px;
+      width: 28px;
+      height: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       color: var(--magenta);
       background: none;
       border-radius: 50%;
@@ -1904,7 +1905,7 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
       position: absolute;
       top: 0;
       right: 0;
-      font-size: 1.1rem;
+      font-size: 0.9rem;
       color: #e20074;
       background: #fff;
       border-radius: 50%;
@@ -1922,27 +1923,27 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         max-width: 90vw;
       }
       .model-controls-container.pulse-highlight {
-        box-shadow: 0 0 0 4px rgba(226,0,116,0.25), 0 0 16px 4px rgba(226,0,116,0.18);
+        box-shadow: 0 0 0 2px rgba(226,0,116,0.18), 0 0 8px 2px rgba(226,0,116,0.12);
         animation: pulse-highlight 1.2s cubic-bezier(0.4,0,0.2,1) 2;
       }
       @keyframes pulse-highlight {
-        0% { box-shadow: 0 0 0 0 rgba(226,0,116,0.25), 0 0 0 0 rgba(226,0,116,0.18); }
-        50% { box-shadow: 0 0 0 12px rgba(226,0,116,0.25), 0 0 32px 12px rgba(226,0,116,0.18); }
-        100% { box-shadow: 0 0 0 0 rgba(226,0,116,0.25), 0 0 0 0 rgba(226,0,116,0.18); }
+        0% { box-shadow: 0 0 0 0 rgba(226,0,116,0.18), 0 0 0 0 rgba(226,0,116,0.12); }
+        50% { box-shadow: 0 0 0 6px rgba(226,0,116,0.18), 0 0 16px 6px rgba(226,0,116,0.12); }
+        100% { box-shadow: 0 0 0 0 rgba(226,0,116,0.18), 0 0 0 0 rgba(226,0,116,0.12); }
       }
       .model-instructional-overlay {
         position: absolute;
         left: 50%;
-        bottom: 56px;
+        bottom: 0px;
         transform: translateX(-50%);
-        background: #fffbe6;
+        background: white;
         color: #e20074;
         border: 1px solid #e20074;
         border-radius: 6px;
-        padding: 4px 10px;
-        font-size: 0.95rem;
+        padding: 1px 5px;
+        font-size: 12px;
         z-index: 200;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         opacity: 0.98;
         animation: fadeIn 0.5s;
         pointer-events: none;
@@ -1972,6 +1973,90 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         box-shadow: 0 0 0 8px rgba(226,0,116,0.08), 0 0 32px 8px rgba(226,0,116,0.06);
         animation: pulse-highlight 1.2s cubic-bezier(0.4,0,0.2,1) 2;
       }
+
+    /* Add swipe zone styles at the end of the <style> block */
+    .swipe-zone-left, .swipe-zone-right {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      .main-image .swipe-zone-left,
+      .main-image .swipe-zone-right {
+        display: block;
+        position: absolute;
+        top: 0;
+        width: 22px;
+        height: calc(100% - 48px); /* leave space at bottom for controls */
+        z-index: 120;
+        /* background: rgba(226,0,116,0.04); subtle magenta tint for debug, can be transparent */
+        pointer-events: auto;
+      }
+      .main-image .swipe-zone-left {
+        left: 0;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+        height: 100%;
+      }
+      .main-image .swipe-zone-right {
+        right: 0;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+        /* Avoid overlap with controls: reduce height and add margin-bottom */
+        height: calc(100% - 56px);
+        margin-bottom: 40px;
+        height: 100%;
+      }
+    }
+
+    /* Add CSS for .view-controls-left at the end of the <style> block */
+    .view-controls-left {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      .view-controls-left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        left: 12px;
+        top: 60%;
+        transform: translateY(-50%);
+        z-index: 200;
+        gap: 6px;
+        background: none;
+        pointer-events: auto;
+        padding: 0 2px;
+      }
+      .view-controls-left .view-control-btn {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        min-height: 28px;
+        font-size: 13px;
+        padding: 0;
+        margin: 0 auto;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255,255,255,0.85);
+        border: 1px solid #ddd;
+        color: #302f2f;
+        transition: all 0.2s;
+      }
+      .view-controls-left .view-control-btn:hover,
+      .view-controls-left .view-control-btn:focus {
+        background: var(--magenta);
+        color: #fff;
+        border-color: var(--magenta);
+      }
+      .view-controls-left .view-control-btn:focus-visible {
+        outline: 2px solid blue;
+        outline-offset: 2px;
+      }
+    }
+
+    /* Add disabled styling for .view-control-btn */
     </style>
 </head>
 <body>
@@ -2005,6 +2090,8 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
       <li><a href="#" class="nav-link active">Variant 2</a></li>
       <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
       <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
+      <li><a href="gallery-variant-3.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
+
 
 
   </ul>
@@ -2057,6 +2144,8 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         <li><a href="#" class="nav-link active">Variant 2</a></li>
         <li><a href="index.html" class="nav-link variant-link">View Gallery Variant 1</a></li>
         <li><a href="gallery-variant-2.html" class="nav-link variant-link">View Gallery Variant 2</a></li>
+        <li><a href="gallery-variant-3.html" class="nav-link variant-link">View Gallery Variant 3</a></li>
+
 
 
     </ul>
@@ -2349,23 +2438,32 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
     nextBtn.tabIndex = 0;
 
     // build slides array (images & videos)
-    const allThumbs = Array.from(strip.querySelectorAll('.thumbnail')).map(el => ({
+    const allThumbsRaw = Array.from(strip.querySelectorAll('.thumbnail')).map(el => ({
       src:     el.src,
       dataSrc: el.getAttribute('data-src'),
       alt:     el.alt || '',
       isVideo: el.getAttribute('data-src')?.toLowerCase().endsWith('.mp4'),
       is3D: false
     }));
-
-    // Add the 3D model thumbnail to the allThumbs array at index 2
-    allThumbs.splice(2, 0, {
+    // Insert 3D model after last image and before first video
+    const firstVideoIdx = allThumbsRaw.findIndex(slide => slide.isVideo);
+    const modelThumb = {
       src: 'models/iPhone13.glb',
       dataSrc: 'models/iPhone13.glb',
       alt: '3D Model of iPhone 16',
       isVideo: false,
       is3D: true
-    });
-
+    };
+    let allThumbs;
+    if (firstVideoIdx === -1) {
+      allThumbs = [...allThumbsRaw, modelThumb];
+    } else {
+      allThumbs = [
+        ...allThumbsRaw.slice(0, firstVideoIdx),
+        modelThumb,
+        ...allThumbsRaw.slice(firstVideoIdx)
+      ];
+    }
     const total = allThumbs.length;
 
 const MOBILE_BP = 480;
@@ -2398,7 +2496,9 @@ function renderStrip() {
                 dot.appendChild(icon);
             }
 
-            dot.addEventListener('click', () => select(idx));
+            dot.addEventListener('click', () => {
+                select(idx);
+            });
             strip.appendChild(dot);
         });
         return;
@@ -2444,7 +2544,9 @@ function renderStrip() {
             thumbWrapper.appendChild(img);
         }
 
-        thumbWrapper.addEventListener('click', () => select(idx));
+        thumbWrapper.addEventListener('click', () => {
+            select(idx);
+        });
         strip.appendChild(thumbWrapper);
     }
 }
@@ -2639,8 +2741,30 @@ function renderStrip() {
       const scale = isMobile ? '1.8 1.8 1.8' : '2 2 2';
       const container = document.createElement('div');
       container.style.position = 'relative';
+      // --- Swipe zones for mobile ---
+      let swipeZones = '';
+      if (isMobile) {
+        swipeZones = `
+          <div class="swipe-zone-left" aria-label="Swipe left for previous image" tabindex="-1"></div>
+          <div class="swipe-zone-right" aria-label="Swipe right for next image" tabindex="-1"></div>
+        `;
+      }
+      // --- View controls for mobile, left side ---
+      let viewControlsLeft = '';
+      if (isMobile) {
+        viewControlsLeft = `
+          <div class="view-controls-left" role="toolbar" aria-label="Model rotation controls">
+            <button class="view-control-btn" data-orbit="0deg 90deg ${scale}" aria-label="Front View"><i class="fas fa-mobile-alt"></i></button>
+            <button class="view-control-btn" data-orbit="-90deg 90deg ${scale}" aria-label="Left View"><i class="fas fa-caret-left"></i></button>
+            <button class="view-control-btn" data-orbit="90deg 90deg ${scale}" aria-label="Right View"><i class="fas fa-caret-right"></i></button>
+            <button class="view-control-btn" data-orbit="0deg 0deg ${scale}" aria-label="Top View"><i class="fas fa-caret-up"></i></button>
+            <button class="view-control-btn" data-orbit="0deg 180deg ${scale}" aria-label="Bottom View"><i class="fas fa-caret-down"></i></button>
+          </div>
+        `;
+      }
       container.innerHTML = `
-        <div class="model-indicator"><i class="fas fa-arrows-rotate"></i> 3D Model</div>
+        ${swipeZones}
+        ${viewControlsLeft}
         <div class="model-loading-spinner" id="modelLoadingSpinner" style="display: flex;">
           <div class="spinner"></div>
         </div>
@@ -2653,7 +2777,7 @@ function renderStrip() {
             style="width: 100%; height: 100%; opacity:0;"
             environment-image="neutral"
             loading="eager"
-            touch-action="none"
+            touch-action="pan-y"
             interaction-policy="allow-when-focused"
             camera-orbit="${cameraOrbit}"
             camera-target="0m 0m 0m"
@@ -2668,38 +2792,99 @@ function renderStrip() {
           <button class="lock-btn" aria-label="Lock interaction"><i class="fas fa-lock-open"></i></button>
           <div class="pointer-indicator" title="You can interact"><i class="fas fa-hand-pointer"></i></div>
         </div>
-        <div class="model-instructional-overlay" style="display:none;">Tap the lock to enable/disable 3D interaction.</div>
+        <div class="model-instructional-overlay" style="display:none;">Tap the lock to rotate the model.</div>
       `;
       transitionContent(container, function() {
         const viewer = container.querySelector('model-viewer');
+        // Attach view controls left logic
+        if (isMobile) {
+          const controlsLeft = container.querySelector('.view-controls-left');
+          if (controlsLeft) {
+            controlsLeft.querySelectorAll('.view-control-btn').forEach(btn => {
+              btn.addEventListener('click', function() {
+                const orbit = btn.getAttribute('data-orbit');
+                if (orbit) {
+                  viewer.setAttribute('auto-rotate', 'false');
+                  viewer.cameraOrbit = orbit;
+                  viewer.removeAttribute('auto-rotate');
+                }
+              });
+            });
+          }
+        }
         const spinner = container.querySelector('#modelLoadingSpinner');
         const lockBtn = container.querySelector('.lock-btn');
         const pointer = container.querySelector('.pointer-indicator');
         const controlsContainer = container.querySelector('.model-controls-container');
         const instruction = container.querySelector('.model-instructional-overlay');
         let interactionLocked = false;
+        // --- Swipe zone touch logic ---
+        if (isMobile) {
+          const leftZone = container.querySelector('.swipe-zone-left');
+          const rightZone = container.querySelector('.swipe-zone-right');
+          let touchStartX = 0;
+          let touchStartY = 0;
+          let isSwiping = false;
+          const THRESHOLD = 40;
+          function handleTouchStart(e) {
+            e.stopPropagation();
+            if (e.touches.length === 1) {
+              touchStartX = e.touches[0].clientX;
+              touchStartY = e.touches[0].clientY;
+              isSwiping = false;
+            }
+          }
+          function handleTouchMove(e) {
+            e.stopPropagation();
+            if (e.touches.length === 1) {
+              const dx = Math.abs(e.touches[0].clientX - touchStartX);
+              const dy = Math.abs(e.touches[0].clientY - touchStartY);
+              if (!isSwiping && dx > dy && dx > 10) {
+                isSwiping = true;
+              }
+              if (isSwiping) e.preventDefault();
+            }
+          }
+          function handleTouchEnd(e, direction) {
+            e.stopPropagation();
+            if (e.changedTouches.length === 1) {
+              const dx = e.changedTouches[0].clientX - touchStartX;
+              if (Math.abs(dx) > THRESHOLD) {
+                if (direction === 'left' && dx > 0) {
+                  move(false);
+                } else if (direction === 'right' && dx < 0) {
+                  move(true);
+                }
+              }
+            }
+          }
+          if (leftZone) {
+            leftZone.addEventListener('touchstart', handleTouchStart, { passive: true });
+            leftZone.addEventListener('touchmove', handleTouchMove, { passive: false });
+            leftZone.addEventListener('touchend', function(e) { handleTouchEnd(e, 'left'); }, { passive: false });
+          }
+          if (rightZone) {
+            rightZone.addEventListener('touchstart', handleTouchStart, { passive: true });
+            rightZone.addEventListener('touchmove', handleTouchMove, { passive: false });
+            rightZone.addEventListener('touchend', function(e) { handleTouchEnd(e, 'right'); }, { passive: false });
+          }
+        }
         viewer.addEventListener('load', function() {
           if (spinner) spinner.style.display = 'none';
           viewer.classList.add('fade-in');
           viewer.removeAttribute('auto-rotate');
           // --- Visual Cues: Pulse and Instructional Overlay (Always) ---
           controlsContainer.classList.add('pulse-highlight');
-          instruction.textContent = 'Tap the lock to lock or unlock 3D interaction.';
+          instruction.textContent = 'Tap the lock to rotate the model';
           instruction.style.display = 'block';
+
           setTimeout(() => {
             controlsContainer.classList.remove('pulse-highlight');
             instruction.style.display = 'none';
           }, 2500);
           // --- End Visual Cues ---
         });
-        // --- Visual Cues: Pulse and Instructional Overlay (Always) ---
-        controlsContainer.classList.add('pulse-highlight');
-        instruction.textContent = 'Tap the lock to lock or unlock 3D interaction.';
-        instruction.style.display = 'block';
-        setTimeout(() => {
-          controlsContainer.classList.remove('pulse-highlight');
-          instruction.style.display = 'none';
-        }, 2500);
+  
         // --- End Visual Cues ---
         function updateControls() {
           if (interactionLocked) {
@@ -2711,6 +2896,7 @@ function renderStrip() {
             viewer.setAttribute('interaction-policy', 'none');
             window._modelInteractionLocked = function() { return true; };
             viewer.removeAttribute('auto-rotate');
+            viewer.setAttribute('touch-action', 'pan-y');
           } else {
             lockBtn.innerHTML = '<i class="fas fa-lock-open"></i>';
             lockBtn.classList.remove('locked');
@@ -2720,14 +2906,15 @@ function renderStrip() {
             viewer.setAttribute('interaction-policy', 'allow-when-focused');
             window._modelInteractionLocked = function() { return false; };
             viewer.removeAttribute('auto-rotate');
+            viewer.setAttribute('touch-action', 'pan-y');
           }
         }
         lockBtn.addEventListener('click', function() {
           interactionLocked = !interactionLocked;
           updateControls();
         });
-        // Start unlocked (interaction enabled)
-        interactionLocked = false;
+        // Start locked (interaction disabled)
+        interactionLocked = true;
         updateControls();
       });
     }
@@ -2766,7 +2953,6 @@ function renderStrip() {
     // move forward/back
     function move(forward) {
       const nextIndex = selectedIndex + (forward ? 1 : -1);
-      
       // Handle wrapping around the ends
       if (nextIndex < 0) {
         select(total - 1);
@@ -2951,12 +3137,8 @@ mainContainer.addEventListener('touchstart', e => {
 
 mainContainer.addEventListener('touchmove', e => {
     if (window.innerWidth <= TABLET_BP) {
-        // If 3D model is active and swipe is not allowed, do nothing
-        if (allThumbs[selectedIndex].is3D && window._modelInteractionLocked && !window._modelInteractionLocked()) {
-            return;
-        }
         // If swipe started on model-viewer, do not handle gallery swipe
-        if (allThumbs[selectedIndex].is3D && swipeOnModelViewer && (!window._modelInteractionLocked || !window._modelInteractionLocked())) return;
+        if (allThumbs[selectedIndex].is3D && swipeOnModelViewer) return;
         // Determine if the user is primarily swiping horizontally
         if (!isSwiping) {
             const dx = Math.abs(e.changedTouches[0].clientX - touchStartX);
@@ -2966,7 +3148,7 @@ mainContainer.addEventListener('touchmove', e => {
             }
         }
         // If it is a horizontal swipe, prevent the page from scrolling vertically
-        if (isSwiping) {
+        if (isSwiping && e.cancelable) {
             e.preventDefault();
         }
     }
@@ -2974,15 +3156,13 @@ mainContainer.addEventListener('touchmove', e => {
 
 mainContainer.addEventListener('touchend', e => {
     if (window.innerWidth <= TABLET_BP && isSwiping) {
-        // If 3D model is active and swipe is not allowed, do nothing
-        if (allThumbs[selectedIndex].is3D && window._modelInteractionLocked && !window._modelInteractionLocked()) {
-            return;
-        }
-        // If swipe started on model-viewer, do not handle gallery swipe
-        if (allThumbs[selectedIndex].is3D && swipeOnModelViewer && (!window._modelInteractionLocked || !window._modelInteractionLocked())) return;
+        if (allThumbs[selectedIndex].is3D && swipeOnModelViewer) return;
         const dx = e.changedTouches[0].clientX - touchStartX;
         const THRESHOLD = 50; // Minimum distance for a swipe
+        isSwiping = false;
         if (Math.abs(dx) > THRESHOLD) {
+            navigationLocked = true;
+            setTimeout(() => { navigationLocked = false; }, 300);
             move(dx < 0); // Navigate to next/previous slide
         }
     }

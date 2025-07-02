@@ -1435,72 +1435,7 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         gap: 5px;
         z-index: 100;
     }
-    @media (max-width: 768px) {
-        .view-controls {
-            /* Always keep the same position and box model, only opacity changes */
-            display: flex !important;
-            flex-direction: column;
-            align-items: center;
-            position: absolute;
-            bottom: 48px; /* or your preferred value */
-            right: 8px;
-            z-index: 130;
-            padding: 6px 4px;
-            gap: 4px;
-            max-width: 90vw;
-            pointer-events: auto;
-            min-width: 40px;
-            opacity: 1;
-            transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1);
-        }
-        .view-controls.mobile-hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        .view-controls.mobile-shown,
-        .view-controls.fade-in-tour {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .view-controls.fade-out-tour {
-            opacity: 0;
-            pointer-events: none;
-        }
-        /* Remove display:none from .mobile-hidden, .mobile-shown, .fade-in-tour, .fade-out-tour */
-    }
-    /* Only show blue outline for toggle on :focus-visible */
-    .mobile-view-controls-toggle:focus-visible {
-        outline: none;
-    }
-    .mobile-view-controls-toggle:focus-visible-visible {
-        outline: 2px solid blue;
-        outline-offset: 2px;
-    }
-    .main-image .mobile-view-controls-toggle {
-        position: absolute;
-        bottom: 16px;
-        right: 16px;
-        left: auto;
-        z-index: 131;
-        background: var(--magenta);
-        color: #fff;
-        border: none;
-        border-radius: 50%;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-        cursor: pointer;
-        transition: background 0.2s;
-        padding: 0;
-    }
-    .main-image .mobile-view-controls-toggle:focus-visible {
-        outline: 2px solid blue;
-        outline-offset: 2px;
-    }
+
     .view-control-btn {
         background-color: rgba(255, 255, 255, 0.8);
         border: 1px solid #ddd;
@@ -1645,17 +1580,6 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
       .view-controls.mobile-hidden {
         display: none !important;
       }
-      .view-controls.mobile-shown {
-        display: flex !important;
-        flex-direction: column;
-        position: absolute;
-        bottom: 40px;
-        right: 8px;
-        z-index: 121;
-        border-radius: 12px;
-        padding: 8px 0;
-        gap: 6px;
-      }
     }
     /* Update the CSS so the button overlays the model at the bottom right of the container */
     @media (max-width: 768px) {
@@ -1683,63 +1607,10 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         outline: 2px solid blue;
         outline-offset: 2px;
       }
-      .view-controls.mobile-hidden {
-        display: none !important;
-      }
-      .view-controls.mobile-shown {
-        display: flex !important;
-        flex-direction: column;
-        position: absolute;
-        bottom: 40px;
-        right: 8px;
-        z-index: 121;
-        border-radius: 12px;
-        padding: 8px 0;
-        gap: 6px;
-      }
+
     }
     @media (max-width: 768px) {
-      .main-image .mobile-view-controls-toggle {
-        position: absolute;
-        bottom: 8px;
-        right: 8px;
-        z-index: 120;
-        background: var(--magenta);
-        color: #fff;
-        border: none;
-        border-radius: 50%;
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-        cursor: pointer;
-        transition: background 0.2s;
-        padding: 0;
-      }
-      .main-image .mobile-view-controls-toggle:focus-visible {
-        outline: 2px solid blue;
-        outline-offset: 2px;
-      }
-      .view-controls.mobile-hidden {
-        display: none !important;
-      }
-      .view-controls.mobile-shown {
-        display: flex !important;
-        flex-direction: column;
-        position: absolute;
-        bottom: 48px; /* 32px button + 8px gap + 8px margin */
-        right: 8px;
-        z-index: 130;
-        border-radius: 10px;
-        padding: 6px 4px;
-        gap: 4px;
-        max-width: 90vw;
-        pointer-events: auto;
-        min-width: 40px;
-      }
+   
       .view-controls .view-control-btn {
         width: 28px;
         height: 28px;
@@ -1777,79 +1648,13 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
             justify-content: flex-end;
             pointer-events: none;
         }
-        .mobile-controls-wrapper .view-controls {
-            display: none !important;
-        }
-        .mobile-controls-wrapper .view-controls.mobile-shown,
-        .mobile-controls-wrapper .view-controls.fade-in-tour,
-        .mobile-controls-wrapper .view-controls.fade-out-tour {
-            display: flex !important;
-            flex-direction: column;
-            align-items: center;
-            padding: 8px 0;
-            gap: 6px;
-            margin-right: -8px;
 
-            pointer-events: auto;
-        }
-        .mobile-controls-wrapper .mobile-view-controls-toggle {
-            background: var(--magenta);
-            border: none;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background 0.2s;
-            padding: 0;
-            pointer-events: auto;
-        }
+ 
         .mobile-controls-wrapper .mobile-view-controls-toggle:focus-visible {
             outline: 2px solid blue;
             outline-offset: 2px;
         }
     }
-
-    /* Base style for the mobile view controls toggle button */
-    .mobile-view-controls-toggle {
-        position: absolute;
-        bottom: 8px;
-        right: 8px;
-        z-index: 120;
-        background: var(--magenta);
-        color: #fff;
-        border: none;
-        border-radius: 50%;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        cursor: pointer;
-        transition: background 0.2s;
-        padding: 0;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-        pointer-events: auto;
-    }
-    .mobile-view-controls-toggle:focus-visible {
-        outline: 2px solid blue;
-        outline-offset: 2px;
-    }
-    /* Contextual override for inside .main-image if needed */
-    .main-image .mobile-view-controls-toggle {
-        z-index: 131;
-        /* If you want to override position or other properties, do so here */
-    }
-    /* Contextual override for inside .mobile-controls-wrapper if needed */
-    .mobile-controls-wrapper .mobile-view-controls-toggle {
-        z-index: 131;
-        /* If you want to override position or other properties, do so here */
-    }
-
     /* 3D Model Lock/Pointer Controls */
     .model-controls-container {
       position: absolute;
@@ -1919,8 +1724,7 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         padding: 4px;
         gap: 4px;
         border-radius: 8px;
-        min-width: unset;
-        max-width: 90vw;
+        min-width: 40px;
       }
       .model-controls-container.pulse-highlight {
         box-shadow: 0 0 0 2px rgba(226,0,116,0.18), 0 0 8px 2px rgba(226,0,116,0.12);
@@ -1949,30 +1753,22 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         pointer-events: none;
         white-space: nowrap;
         display: none;
+        transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1);
       }
       .model-instructional-overlay.active {
         display: block;
+        opacity: 0.98;
+      }
+      .model-instructional-overlay.fade-out {
+        opacity: 0 !important;
+        transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1);
       }
       @keyframes fadeIn {
         from { opacity: 0; }
         to { opacity: 0.98; }
       }
+    
     }
-    @keyframes pulse-highlight {
-        0% {
-          box-shadow: 0 0 0 0 rgba(226,0,116,0.10), 0 0 0 0 rgba(226,0,116,0.08);
-        }
-        50% {
-          box-shadow: 0 0 0 18px rgba(226,0,116,0.08), 0 0 32px 18px rgba(226,0,116,0.06);
-        }
-        100% {
-          box-shadow: 0 0 0 0 rgba(226,0,116,0.10), 0 0 0 0 rgba(226,0,116,0.08);
-        }
-      }
-      .model-controls-container.pulse-highlight {
-        box-shadow: 0 0 0 8px rgba(226,0,116,0.08), 0 0 32px 8px rgba(226,0,116,0.06);
-        animation: pulse-highlight 1.2s cubic-bezier(0.4,0,0.2,1) 2;
-      }
 
     /* Add swipe zone styles at the end of the <style> block */
     .swipe-zone-left, .swipe-zone-right {
@@ -2019,7 +1815,7 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         justify-content: center;
         position: absolute;
         left: 12px;
-        top: 60%;
+        top: 50%;
         transform: translateY(-50%);
         z-index: 200;
         gap: 6px;
@@ -2028,10 +1824,10 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         padding: 0 2px;
       }
       .view-controls-left .view-control-btn {
-        width: 28px;
-        height: 28px;
-        min-width: 28px;
-        min-height: 28px;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
         font-size: 13px;
         padding: 0;
         margin: 0 auto;
@@ -2043,6 +1839,9 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         border: 1px solid #ddd;
         color: #302f2f;
         transition: all 0.2s;
+      }
+      .view-controls-left .view-control-btn i {
+        font-size: 1rem;
       }
       .view-controls-left .view-control-btn:hover,
       .view-controls-left .view-control-btn:focus {
@@ -2056,7 +1855,6 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
       }
     }
 
-    /* Add disabled styling for .view-control-btn */
     </style>
 </head>
 <body>
@@ -2877,10 +2675,17 @@ function renderStrip() {
           controlsContainer.classList.add('pulse-highlight');
           instruction.textContent = 'Tap the lock to rotate the model';
           instruction.style.display = 'block';
+          instruction.classList.remove('fade-out');
+          instruction.classList.add('active');
 
           setTimeout(() => {
             controlsContainer.classList.remove('pulse-highlight');
-            instruction.style.display = 'none';
+            instruction.classList.add('fade-out');
+            instruction.classList.remove('active');
+            setTimeout(() => {
+              instruction.style.display = 'none';
+              instruction.classList.remove('fade-out');
+            }, 500);
           }, 2500);
           // --- End Visual Cues ---
         });

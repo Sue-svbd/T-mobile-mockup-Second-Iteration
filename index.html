@@ -2570,7 +2570,6 @@ function renderStrip() {
         function unhighlight(btn) { btn.classList.remove('tour-highlight'); }
         function resetModel() {
           setOrbit(`0deg 90deg ${isMobile ? '0.55m' : '1.2m'}`);
-          // viewer.setAttribute('auto-rotate', 'true'); // Do not enable auto-rotate
         }
         function tapNext() {
           if (idx > 0) unhighlight(btns[idx-1]);
@@ -2619,9 +2618,8 @@ function renderStrip() {
             const orbit = btn.getAttribute('data-orbit');
             if (orbit) {
               // Snap to absolute view: stop auto-rotate, set orbit
-              viewer.setAttribute('auto-rotate', 'false');
+
               setOrbit(orbit);
-              // Do not resume auto-rotate
             }
           };
         });

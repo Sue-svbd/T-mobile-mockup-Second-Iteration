@@ -1398,7 +1398,7 @@
     .main-image .mobile-view-controls-toggle {
         position: absolute;
         bottom: 16px;
-        right: 16px;
+        right: 5px;
         left: auto;
         z-index: 131;
         background: var(--magenta);
@@ -1535,93 +1535,13 @@
       min-height: 200px;
     }
 
-    /* Mobile view controls toggle button */
-    @media (max-width: 768px) {
-      .mobile-view-controls-toggle {
-        position: absolute;
-        bottom: 8px;
-        right: 8px;
-        z-index: 120;
-        background: var(--magenta);
-        color: #fff;
-        border: none;
-        border-radius: 50%;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-        cursor: pointer;
-        transition: background 0.2s;
-        padding: 0;
-      }
-      .mobile-view-controls-toggle:focus-visible {
-        outline: 2px solid blue;
-        outline-offset: 2px;
-      }
-      .view-controls.mobile-hidden {
-        display: none !important;
-      }
-      .view-controls.mobile-shown {
-        display: flex !important;
-        flex-direction: column;
-        position: absolute;
-        bottom: 40px;
-        right: 8px;
-        z-index: 121;
-        border-radius: 12px;
-        padding: 8px 0;
-        gap: 6px;
-      }
-    }
     /* Update the CSS so the button overlays the model at the bottom right of the container */
+  
     @media (max-width: 768px) {
       .main-image .mobile-view-controls-toggle {
         position: absolute;
         bottom: 8px;
-        right: 8px;
-        z-index: 120;
-        background: var(--magenta);
-        color: #fff;
-        border: none;
-        border-radius: 50%;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-        cursor: pointer;
-        transition: background 0.2s;
-        padding: 0;
-      }
-      .main-image .mobile-view-controls-toggle:focus-visible {
-        outline: 2px solid blue;
-        outline-offset: 2px;
-      }
-      .view-controls.mobile-hidden {
-        display: none !important;
-      }
-      .view-controls.mobile-shown {
-        display: flex !important;
-        flex-direction: column;
-        position: absolute;
-        bottom: 40px;
-        right: 8px;
-        z-index: 121;
-        border-radius: 12px;
-        padding: 8px 0;
-        gap: 6px;
-      }
-    }
-    @media (max-width: 768px) {
-      .main-image .mobile-view-controls-toggle {
-        position: absolute;
-        bottom: 8px;
-        right: 8px;
+        right: 5px;
         z-index: 120;
         background: var(--magenta);
         color: #fff;
@@ -1660,10 +1580,8 @@
         min-width: 40px;
       }
       .view-controls .view-control-btn {
-        width: 28px;
-        height: 28px;
-        min-width: 28px;
-        min-height: 28px;
+        width: 30px;
+        height: 30px;
         font-size: 13px;
         padding: 0;
         margin: 0 auto;
@@ -1673,7 +1591,7 @@
         justify-content: center;
       }
       .view-controls .view-control-btn i {
-        font-size: 1em;
+        font-size: 1rem;
         line-height: 1;
       }
     }
@@ -1715,8 +1633,8 @@
             background: var(--magenta);
             border: none;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 30px;
+            height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1732,28 +1650,7 @@
         }
     }
 
-    /* Base style for the mobile view controls toggle button */
-    .mobile-view-controls-toggle {
-        position: absolute;
-        bottom: 8px;
-        right: 8px;
-        z-index: 120;
-        background: var(--magenta);
-        color: #fff;
-        border: none;
-        border-radius: 50%;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        cursor: pointer;
-        transition: background 0.2s;
-        padding: 0;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-        pointer-events: auto;
-    }
+
     .mobile-view-controls-toggle:focus-visible {
         outline: 2px solid blue;
         outline-offset: 2px;

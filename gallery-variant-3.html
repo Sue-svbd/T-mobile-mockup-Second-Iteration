@@ -1467,7 +1467,10 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
             opacity: 0;
             pointer-events: none;
         }
-        /* Remove display:none from .mobile-hidden, .mobile-shown, .fade-in-tour, .fade-out-tour */
+        .view-controls .view-control-btn i {
+        font-size: 1rem;
+        line-height: 1;
+      }
     }
     /* Only show blue outline for toggle on :focus-visible */
     .mobile-view-controls-toggle:focus-visible {
@@ -1487,8 +1490,8 @@ transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
         color: #fff;
         border: none;
         border-radius: 50%;
-        width: 30px;
-        height: 30px;
+        width: 32px;
+        height: 32px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -2389,7 +2392,6 @@ function renderStrip() {
   }
   container.innerHTML = `
     ${swipeZones}
-    <div class="model-indicator"><i class="fas fa-arrows-rotate"></i> 3D </div>
     <div class="model-loading-spinner" id="modelLoadingSpinner" style="display: flex;">
       <div class="spinner"></div>
     </div>
